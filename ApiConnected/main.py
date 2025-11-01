@@ -9,6 +9,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates=Jinja2Templates(directory="templates")
 code_evaluator=CodeEvaluator()
 
+@app.get("/", response_class=HTMLResponse)
+async def show_home(request:Request):
+    return templates.TemplateResponse("home_page.html", {"request":request})
+
 
 @app.get("/student/courses", response_class=HTMLResponse)
 async def show_courses(request:Request):
@@ -77,4 +81,20 @@ async def submit_quiz(student_code:str=Form(...)):
 
 
 
+@app.get("/teacher/quizzes", response_class=HTMLResponse)
+async def show_created_quizzes(request:Request):
+    return templates.TemplateResponse("teacher_quizzes.html", {"request":request})
 
+
+@app.get("/teacher/quiz/new", response_class=HTMLResponse)
+async def show_create_quiz(request:Request):
+    return templates.TemplateResponse("teacher_create_quiz.html", {"request":request})
+
+@app.get("/teacher/quiz/submissions", response_class=HTMLResponse)
+async def show_quiz_submissions(request:Request):
+    return templates.TemplateResponse("teacher_submissions.html", {"request":request})
+
+
+@app.get("/teacher/quiz/responses", response_class=HTMLResponse)
+async def show_quiz_submissions(request:Request):
+    return templates.TemplateResponse("teacher_responses.html", {"request":request})
