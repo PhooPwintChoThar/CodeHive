@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduHub - Discussions</title>
+    <title>EduHub - Create Quiz</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="header">
         <div class="header-content">
-            <div class="brand">🎓 EduHub - Student</div>
+            <div class="brand">🎓 EduHub - Teacher</div>
             <div class="user-info">
-                <span>Welcome, Student!</span>
+                <span>Welcome, Professor!</span>
                 <a href="index.html" class="btn btn-danger">Logout</a>
             </div>
         </div>
@@ -19,99 +19,51 @@
 
     <div class="container">
         <div class="nav-tabs">
-            <a href="student.html" class="nav-tab">📝 Quizzes</a>
-            <a href="student-discussions.html" class="nav-tab active">💬 Discussions</a>
-            <a href="student-courses.html" class="nav-tab">📚 My Courses</a>
+            <a href="teacher.html" class="nav-tab">📝 My Quizzes</a>
+            <a href="teacher-create-quiz.html" class="nav-tab active">➕ Create Quiz</a>
         </div>
 
         <div class="content">
-            <h2 class="section-title">Study Discussions</h2>
-            <button class="btn btn-primary" style="margin-bottom: 20px;" onclick="openNewDiscussionModal()">+ New Discussion</button>
-            <div class="discussion-list">
-                <div class="discussion-card">
-                    <div class="discussion-post">
-                        <div class="post-header">
-                            <span class="post-author">Sarah Chen</span>
-                            <span class="post-time">2 hours ago</span>
-                        </div>
-                        <div class="post-content">
-                            Can someone explain the difference between kinetic and potential energy? I'm having trouble understanding the concept for the upcoming quiz.
-                        </div>
-                        <div class="post-actions">
-                            <span class="post-action">👍 12 Likes</span>
-                            <span class="post-action">💬 5 Replies</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="discussion-card">
-                    <div class="discussion-post">
-                        <div class="post-header">
-                            <span class="post-author">Michael Johnson</span>
-                            <span class="post-time">5 hours ago</span>
-                        </div>
-                        <div class="post-content">
-                            Study group forming for the Chemistry exam next week! Anyone interested in joining? We're planning to meet on Discord.
-                        </div>
-                        <div class="post-actions">
-                            <span class="post-action">👍 8 Likes</span>
-                            <span class="post-action">💬 3 Replies</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="discussion-card">
-                    <div class="discussion-post">
-                        <div class="post-header">
-                            <span class="post-author">Lisa Wong</span>
-                            <span class="post-time">1 day ago</span>
-                        </div>
-                        <div class="post-content">
-                            Does anyone have good resources for learning calculus derivatives? I find the textbook explanations a bit confusing.
-                        </div>
-                        <div class="post-actions">
-                            <span class="post-action">👍 15 Likes</span>
-                            <span class="post-action">💬 8 Replies</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- New Discussion Modal -->
-    <div id="newDiscussionModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">New Discussion</h3>
-                <button class="close-btn" onclick="closeNewDiscussionModal()">&times;</button>
-            </div>
-            <form onsubmit="postDiscussion(event)">
+            <h2 class="section-title">Create New Quiz</h2>
+            <form onsubmit="createQuiz(event)">
                 <div class="form-group">
-                    <label class="form-label">Discussion Topic</label>
-                    <input type="text" class="form-input" placeholder="What would you like to discuss?" required>
+                    <label class="form-label">Quiz Title</label>
+                    <input type="text" class="form-input" placeholder="e.g., Introduction to Calculus" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Your Message</label>
-                    <textarea class="form-textarea" placeholder="Share your thoughts..." required></textarea>
+                    <label class="form-label">Course</label>
+                    <input type="text" class="form-input" placeholder="e.g., Mathematics 101" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Post Discussion</button>
+                <div class="form-group">
+                    <label class="form-label">Quiz Description</label>
+                    <textarea class="form-textarea" placeholder="Brief description of the quiz..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Questions (one per line)</label>
+                    <textarea class="form-textarea" placeholder="Question 1&#10;Question 2&#10;Question 3..." style="min-height: 150px;" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Solutions (one per line, corresponding to questions)</label>
+                    <textarea class="form-textarea" placeholder="Solution 1&#10;Solution 2&#10;Solution 3..." style="min-height: 150px;" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Due Date</label>
+                    <input type="date" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Time Limit (minutes)</label>
+                    <input type="number" class="form-input" placeholder="e.g., 30" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Quiz</button>
             </form>
         </div>
     </div>
 
     <script>
-        function openNewDiscussionModal() {
-            document.getElementById('newDiscussionModal').classList.add('active');
-        }
-
-        function closeNewDiscussionModal() {
-            document.getElementById('newDiscussionModal').classList.remove('active');
-        }
-
-        function postDiscussion(event) {
+        function createQuiz(event) {
             event.preventDefault();
-            alert('Discussion posted successfully!');
-            closeNewDiscussionModal();
-            window.location.reload();
+            alert('Quiz created successfully!');
+            window.location.href = 'teacher.html';
         }
     </script>
 </body>
