@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub - Student Dashboard</title>
+    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}">
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <div class="brand">
+          CodeHive
+          <img src="test4.png" alt="CodeHive" width="40" height="35" />
+        </div>
+        <div
+          class="tab"
+          style="
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <span style="margin: 0 40px">
+            <a href="/student/quizzes" class="btn btn-tabs" style="font-size: 16px"
+              >Quiz</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/discussions"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Discussion</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/courses"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Courses</a
+            >
+          </span>
+        </div>
+        <a href="homePage.html" class="loginandout" style="font-size: 16px"
+          >Logout</a
+        >
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="content">
+        <h2 class="section-title">Available Quizzes</h2>
+        <div class="quiz-list">
+            <!-- directed to /quiz/solve-->
+          <a href="/student/quiz/solve" class="quiz-card">
+            <div class="quiz-title">Mathematics - Algebra Basics</div>
+            <div class="quiz-meta">
+              <span>📅 Due: Dec 15, 2024</span>
+              <span>⏱️ 30 minutes</span>
+              <span>❓ 10 questions</span>
+            </div>
+          </a>
+          <a href="/student/quiz/solve" class="quiz-card">
+            <div class="quiz-title">Physics - Newton's Laws</div>
+            <div class="quiz-meta">
+              <span>📅 Due: Dec 18, 2024</span>
+              <span>⏱️ 45 minutes</span>
+              <span>❓ 15 questions</span>
+            </div>
+          </a>
+          <a href="/student/quiz/solve" class="quiz-card">
+            <div class="quiz-title">Chemistry - Periodic Table</div>
+            <div class="quiz-meta">
+              <span>📅 Due: Dec 20, 2024</span>
+              <span>⏱️ 20 minutes</span>
+              <span>❓ 8 questions</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
