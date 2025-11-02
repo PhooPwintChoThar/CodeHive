@@ -2,6 +2,7 @@ from fastapi import FastAPI,Request,Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
+import time
 from ai_assistant import CodeEvaluator
 
 app=FastAPI()
@@ -11,7 +12,7 @@ code_evaluator=CodeEvaluator()
 
 @app.get("/", response_class=HTMLResponse)
 async def show_home(request:Request):
-    return templates.TemplateResponse("home_page.html", {"request":request})
+    return templates.TemplateResponse("home_page.html", {"request":request, "version": int(time.time())})
 
 
 @app.get("/student/courses", response_class=HTMLResponse)
