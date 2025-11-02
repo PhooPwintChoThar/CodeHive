@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub - Teacher Dashboard</title>
+    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}">
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <div class="brand">
+          CodeHive
+          <img src="{{url_for('static', path='test4.png')}}" alt="CodeHive" width="40" height="35" />
+        </div>
+        <a href="/" class="loginandout">Logout</a>
+        <div style="width: 40px"></div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="content">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+          "
+        >
+          <h2 class="section-title" style="margin: 0">Quiz</h2>
+          <a
+            href="/teacher/quiz/new"
+            class="btn"
+            style="font-size: 24px; padding: 10px 20px; text-decoration: none"
+            >➕</a
+          >
+        </div>
+        <div class="quiz-list">
+          <a href="/teacher/quiz/submissions" class="quiz-card">
+            <div class="quiz-title">Mathematics - Algebra Basics</div>
+            <div class="quiz-meta">
+              <span>📅 Created: Nov 20, 2024</span>
+              <span>👥 24 submissions</span>
+              <span>❓ 10 questions</span>
+            </div>
+          </a>
+          <a href="/teacher/quiz/submissions" class="quiz-card">
+            <div class="quiz-title">Physics - Newton's Laws</div>
+            <div class="quiz-meta">
+              <span>📅 Created: Nov 25, 2024</span>
+              <span>👥 18 submissions</span>
+              <span>❓ 15 questions</span>
+            </div>
+          </a>
+          <a href="/teacher/quiz/submissions" class="quiz-card">
+            <div class="quiz-title">Chemistry - Periodic Table</div>
+            <div class="quiz-meta">
+              <span>📅 Created: Nov 28, 2024</span>
+              <span>👥 31 submissions</span>
+              <span>❓ 8 questions</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
