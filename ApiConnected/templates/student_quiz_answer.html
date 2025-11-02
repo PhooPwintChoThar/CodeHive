@@ -4,14 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EduHub - Answer Quiz</title>
-    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}" />
   </head>
   <body>
     <div class="header">
       <div class="header-content">
         <div class="brand">
           CodeHive
-          <img src="{{url_for('static', path='test4.png')}}" alt="CodeHive" width="40" height="35" />
+          <img
+            src="{{url_for('static', path='test4.png')}}"
+            alt="CodeHive"
+            width="40"
+            height="35"
+          />
         </div>
         <div
           class="tab"
@@ -23,7 +28,10 @@
           "
         >
           <span style="margin: 0 40px">
-            <a href="/student/quizzes" class="btn btn-tabs" style="font-size: 16px"
+            <a
+              href="/student/quizzes"
+              class="btn btn-tabs"
+              style="font-size: 16px"
               >Quiz</a
             >
           </span>
@@ -44,9 +52,7 @@
             >
           </span>
         </div>
-        <a href="/" class="loginandout" style="font-size: 16px"
-          >Logout</a
-        >
+        <a href="/" class="loginandout" style="font-size: 16px">Logout</a>
       </div>
     </div>
 
@@ -67,13 +73,14 @@
           <div class="form-group">
             <label class="form-label">Your Solution</label>
             <!-- student_code named here-->
-            <textarea
-              class="form-textarea"
-              placeholder="Type your answers here..."
-              style="min-height: 300px"
-              name="student_code"
-              required
-            ></textarea>
+            <iframe
+              id="onecompiler"
+              src="https://onecompiler.com/embed/"
+              frameborder="0"
+              width="100%"
+              height="600px"
+            >
+            </iframe>
           </div>
           <button type="submit" class="btn btn-primary">Submit Quiz</button>
         </form>
@@ -88,8 +95,7 @@
       const quizData = {
         1: {
           title: "Mathematics - Algebra Basics",
-          instructions:
-            "Once you clicked submit ,it is unchangable!",
+          instructions: "Once you clicked submit ,it is unchangable!",
         },
         2: {
           title: "Physics - Newton's Laws",
@@ -105,8 +111,8 @@
 
       const quiz = quizData["1"];
       document.getElementById("quizTitle").textContent = quiz.title;
-      document.getElementById("quizInstructions").textContent =quiz.instructions;
-
+      document.getElementById("quizInstructions").textContent =
+        quiz.instructions;
     </script>
   </body>
 </html>

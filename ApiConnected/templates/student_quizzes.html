@@ -4,14 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EduHub - Student Dashboard</title>
-    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}">
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', path='styles.css')}}?v={{ version }}"
+    />
   </head>
   <body>
     <div class="header">
       <div class="header-content">
         <div class="brand">
           CodeHive
-          <img src="{{url_for('static', path='test4.png')}}" alt="CodeHive" width="40" height="35" />
+          <img
+            src="{{url_for('static', path='test4.png')}}"
+            alt="CodeHive"
+            width="40"
+            height="35"
+          />
         </div>
         <div
           class="tab"
@@ -23,7 +31,10 @@
           "
         >
           <span style="margin: 0 40px">
-            <a href="/student/quizzes" class="btn btn-tabs" style="font-size: 16px"
+            <a
+              href="/student/quizzes"
+              class="btn btn-tabs"
+              style="font-size: 16px"
               >Quiz</a
             >
           </span>
@@ -44,9 +55,7 @@
             >
           </span>
         </div>
-        <a href="/" class="loginandout" style="font-size: 16px"
-          >Logout</a
-        >
+        <a href="/" class="loginandout" style="font-size: 16px">Logout</a>
       </div>
     </div>
 
@@ -54,7 +63,7 @@
       <div class="content">
         <h2 class="section-title">Available Quizzes</h2>
         <div class="quiz-list">
-            <!-- directed to /quiz/solve-->
+          <!-- directed to /quiz/solve-->
           <a href="/student/quiz/solve" class="quiz-card">
             <div class="quiz-title">Mathematics - Algebra Basics</div>
             <div class="quiz-meta">
