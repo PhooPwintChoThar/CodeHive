@@ -82,43 +82,30 @@
           CodeHive
           <img src="test4.png" alt="CodeHive" width="40" height="35" />
         </div>
-        <div
-          class="tab"
-          style="
-            display: flex;
-            flex: 1;
-            justify-content: center;
-            align-items: center;
-          "
-        >
-          <span style="margin: 0 40px">
-            <a href="student.html" class="btn btn-tabs" style="font-size: 16px"
-              >Quiz</a
-            >
-          </span>
-          <span style="margin: 0 40px">
-            <a
-              href="student-discussions.html"
-              class="btn btn-tabs"
-              style="font-size: 16px"
-              >Discussion</a
-            >
-          </span>
-          <span style="margin: 0 40px">
-            <a
-              href="student-courses.html"
-              class="btn btn-tabs"
-              style="font-size: 16px"
-              >Courses</a
-            >
-          </span>
+        <nav class="header-nav">
+          <a href="student.html" class="btn btn-tabs" style="font-size: 16px"
+            >Quiz</a
+          >
+          <a
+            href="student-discussions.html"
+            class="btn btn-tabs"
+            style="font-size: 16px"
+            >Discussion</a
+          >
+          <a
+            href="student-courses.html"
+            class="btn btn-tabs"
+            style="font-size: 16px"
+            >Courses</a
+          >
+        </nav>
+        <div class="user-actions">
+          <a href="homePage.html" class="loginandout" style="font-size: 16px"
+            >Logout</a
+          >
         </div>
-        <a href="homePage.html" class="loginandout" style="font-size: 16px"
-          >Logout</a
-        >
       </div>
     </div>
-
     <div class="container">
       <div class="content">
         <h2 class="section-title">Study Discussions</h2>
@@ -130,7 +117,6 @@
           + New Discussion
         </button>
         <div class="discussion-list">
-          <!-- Discussion 1 -->
           <div class="discussion-card">
             <div class="discussion-post">
               <div class="post-header">
@@ -177,7 +163,6 @@
             </div>
           </div>
 
-          <!-- Discussion 2 -->
           <div class="discussion-card">
             <div class="discussion-post">
               <div class="post-header">
@@ -223,7 +208,6 @@
             </div>
           </div>
 
-          <!-- Discussion 3 -->
           <div class="discussion-card">
             <div class="discussion-post">
               <div class="post-header">
@@ -272,7 +256,6 @@
       </div>
     </div>
 
-    <!-- New Discussion Modal -->
     <div id="newDiscussionModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
@@ -352,7 +335,7 @@
         }
       }
 
-      // Submit reply
+      // Submit reply 
       function submitReply(button) {
         const card = button.closest(".discussion-card");
         const replyInput = card.querySelector(".reply-input");
@@ -368,7 +351,7 @@
         const replyCountText = replyBtn.textContent;
         const currentCount = parseInt(replyCountText.match(/\d+/)[0]);
         const newCount = currentCount + 1;
-        replyBtn.innerHTML = `💬 ${newCount} Replies`;
+        replyBtn.innerHTML = `💬 ${newCount} Replies`; // ← 修正箇所
 
         // Clear and hide reply section
         replyInput.value = "";
