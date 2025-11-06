@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub - Discussions</title>
+    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}">
+    <style>
+      .reply-section {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #ddd;
+        display: none;
+      }
+
+      .reply-section.active {
+        display: block;
+      }
+
+      .reply-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        font-family: inherit;
+        resize: vertical;
+        min-height: 60px;
+      }
+
+      .reply-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+
+      .btn-small {
+        padding: 8px 16px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .btn-reply-submit {
+        background-color: #4a5568;
+        color: white;
+      }
+
+      .btn-reply-submit:hover {
+        background-color: #2d3748;
+      }
+
+      .btn-cancel {
+        background-color: #e2e8f0;
+        color: #4a5568;
+      }
+
+      .btn-cancel:hover {
+        background-color: #cbd5e0;
+      }
+
+      .post-action {
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .post-action:hover {
+        transform: scale(1.05);
+      }
+
+      .post-action.liked {
+        color: #3182ce;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <div class="brand">
+          CodeHive
+          <img src="{{url_for('static', path='test4.png')}}" alt="CodeHive" width="40" height="35" />
+        </div>
+        <div
+          class="tab"
+          style="
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <span style="margin: 0 40px">
+            <a href="/student/quizzes" class="btn btn-tabs" style="font-size: 16px"
+              >Quiz</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/discussions"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Discussion</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/courses"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Courses</a
+            >
+          </span>
+        </div>
+        <a href="/" class="loginandout" style="font-size: 16px"
+          >Logout</a
+        >
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="content">
+        <h2 class="section-title">Study Discussions</h2>
+        <button
+          class="btn btn-primary"
+          style="margin-bottom: 20px"
+          onclick="openNewDiscussionModal()"
+        >
+          + New Discussion
+        </button>
+        <div class="discussion-list">
+          <!-- Discussion 1 -->
+          <div class="discussion-card">
+            <div class="discussion-post">
+              <div class="post-header">
+                <span class="post-author">Sarah Chen</span>
+                <span class="post-time">2 hours ago</span>
+              </div>
+              <div class="post-content">
+                Can someone explain the difference between kinetic and potential
+                energy? I'm having trouble understanding the concept for the
+                upcoming quiz.
+              </div>
+              <div class="post-actions">
+                <span
+                  class="post-action like-btn"
+                  onclick="toggleLike(this)"
+                  data-likes="12"
+                >
+                  👍 <span class="like-count">12</span> Likes
+                </span>
+                <span class="post-action reply-btn" onclick="toggleReply(this)">
+                  💬 5 Replies
+                </span>
+              </div>
+              <div class="reply-section">
+                <textarea
+                  class="reply-input"
+                  placeholder="Write your reply..."
+                ></textarea>
+                <div class="reply-actions">
+                  <button
+                    class="btn-small btn-cancel"
+                    onclick="toggleReply(this.closest('.discussion-card').querySelector('.reply-btn'))"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    class="btn-small btn-reply-submit"
+                    onclick="submitReply(this)"
+                  >
+                    Reply
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Discussion 2 -->
+          <div class="discussion-card">
+            <div class="discussion-post">
+              <div class="post-header">
+                <span class="post-author">Michael Johnson</span>
+                <span class="post-time">5 hours ago</span>
+              </div>
+              <div class="post-content">
+                Study group forming for the Chemistry exam next week! Anyone
+                interested in joining? We're planning to meet on Discord.
+              </div>
+              <div class="post-actions">
+                <span
+                  class="post-action like-btn"
+                  onclick="toggleLike(this)"
+                  data-likes="8"
+                >
+                  👍 <span class="like-count">8</span> Likes
+                </span>
+                <span class="post-action reply-btn" onclick="toggleReply(this)">
+                  💬 3 Replies
+                </span>
+              </div>
+              <div class="reply-section">
+                <textarea
+                  class="reply-input"
+                  placeholder="Write your reply..."
+                ></textarea>
+                <div class="reply-actions">
+                  <button
+                    class="btn-small btn-cancel"
+                    onclick="toggleReply(this.closest('.discussion-card').querySelector('.reply-btn'))"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    class="btn-small btn-reply-submit"
+                    onclick="submitReply(this)"
+                  >
+                    Reply
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Discussion 3 -->
+          <div class="discussion-card">
+            <div class="discussion-post">
+              <div class="post-header">
+                <span class="post-author">Lisa Wong</span>
+                <span class="post-time">1 day ago</span>
+              </div>
+              <div class="post-content">
+                Does anyone have good resources for learning calculus
+                derivatives? I find the textbook explanations a bit confusing.
+              </div>
+              <div class="post-actions">
+                <span
+                  class="post-action like-btn"
+                  onclick="toggleLike(this)"
+                  data-likes="15"
+                >
+                  👍 <span class="like-count">15</span> Likes
+                </span>
+                <span class="post-action reply-btn" onclick="toggleReply(this)">
+                  💬 8 Replies
+                </span>
+              </div>
+              <div class="reply-section">
+                <textarea
+                  class="reply-input"
+                  placeholder="Write your reply..."
+                ></textarea>
+                <div class="reply-actions">
+                  <button
+                    class="btn-small btn-cancel"
+                    onclick="toggleReply(this.closest('.discussion-card').querySelector('.reply-btn'))"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    class="btn-small btn-reply-submit"
+                    onclick="submitReply(this)"
+                  >
+                    Reply
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Discussion Modal -->
+    <div id="newDiscussionModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">New Discussion</h3>
+          <button class="close-btn" onclick="closeNewDiscussionModal()">
+            &times;
+          </button>
+        </div>
+        <form onsubmit="postDiscussion(event)">
+          <div class="form-group">
+            <label class="form-label">Discussion Topic</label>
+            <input
+              type="text"
+              class="form-input"
+              placeholder="What would you like to discuss?"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Your Message</label>
+            <textarea
+              class="form-textarea"
+              placeholder="Share your thoughts..."
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Post Discussion</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function openNewDiscussionModal() {
+        document.getElementById("newDiscussionModal").classList.add("active");
+      }
+
+      function closeNewDiscussionModal() {
+        document
+          .getElementById("newDiscussionModal")
+          .classList.remove("active");
+      }
+
+      function postDiscussion(event) {
+        event.preventDefault();
+        alert("Discussion posted successfully!");
+        closeNewDiscussionModal();
+        window.location.reload();
+      }
+
+      // Toggle like functionality
+      function toggleLike(element) {
+        const likeCountSpan = element.querySelector(".like-count");
+        let currentLikes = parseInt(likeCountSpan.textContent);
+
+        if (element.classList.contains("liked")) {
+          // Unlike
+          currentLikes--;
+          element.classList.remove("liked");
+        } else {
+          // Like
+          currentLikes++;
+          element.classList.add("liked");
+        }
+
+        likeCountSpan.textContent = currentLikes;
+      }
+
+      // Toggle reply box
+      function toggleReply(button) {
+        const card = button.closest(".discussion-card");
+        const replySection = card.querySelector(".reply-section");
+        replySection.classList.toggle("active");
+
+        // Clear the textarea if closing
+        if (!replySection.classList.contains("active")) {
+          replySection.querySelector(".reply-input").value = "";
+        }
+      }
+
+      // Submit reply
+      function submitReply(button) {
+        const card = button.closest(".discussion-card");
+        const replyInput = card.querySelector(".reply-input");
+        const replyText = replyInput.value.trim();
+
+        if (replyText === "") {
+          alert("Please write a reply before submitting!");
+          return;
+        }
+
+        // Increment reply count
+        const replyBtn = card.querySelector(".reply-btn");
+        const replyCountText = replyBtn.textContent;
+        const currentCount = parseInt(replyCountText.match(/\d+/)[0]);
+        const newCount = currentCount + 1;
+        replyBtn.innerHTML = `💬 ${newCount} Replies`;
+
+        // Clear and hide reply section
+        replyInput.value = "";
+        card.querySelector(".reply-section").classList.remove("active");
+
+        alert("Reply posted successfully!");
+      }
+    </script>
+  </body>
+</html>
