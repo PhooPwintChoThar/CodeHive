@@ -23,13 +23,13 @@
           "
         >
           <span style="margin: 0 40px">
-            <a href="/student/quizzes" class="btn btn-tabs" style="font-size: 16px"
+            <a href="/student/{{id}}/quizzes" class="btn btn-tabs" style="font-size: 16px"
               >Quiz</a
             >
           </span>
           <span style="margin: 0 40px">
             <a
-              href="/student/discussions"
+              href="/student/{{id}}/discussions"
               class="btn btn-tabs"
               style="font-size: 16px"
               >Discussion</a
@@ -37,7 +37,7 @@
           </span>
           <span style="margin: 0 40px">
             <a
-              href="/student/courses"
+              href="/student/{{id}}/courses"
               class="btn btn-tabs"
               style="font-size: 16px"
               >Courses</a
@@ -54,34 +54,15 @@
       <div class="content">
         <h2 class="section-title">My Courses</h2>
         <div class="course-list">
+          {%for c in courses%}
           <a href="/student/chat" class="course-card">
-            <div class="course-title">📐 Mathematics 101</div>
+            <div class="course-title">{{c.name}}</div>
             <div class="course-meta">
-              <span>Prof. Anderson</span>
-              <span>45 students enrolled</span>
+              <span>{{c.professor}}</span>
+              <span>{{c.enrolled_student | length}}</span>
             </div>
           </a>
-          <a href="/student/chat" class="course-card">
-            <div class="course-title">⚛️ Physics Fundamentals</div>
-            <div class="course-meta">
-              <span>Prof. Martinez</span>
-              <span>38 students enrolled</span>
-            </div>
-          </a>
-          <a href="/student/chat" class="course-card">
-            <div class="course-title">🧪 Chemistry Basics</div>
-            <div class="course-meta">
-              <span>Prof. Lee</span>
-              <span>42 students enrolled</span>
-            </div>
-          </a>
-          <a href="/student/chat" class="course-card">
-            <div class="course-title">🧬 Introduction to Biology</div>
-            <div class="course-meta">
-              <span>Prof. Thompson</span>
-              <span>50 students enrolled</span>
-            </div>
-          </a>
+          {%endfor%}
         </div>
       </div>
     </div>

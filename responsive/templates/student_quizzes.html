@@ -32,7 +32,7 @@
         >
           <span style="margin: 0 40px">
             <a
-              href="/student/quizzes"
+              href="/student/{{student_id}}/quizzes"
               class="btn btn-tabs"
               style="font-size: 16px"
               >Quiz</a
@@ -40,7 +40,7 @@
           </span>
           <span style="margin: 0 40px">
             <a
-              href="/student/discussions"
+              href="/student/{{student_id}}/discussions"
               class="btn btn-tabs"
               style="font-size: 16px"
               >Discussion</a
@@ -65,17 +65,20 @@
         <div class="quiz-list">
           {%for quiz in quizzes%}
           <!-- directed to /quiz/solve-->
-          <a href="/student/quiz/solve" class="quiz-card">
+          <a href="/student/{{student_id}}/quiz/{{quiz.id}}/solve" class="quiz-card">
             <div class="quiz-title">{{quiz.question}}</div>
             <div class="quiz-meta">
-              <span>📅 Due: Dec 15, 2024</span>
-              <span>⏱️ 30 minutes</span>
-              <span>❓ 10 questions</span>
+              <span>📅 Due:{{quiz.duedate}}</span>
             </div>
           </a>
           {%endfor%}
         </div>
       </div>
     </div>
+    {% if message %}
+<script>
+    alert("{{ message }}");
+</script>
+{% endif %}
   </body>
 </html>

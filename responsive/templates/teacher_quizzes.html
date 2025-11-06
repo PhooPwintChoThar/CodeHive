@@ -29,7 +29,7 @@
         >
           <h2 class="section-title" style="margin: 0">Quiz</h2>
           <a
-            href="/teacher/quiz/new"
+            href="/teacher/{{id}}/quiz/new"
             class="btn"
             style="font-size: 24px; padding: 10px 20px; text-decoration: none"
             >➕</a
@@ -38,11 +38,11 @@
         <div class="quiz-list">
           {%for q in quizzes %}
           <a href="/teacher/quiz/submissions" class="quiz-card">
-            <div class="quiz-title">{{q.question}}</div>
+            <div class="quiz-title">{{q.title}}</div>
             <div class="quiz-meta">
-              <span>📅 Created: Nov 20, 2024</span>
-              <span>👥 24 submissions</span>
-              <span>❓ 10 questions</span>
+              <span>📅 Created:{{q.duedate}}</span>
+              <span>👥 {{q.participated_students | length}} submissions</span>
+              <span>Duration: {{q.duration}}</span>
             </div>
           </a>
           {%endfor%}
