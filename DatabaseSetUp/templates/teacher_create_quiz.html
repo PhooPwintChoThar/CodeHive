@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub - Create Quiz</title>
+    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}">
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <div class="brand">
+          CodeHive
+          <img src="{{url_for('static', path='test4.png')}}" alt="CodeHive" width="40" height="35" />
+        </div>
+        <a href="/" class="loginandout">Logout</a>
+        <div style="width: 40px"></div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="content">
+        <h2 class="section-title">Create New Quiz</h2>
+        <!--  create quiz form-->
+        <form action="/professor/{{id}}/quiz/new" method="POST">
+          <div class="form-group">
+            <label class="form-label">Quiz Title</label>
+            <input
+              type="text"
+              class="form-input"
+              placeholder="e.g., Introduction to Calculus"
+              name="title"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Course</label>
+            <select name="course">
+              {% for c in courses%}
+              <option value={{c.id | string}}> {{c.id}} - {{c.name}}</option>
+              {%endfor%}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Question</label>
+            <textarea
+              class="form-textarea"
+              placeholder="Type Your Question "
+              style="min-height: 150px"
+              name="question"
+              required
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label"
+              >Sample Output</label
+            >
+            <textarea
+              class="form-textarea"
+              placeholder="sample"
+              style="min-height: 150px"
+              name="sample_output"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Due Date</label>
+            <input type="date" class="form-input" name="duedate" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Time Limit (minutes)</label>
+            <input
+              type="number"
+              class="form-input"
+              placeholder="e.g., 30"
+              name="duration"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Restrictions</label>
+            <input
+              type="text"
+              class="form-input"
+              placeholder="e.g., Introduction to Calculus"
+              name="restriction"
+              
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Total Score (Default 5)</label>
+            <input
+              type="number"
+              class="form-input"
+              placeholder="e.g., 30"
+              name="total_s"
+              required
+            />
+          </div>
+          <div style="display: flex; gap: 10px">
+            <a href="/professor/{{id}}/quizzes" class="btn" style="text-decoration: none"
+              >Back</a
+            >
+            <button type="submit" class="btn btn-primary">Create Quiz</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    {% if message %}
+<script>
+    alert("{{ message }}");
+</script>
+{% endif %}
+
+  </body>
+</html>
