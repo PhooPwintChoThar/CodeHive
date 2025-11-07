@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub - Discussions</title>
+    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}">
+    <style>
+      .reply-section {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #ddd;
+        display: none;
+      }
+
+      .reply-section.active {
+        display: block;
+      }
+
+      .reply-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        font-family: inherit;
+        resize: vertical;
+        min-height: 60px;
+      }
+
+      .reply-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+
+      .btn-small {
+        padding: 8px 16px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .btn-reply-submit {
+        background-color: #4a5568;
+        color: white;
+      }
+
+      .btn-reply-submit:hover {
+        background-color: #2d3748;
+      }
+
+      .btn-cancel {
+        background-color: #e2e8f0;
+        color: #4a5568;
+      }
+
+      .btn-cancel:hover {
+        background-color: #cbd5e0;
+      }
+
+      .post-action {
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .post-action:hover {
+        transform: scale(1.05);
+      }
+
+      .post-action.liked {
+        color: #3182ce;
+        font-weight: 600;
+      }
+
+      .btn-delete {
+        background-color: #e53e3e;
+        color: white;
+        padding: 6px 12px;
+        font-size: 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+
+      .btn-delete:hover {
+        background-color: #c53030;
+      }
+
+      .comment-item {
+        background-color: #f7fafc;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border-left: 3px solid #4a5568;
+      }
+
+      .comment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+      }
+
+      .comment-author {
+        font-weight: 600;
+        color: #2d3748;
+      }
+
+      .comment-time {
+        font-size: 12px;
+        color: #718096;
+      }
+
+      .comment-content {
+        color: #4a5568;
+        margin-bottom: 8px;
+      }
+
+      .comment-actions {
+        display: flex;
+        gap: 15px;
+        font-size: 14px;
+      }
+
+      .comments-list {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #e2e8f0;
+        display: none; /* Hidden by default */
+      }
+
+      .comments-list.active {
+        display: block; /* Show when active */
+      }
+
+      .comments-container {
+        max-height: 300px;
+        overflow-y: auto;
+        padding-right: 5px;
+      }
+
+      .comments-container::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .comments-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+
+      .comments-container::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+
+      .comments-container::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
+      .show-more-comments {
+        text-align: center;
+        padding: 10px;
+        color: #4a5568;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        background-color: #f7fafc;
+        border-radius: 5px;
+        margin-top: 10px;
+        transition: background-color 0.2s;
+      }
+
+      .show-more-comments:hover {
+        background-color: #e2e8f0;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 20px;
+        color: #718096;
+      }
+
+      .error-message {
+        background-color: #fed7d7;
+        color: #c53030;
+        padding: 12px;
+        border-radius: 8px;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <div class="brand">
+          CodeHive
+          <img src="{{url_for('static', path='test4.png')}}" alt="CodeHive" width="40" height="35" />
+        </div>
+        <div class="tab" style="display: flex; flex: 1; justify-content: center; align-items: center;">
+          <span style="margin: 0 40px">
+            <a href="/student/{{id}}/quizzes" class="btn btn-tabs" style="font-size: 16px">Quiz</a>
+          </span>
+          <span style="margin: 0 40px">
+            <a href="/student/{{id}}/discussions" class="btn btn-tabs" style="font-size: 16px">Discussion</a>
+          </span>
+          <span style="margin: 0 40px">
+            <a href="/student/{{id}}/courses" class="btn btn-tabs" style="font-size: 16px">Courses</a>
+          </span>
+        </div>
+        <a href="/" class="loginandout" style="font-size: 16px">Logout</a>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="content">
+        <h2 class="section-title">Study Discussions</h2>
+        <button class="btn btn-primary" style="margin-bottom: 20px" onclick="openNewDiscussionModal()">
+          + New Discussion
+        </button>
+        
+        <div id="discussionsList" class="discussion-list">
+          <div class="loading">Loading discussions...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Discussion Modal -->
+    <div id="newDiscussionModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">New Discussion</h3>
+          <button class="close-btn" onclick="closeNewDiscussionModal()">&times;</button>
+        </div>
+        <form id="newDiscussionForm" onsubmit="postDiscussion(event)">
+          <div class="form-group">
+            <label class="form-label">Discussion Topic</label>
+            <input type="text" id="discussionTopic" class="form-input" placeholder="What would you like to discuss?" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Your Message</label>
+            <textarea id="discussionMessage" class="form-textarea" placeholder="Share your thoughts..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Post Discussion</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      // Current student info (from template)
+      const STUDENT_ID = {{id}};
+      const STUDENT_NAME = "{{ students.get(id).name if students and id in students else 'Student' }}";
+      const API_BASE = "/api";
+
+      // ============= Load Discussions =============
+      async function loadDiscussions() {
+        try {
+          const response = await fetch(`${API_BASE}/discussions?student_id=${STUDENT_ID}`);
+          const result = await response.json();
+
+          if (result.success) {
+            displayDiscussions(result.data);
+          } else {
+            showError("Failed to load discussions");
+          }
+        } catch (error) {
+          console.error("Error loading discussions:", error);
+          showError("Error loading discussions. Please refresh the page.");
+        }
+      }
+
+      // ============= Render Comments =============
+      function renderComments(comments, discussionId) {
+        if (!comments || comments.length === 0) {
+          return '<p style="color: #a0aec0; font-size: 14px; padding: 10px;">No comments yet</p>';
+        }
+
+        const INITIAL_SHOW = 2;
+        const showAll = comments.length <= INITIAL_SHOW;
+        const visibleComments = showAll ? comments : comments.slice(0, INITIAL_SHOW);
+        const hiddenCount = comments.length - INITIAL_SHOW;
+
+        let html = '<div class="comments-container" id="comments-container-' + discussionId + '">';
+        
+        // Render visible comments
+        html += visibleComments.map(comment => `
+          <div class="comment-item" data-id="${comment.id}">
+            <div class="comment-header">
+              <span class="comment-author">${comment.student_name}</span>
+              <span class="comment-time">${formatTime(comment.timestamp)}</span>
+            </div>
+            <div class="comment-content">${comment.content}</div>
+            <div class="comment-actions">
+              <span class="post-action ${comment.liked_by.includes(STUDENT_ID) ? 'liked' : ''}" 
+                    onclick="toggleCommentLike(${comment.id}, this)">
+                👍 <span class="like-count">${comment.like_count}</span>
+              </span>
+              ${comment.student_id === STUDENT_ID ? `
+                <button class="btn-delete" onclick="deleteComment(${comment.id}, ${discussionId})">Delete</button>
+              ` : ''}
+            </div>
+          </div>
+        `).join('');
+
+        // Add hidden comments (initially hidden)
+        if (!showAll) {
+          html += '<div id="hidden-comments-' + discussionId + '" style="display: none;">';
+          html += comments.slice(INITIAL_SHOW).map(comment => `
+            <div class="comment-item" data-id="${comment.id}">
+              <div class="comment-header">
+                <span class="comment-author">${comment.student_name}</span>
+                <span class="comment-time">${formatTime(comment.timestamp)}</span>
+              </div>
+              <div class="comment-content">${comment.content}</div>
+              <div class="comment-actions">
+                <span class="post-action ${comment.liked_by.includes(STUDENT_ID) ? 'liked' : ''}" 
+                      onclick="toggleCommentLike(${comment.id}, this)">
+                  👍 <span class="like-count">${comment.like_count}</span>
+                </span>
+                ${comment.student_id === STUDENT_ID ? `
+                  <button class="btn-delete" onclick="deleteComment(${comment.id}, ${discussionId})">Delete</button>
+                ` : ''}
+              </div>
+            </div>
+          `).join('');
+          html += '</div>';
+        }
+
+        html += '</div>'; // Close comments-container
+
+        // Add "Show more" button if there are hidden comments
+        if (!showAll) {
+          html += `
+            <div class="show-more-comments" id="show-more-${discussionId}" onclick="toggleShowMore(${discussionId})">
+              ▼ Show ${hiddenCount} more comment${hiddenCount > 1 ? 's' : ''}
+            </div>
+          `;
+        }
+
+        return html;
+      }
+
+      // ============= Toggle Show More Comments =============
+      function toggleShowMore(discussionId) {
+        const hiddenComments = document.getElementById('hidden-comments-' + discussionId);
+        const showMoreBtn = document.getElementById('show-more-' + discussionId);
+        const container = document.getElementById('comments-container-' + discussionId);
+
+        if (hiddenComments.style.display === 'none') {
+          hiddenComments.style.display = 'block';
+          showMoreBtn.innerHTML = '▲ Show less';
+          // Scroll to show new comments
+          setTimeout(() => {
+            container.scrollTop = container.scrollHeight;
+          }, 100);
+        } else {
+          hiddenComments.style.display = 'none';
+          const hiddenCount = hiddenComments.querySelectorAll('.comment-item').length;
+          showMoreBtn.innerHTML = `▼ Show ${hiddenCount} more comment${hiddenCount > 1 ? 's' : ''}`;
+          container.scrollTop = 0;
+        }
+      }
+
+      // ============= Display Discussions =============
+      function displayDiscussions(discussions) {
+        const container = document.getElementById("discussionsList");
+        
+        if (discussions.length === 0) {
+          container.innerHTML = '<p style="text-align: center; color: #718096;">No discussions yet. Be the first to start one!</p>';
+          return;
+        }
+
+        container.innerHTML = discussions.map(disc => `
+          <div class="discussion-card" data-id="${disc.id}">
+            <div class="discussion-post">
+              <div class="post-header">
+                <span class="post-author">${disc.student_name}</span>
+                <span class="post-time">${formatTime(disc.timestamp)}</span>
+              </div>
+              <div class="post-content">
+                <strong>${disc.topic}</strong><br>
+                ${disc.message}
+              </div>
+              <div class="post-actions">
+                <span class="post-action like-btn ${disc.is_liked_by_me ? 'liked' : ''}" 
+                      onclick="toggleLike(${disc.id}, this)" 
+                      data-liked="${disc.is_liked_by_me}">
+                  👍 <span class="like-count">${disc.like_count}</span> Likes
+                </span>
+                <span class="post-action reply-btn" onclick="toggleReply(${disc.id})">
+                  💬 ${disc.comment_count} Replies
+                </span>
+                ${disc.student_id === STUDENT_ID ? `
+                  <button class="btn-delete" onclick="deleteDiscussion(${disc.id})">Delete</button>
+                ` : ''}
+              </div>
+              
+              <!-- Comments Section -->
+              <div class="comments-list" id="comments-${disc.id}">
+                ${renderComments(disc.comments, disc.id)}
+              </div>
+              
+              <!-- Reply Section -->
+              <div class="reply-section" id="reply-${disc.id}">
+                <textarea class="reply-input" id="reply-input-${disc.id}" placeholder="Write your reply..."></textarea>
+                <div class="reply-actions">
+                  <button class="btn-small btn-cancel" onclick="toggleReply(${disc.id})">Cancel</button>
+                  <button class="btn-small btn-reply-submit" onclick="submitReply(${disc.id})">Reply</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // ============= Create New Discussion =============
+      async function postDiscussion(event) {
+        event.preventDefault();
+        
+        const topic = document.getElementById("discussionTopic").value;
+        const message = document.getElementById("discussionMessage").value;
+
+        try {
+          const response = await fetch(`${API_BASE}/discussions`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              student_id: STUDENT_ID,
+              student_name: STUDENT_NAME,
+              topic: topic,
+              message: message
+            })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            closeNewDiscussionModal();
+            document.getElementById("newDiscussionForm").reset();
+            loadDiscussions();
+          } else {
+            alert("Failed to create discussion");
+          }
+        } catch (error) {
+          console.error("Error creating discussion:", error);
+          alert("Error creating discussion. Please try again.");
+        }
+      }
+
+      // ============= Delete Discussion =============
+      async function deleteDiscussion(discussionId) {
+        if (!confirm("Are you sure you want to delete this discussion?")) return;
+
+        try {
+          const response = await fetch(`${API_BASE}/discussions/${discussionId}?student_id=${STUDENT_ID}`, {
+            method: "DELETE"
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            loadDiscussions();
+          } else {
+            alert("Failed to delete discussion");
+          }
+        } catch (error) {
+          console.error("Error deleting discussion:", error);
+          alert("Error deleting discussion. Please try again.");
+        }
+      }
+
+      // ============= Toggle Like on Discussion =============
+      async function toggleLike(discussionId, element) {
+        const isLiked = element.dataset.liked === "true";
+        const endpoint = isLiked ? "unlike" : "like";
+
+        try {
+          const response = await fetch(`${API_BASE}/discussions/${discussionId}/${endpoint}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ student_id: STUDENT_ID })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            // Update UI
+            element.dataset.liked = !isLiked;
+            element.classList.toggle("liked");
+            element.querySelector(".like-count").textContent = result.like_count;
+          } else {
+            alert(result.detail || "Action failed");
+          }
+        } catch (error) {
+          console.error("Error toggling like:", error);
+        }
+      }
+
+      // ============= Toggle Comment Like =============
+      async function toggleCommentLike(commentId, element) {
+        const isLiked = element.classList.contains("liked");
+        const endpoint = isLiked ? "unlike" : "like";
+
+        try {
+          const response = await fetch(`${API_BASE}/comments/${commentId}/${endpoint}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ student_id: STUDENT_ID })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            element.classList.toggle("liked");
+            element.querySelector(".like-count").textContent = result.like_count;
+          } else {
+            alert(result.detail || "Action failed");
+          }
+        } catch (error) {
+          console.error("Error toggling comment like:", error);
+        }
+      }
+
+      // ============= Toggle Reply Box and Comments =============
+      function toggleReply(discussionId) {
+        const commentsSection = document.getElementById(`comments-${discussionId}`);
+        const replySection = document.getElementById(`reply-${discussionId}`);
+        
+        // Toggle comments section visibility
+        commentsSection.classList.toggle("active");
+        
+        // Only show reply box when comments are visible
+        if (commentsSection.classList.contains("active")) {
+          replySection.classList.add("active");
+        } else {
+          replySection.classList.remove("active");
+          document.getElementById(`reply-input-${discussionId}`).value = "";
+        }
+      }
+
+      // ============= Submit Reply (Comment) =============
+      async function submitReply(discussionId) {
+        const content = document.getElementById(`reply-input-${discussionId}`).value.trim();
+
+        if (!content) {
+          alert("Please write a reply before submitting!");
+          return;
+        }
+
+        try {
+          const response = await fetch(`${API_BASE}/discussions/${discussionId}/comments`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              student_id: STUDENT_ID,
+              student_name: STUDENT_NAME,
+              content: content
+            })
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            document.getElementById(`reply-input-${discussionId}`).value = "";
+            // Reload discussions and keep comments section open
+            await loadDiscussions();
+            // Re-open the comments section after reload
+            const commentsSection = document.getElementById(`comments-${discussionId}`);
+            const replySection = document.getElementById(`reply-${discussionId}`);
+            if (commentsSection && replySection) {
+              commentsSection.classList.add("active");
+              replySection.classList.add("active");
+            }
+          } else {
+            alert("Failed to post comment");
+          }
+        } catch (error) {
+          console.error("Error posting comment:", error);
+          alert("Error posting comment. Please try again.");
+        }
+      }
+
+      // ============= Delete Comment =============
+      async function deleteComment(commentId, discussionId) {
+        if (!confirm("Are you sure you want to delete this comment?")) return;
+
+        try {
+          const response = await fetch(`${API_BASE}/comments/${commentId}?student_id=${STUDENT_ID}`, {
+            method: "DELETE"
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            loadDiscussions();
+          } else {
+            alert("Failed to delete comment");
+          }
+        } catch (error) {
+          console.error("Error deleting comment:", error);
+          alert("Error deleting comment. Please try again.");
+        }
+      }
+
+      // ============= Modal Functions =============
+      function openNewDiscussionModal() {
+        document.getElementById("newDiscussionModal").classList.add("active");
+      }
+
+      function closeNewDiscussionModal() {
+        document.getElementById("newDiscussionModal").classList.remove("active");
+        document.getElementById("newDiscussionForm").reset();
+      }
+
+      // ============= Utility Functions =============
+      function formatTime(timestamp) {
+        const date = new Date(timestamp);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMins / 60);
+        const diffDays = Math.floor(diffHours / 24);
+
+        if (diffMins < 1) return "Just now";
+        if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+        if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+        if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+        
+        return date.toLocaleDateString();
+      }
+
+      function showError(message) {
+        const container = document.getElementById("discussionsList");
+        container.innerHTML = `<div class="error-message">${message}</div>`;
+      }
+
+      // ============= Initialize =============
+      document.addEventListener("DOMContentLoaded", () => {
+        loadDiscussions();
+      });
+    </script>
+  </body>
+</html>
