@@ -1,6 +1,6 @@
 import persistent
 from persistent import Persistent
-
+from persistent.mapping import PersistentMapping
 class Quiz(persistent.Persistent):
     def __init__(self, id=0, title="", question="", languages="Any", sample_sol="", duedate=None, 
                  duration=0, restriction="None", total_s=0):
@@ -13,7 +13,7 @@ class Quiz(persistent.Persistent):
         self.duration = duration
         self.restriction = restriction
         self.total_s = total_s
-        self.participated_students = {}
+        self.participated_students = PersistentMapping()
         self.professor_id = None  
         self.course_id = None  
 
@@ -24,4 +24,5 @@ class Quiz(persistent.Persistent):
         return self.participated_students[id]
 
     
+
 
