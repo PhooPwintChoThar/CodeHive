@@ -59,6 +59,9 @@ class CodeEvaluator:
             )
                 #score=[0],mistakes=[1];comment=[2]
                 response_data=response.choices[0].message.content.split("#")
+                
+                while(len(response_data)<3):
+                    response_data.append(None)
                 return response_data
             except Exception as e:
                 raise RuntimeError(f"Error in processing prompt : {e}")
@@ -199,7 +202,7 @@ class TeacherAssistant:
                 Be encouraging and helpful
                 Provide visualization links only when they significantly enhance understanding"""
             
-            # Create the user prompt with lecture context
+    
             user_prompt = f"""LECTURE CONTENT:
                             {lecture_content}
                             STUDENT QUESTION:
