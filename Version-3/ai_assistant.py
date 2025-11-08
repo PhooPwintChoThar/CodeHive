@@ -1,4 +1,5 @@
 from openai import OpenAI
+import os
 
 def getAPI():
     return OpenAI(
@@ -62,4 +63,176 @@ class CodeEvaluator:
             except Exception as e:
                 raise RuntimeError(f"Error in processing prompt : {e}")
         
+
+class TeacherAssistant:
+    def __init__(self):
+        self.client = getAPI()
+        self.conversation_history = []
+        
+    def _get_lecture_content(self, filepath: str) -> str:
+        if os.path.isdir(filepath):
+            all_text = ""
+            txt_files = [f for f in os.listdir(filepath) if f.lower().endswith('.txt')]
+            
+            if not txt_files:
+                raise ValueError(f"No TXT files found in directory: {filepath}")
+            
+            for txt_file in sorted(txt_files):
+                txt_path = os.path.join(filepath, txt_file)
+                try:
+                    with open(txt_path, 'r', encoding='utf-8') as file:
+                        text = file.read()
+                    all_text += f"\n\n--- From {txt_file} ---\n{text}"
+                except Exception as e:
+                    print(f"Warning: Could not read {txt_file}: {e}")
+            
+            return all_text
+        
+        elif filepath.lower().endswith('.txt'):
+            if not os.path.exists(filepath):
+                raise FileNotFoundError(f"TXT file not found: {filepath}")
+            
+            try:
+                with open(filepath, 'r', encoding='utf-8') as file:
+                    return file.read()
+            except Exception as e:
+                raise RuntimeError(f"Error reading TXT file: {e}")
+        
+        else:
+            raise ValueError("Filepath must point to a TXT file or directory containing TXT files")  
+        
+    def _detect_question_type(self, question):
+        question_lower = question.lower()
+        exercise_keywords = ["exercise", "practice",  "challenge", "task"]
+        
+        if any(keyword in question_lower for keyword in exercise_keywords):
+            return "exercise"
+        else:
+            return "explanation"
+    
+    def _calculate_dynamic_max_tokens(self, question: str, question_type: str) -> int:
+        question_length = len(question.split())
+        base_tokens = 300
+        
+        if question_type == "exercise":
+            base_tokens = 500
+        elif question_type == "explanation":
+            base_tokens = 400
+        
+        if question_length > 50:
+            base_tokens += 150
+        elif question_length > 30:
+            base_tokens += 75
+        
+        return min(base_tokens, 1200)
+    
+    def chat(self, student_question, lecture_filepath):
+        if not student_question or not student_question.strip():
+            raise ValueError("Question cannot be empty!")
+        
+        try:
+            lecture_content = self._get_lecture_content(lecture_filepath)
+            
+            question_type = self._detect_question_type(student_question)
+            
+            
+            max_tokens = self._calculate_dynamic_max_tokens(student_question, question_type)
+            
+            self.conversation_history.append({
+                "role": "user",
+                "content": student_question,
+                "type": question_type
+            })
+            
+            if question_type == "exercise":
+                type_instruction = """Provide 2-3 practice problems directly related to the lecture topics. Make them progressively harder. Include:
+                Problem statement in plain text
+                Expected approach or solution hints
+                Difficulty level (Easy/Medium/Hard)
+                You can use problems from outside the lectures but they MUST align with what was taught."""
+            else:
+                type_instruction = """
+            Explain the concept using ONLY plain text. Include:
+
+            A simple definition of the topic
+            How it works with a concrete example from the lecture
+            Why it matters or when to use it
+            Use natural language without any markdown formatting.
+
+            VISUALIZATION LINKS:
+            If a visualization would significantly help understanding the concept, include one open-source resource link in this format:
+            [VISUALIZATION: concept_name - url_to_resource]          
+            Examples of resources to link:
+
+            Khan Academy: https://www.khanacademy.org/
+            Wikipedia diagrams and animations
+            GeeksforGeeks visualizations: https://www.geeksforgeeks.org/
+            Visualgo algorithm visualizations: https://visualgo.net/
+            YouTube educational videos
+            GitHub educational repositories with diagrams
+
+            Only include links to legitimate, free, educational resources."""
+            
+            # Create system prompt
+            system_prompt = f"""You are an educational assistant that explains concepts clearly and simply.
+
+                {type_instruction}
+
+                RESPONSE FORMAT RULES:
+
+                Write in plain text ONLY
+                No asterisks (*), hash marks (#), underscores (_), or backticks (`)
+                No bullet points or numbered lists with symbols
+                No markdown code blocks
+                Use simple line breaks to separate paragraphs
+                If showing code, write it as plain text lines
+                Keep explanations natural and conversational
+                Only include [VISUALIZATION: name - url] tags when truly helpful
+
+                Core Guidelines:
+
+                Use only information from the lecture materials
+                If not in lectures, say "This topic is not covered in the provided lecture materials"
+                Be clear and direct
+                Support claims with examples from the lecture
+                Keep response complete and well-organized
+                Be encouraging and helpful
+                Provide visualization links only when they significantly enhance understanding"""
+            
+            # Create the user prompt with lecture context
+            user_prompt = f"""LECTURE CONTENT:
+                            {lecture_content}
+                            STUDENT QUESTION:
+                            {student_question}
+                            IMPORTANT:
+
+                            Answer only using the lecture content above
+                            Write in plain text with no special formatting
+                            Keep it clear and straightforward
+                            Complete your full answer in approximately {max_tokens} tokens"""
+            
+            response = self.client.chat.completions.create(
+                    model="google/gemini-2.0-flash-exp:free",
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": system_prompt
+                        },
+                        {
+                            "role": "user",
+                            "content": user_prompt
+                        }
+                    ],
+                    temperature=0.7,
+                    max_tokens=max_tokens
+                )
+            return response.choices[0].message.content
+            
+        except FileNotFoundError as e:
+            raise FileNotFoundError(f"Lecture file error: {e}")
+        except ValueError as e:
+            raise ValueError(f"Input error: {e}")
+        except Exception as e:
+            raise RuntimeError(f"Error processing question: {e}")
+
         
