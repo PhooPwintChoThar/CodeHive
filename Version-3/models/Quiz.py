@@ -25,4 +25,3 @@ class Quiz(persistent.Persistent):
 
     
 
-
