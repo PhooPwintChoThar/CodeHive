@@ -37,7 +37,7 @@
         </div>
         <div class="quiz-list">
           {%for q in quizzes %}
-          <a href="/professor/{{id}}/quiz/submissions" class="quiz-card">
+          <a href="/professor/{{id}}/quiz/{{q.id}}/submissions" class="quiz-card">
             <div class="quiz-title">{{q.title}}</div>
             <div class="quiz-meta">
               <span>📅 Created:{{q.duedate}}</span>

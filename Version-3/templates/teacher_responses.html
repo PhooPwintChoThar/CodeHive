@@ -1,168 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EduHub - Student Solution</title>
-    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}">
-  </head>
-  <body>
-    <div class="header">
-      <div class="header-content">
-        <div class="brand">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduHub - Student Solution</title>
+<link rel="stylesheet" href="{{url_for('static', path='styles.css')}}">
+<style>
+  .score-edit-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .edit-icon {
+    cursor: pointer;
+    color: var(--primary);
+    font-size: 18px;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+
+  .edit-icon:hover {
+    background-color: var(--light);
+  }
+
+  .form-input:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+  }
+
+  .form-input:not(:disabled) {
+    background-color: white;
+    cursor: text;
+  }
+
+  .check-icon {
+    cursor: pointer;
+    color: green;
+    font-size: 18px;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    display: none;
+  }
+
+  .check-icon:hover {
+    background-color: var(--light);
+  }
+</style>
+</head>
+<body>
+<div class="header">
+<div class="header-content">
+<div class="brand">
           CodeHive
-          <img src="{{url_for('static', path='test4.png')}}" alt="CodeHive" width="40" height="35" />
-        </div>
-        <a href="/" class="loginandout">Logout</a>
-        <div style="width: 40px"></div>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="content">
-        <a href="/teacher/quiz/submissions" class="btn btn-secondary back-btn"
-          >← Back to Submissions</a
-        >
-        <h2 class="section-title" id="studentName">Student Solution</h2>
-
-        <div style="margin-bottom: 30px">
-          <h4
-            style="color: var(--primary); margin-bottom: 10px; font-size: 18px"
-          >
-            Teacher's Solution:
-          </h4>
-          <div class="solution-display">
-            <strong>Question 1:</strong> What is the derivative of x²?<br />
-            <strong>Answer:</strong> The derivative of x² is 2x<br /><br />
-
-            <strong>Question 2:</strong> State Newton's Second Law of Motion.<br />
-            <strong>Answer:</strong> Force = Mass × Acceleration (F = ma)<br /><br />
-
-            <strong>Question 3:</strong> What is the chemical formula for
-            water?<br />
-            <strong>Answer:</strong> H₂O (two hydrogen atoms and one oxygen
-            atom)
-          </div>
-        </div>
-
-        <div>
-          <h4
-            style="color: var(--primary); margin-bottom: 10px; font-size: 18px"
-          >
-            Student's Solution:
-          </h4>
-          <div class="solution-display" id="studentSolution">
-            <strong>Question 1:</strong> What is the derivative of x²?<br />
-            <strong>Answer:</strong> The derivative of x² is 2x ✓<br /><br />
-
-            <strong>Question 2:</strong> State Newton's Second Law of Motion.<br />
-            <strong>Answer:</strong> Force equals mass times acceleration (F =
-            ma) ✓<br /><br />
-
-            <strong>Question 3:</strong> What is the chemical formula for
-            water?<br />
-            <strong>Answer:</strong> H2O - two hydrogen atoms bonded with one
-            oxygen atom ✓
-          </div>
-        </div>
-
-        <div
-          style="
+<img src="{{url_for('static', path='test4.png')}}" alt="CodeHive" width="40" height="35" />
+</div>
+<a href="/" class="loginandout">Logout</a>
+<div style="width: 40px"></div>
+</div>
+</div>
+<div class="container">
+<div class="content">
+<a href="/professor/{{id}}/quiz/{{qid}}/submissions" class="btn btn-secondary back-btn"
+>← Back to Submissions</a
+>
+<h2 class="section-title" id="studentName">{{student.id}} - {{student.name}}</h2>
+<div style="margin-bottom: 30px">
+<h4
+style="color: var(--primary); margin-bottom: 10px; font-size: 18px"
+>
+{{response.quiz.title}}
+</h4>
+<div class="solution-display">
+<strong>Question :</strong> {{response.quiz.question}}<br />
+<strong>Sample Outputs :</strong> {{response.quiz.sample_sol}}<br />
+</div>
+</div>
+<div>
+<h4
+style="color: var(--primary); margin-bottom: 10px; font-size: 18px"
+>
+{{student.name}}'s Solution:
+</h4>
+<div class="solution-display" id="studentSolution">
+{{response.answer}}
+</div>
+</div>
+<form
+id="scoreForm"
+style="
             margin-top: 30px;
             padding: 20px;
             background: var(--light);
             border-radius: 10px;
           "
-        >
-          <h4 style="color: var(--primary); margin-bottom: 15px">
-            Grade & Feedback
-          </h4>
-          <div class="form-group">
-            <label class="form-label">Score</label>
-            <input
-              type="text"
-              class="form-input"
-              placeholder="e.g., 95/100"
-              style="max-width: 200px"
-            />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Feedback</label>
-            <textarea
-              class="form-textarea"
-              placeholder="Provide feedback to the student..."
-            ></textarea>
-          </div>
-          <button class="btn btn-primary" onclick="submitGrade()">
-            Submit Grade
-          </button>
-        </div>
-      </div>
-    </div>
+method="POST"
+action="/professor/{{id}}/quiz/{{qid}}/{{student.id}}/update-score"
+>
+<h4 style="color: var(--primary); margin-bottom: 15px">
+            Scores & Comments
+</h4>
+<div class="form-group">
+<label class="form-label">Score</label>
+<div class="score-edit-container">
+<input
+type="text"
+id="scoreInput"
+class="form-input"
+placeholder="e.g., 95/100"
+style="max-width: 200px"
+value="{{response.score}}"
+name="score"
+disabled
+/>
+<span class="edit-icon" id="editIcon" title="Edit score">
+✏️
+</span>
+<button type="submit" class="check-icon" id="checkIcon" title="Save score">
+✅
+</button>
+</div>
+</div>
+{% if response.mistakes %}
+<div class="form-group">
+<label class="form-label">Mistakes<br> {{response.mistakes}}</label>
+</div>
+{%endif%}
+{% if response.comments %}
+<div class="form-group">
+<label class="form-label">Comment<br> {{response.comments}}</label>
+</div>
+{%endif%}
+</form>
+</div>
+</div>
+<script>
+const editIcon = document.getElementById('editIcon');
+const checkIcon = document.getElementById('checkIcon');
+const scoreInput = document.getElementById('scoreInput');
+const scoreForm = document.getElementById('scoreForm');
 
-    <script>
-      // Get student info from URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const studentId = urlParams.get("student");
+// Click edit icon to enable input
+editIcon.addEventListener('click', function() {
+  scoreInput.disabled = false;
+  editIcon.style.display = 'none';
+  checkIcon.style.display = 'inline-block';
+  scoreInput.focus();
+  scoreInput.select();
+});
 
-      const studentData = {
-        1: {
-          name: "Emma Wilson",
-          solution: `<strong>Question 1:</strong> What is the derivative of x²?<br>
-                          <strong>Answer:</strong> The derivative of x² is 2x ✓<br><br>
-                          <strong>Question 2:</strong> State Newton's Second Law of Motion.<br>
-                          <strong>Answer:</strong> Force equals mass times acceleration (F = ma) ✓<br><br>
-                          <strong>Question 3:</strong> What is the chemical formula for water?<br>
-                          <strong>Answer:</strong> H2O - two hydrogen atoms bonded with one oxygen atom ✓`,
-        },
-        2: {
-          name: "James Brown",
-          solution: `<strong>Question 1:</strong> What is the derivative of x²?<br>
-                          <strong>Answer:</strong> 2x ✓<br><br>
-                          <strong>Question 2:</strong> State Newton's Second Law of Motion.<br>
-                          <strong>Answer:</strong> F = ma ✓<br><br>
-                          <strong>Question 3:</strong> What is the chemical formula for water?<br>
-                          <strong>Answer:</strong> H2O ✓`,
-        },
-        3: {
-          name: "Olivia Davis",
-          solution: `<strong>Question 1:</strong> What is the derivative of x²?<br>
-                          <strong>Answer:</strong> The derivative is 2x ✓<br><br>
-                          <strong>Question 2:</strong> State Newton's Second Law of Motion.<br>
-                          <strong>Answer:</strong> The acceleration of an object depends on the mass and the force applied (F=ma) ✓<br><br>
-                          <strong>Question 3:</strong> What is the chemical formula for water?<br>
-                          <strong>Answer:</strong> Water is H₂O ✓`,
-        },
-        4: {
-          name: "Noah Martinez",
-          solution: `<strong>Question 1:</strong> What is the derivative of x²?<br>
-                          <strong>Answer:</strong> 2x ✓<br><br>
-                          <strong>Question 2:</strong> State Newton's Second Law of Motion.<br>
-                          <strong>Answer:</strong> Force = mass * acceleration ✓<br><br>
-                          <strong>Question 3:</strong> What is the chemical formula for water?<br>
-                          <strong>Answer:</strong> H₂O ✓`,
-        },
-        5: {
-          name: "Sophia Anderson",
-          solution: `<strong>Question 1:</strong> What is the derivative of x²?<br>
-                          <strong>Answer:</strong> It's 2x because using the power rule ✓<br><br>
-                          <strong>Question 2:</strong> State Newton's Second Law of Motion.<br>
-                          <strong>Answer:</strong> F = m × a (Force equals mass multiplied by acceleration) ✓<br><br>
-                          <strong>Question 3:</strong> What is the chemical formula for water?<br>
-                          <strong>Answer:</strong> The formula is H₂O ✓`,
-        },
-      };
-
-      const student = studentData[studentId] || studentData["1"];
-      document.getElementById(
-        "studentName"
-      ).textContent = `${student.name}'s Solution`;
-      document.getElementById("studentSolution").innerHTML = student.solution;
-
-      function submitGrade() {
-        alert("Grade and feedback submitted successfully!");
-        window.history.back();
-      }
-    </script>
-  </body>
+// Allow saving with Enter key
+scoreInput.addEventListener('keypress', function(e) {
+  if (e.key === 'Enter' && !scoreInput.disabled) {
+    scoreForm.submit();
+  }
+});
+</script>
+</body>
 </html>
