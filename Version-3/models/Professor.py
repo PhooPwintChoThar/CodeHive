@@ -1,17 +1,16 @@
 import persistent
-from persistent import Persistent
+from persistent.list import PersistentList
 from models.Quiz import Quiz
-import random
 from models.Course import Course
 import globals
-import transaction
+
 
 
 class Professor(persistent.Persistent):
     def __init__(self, id = 0, name = ""):
         self.id = id
         self.name = name
-        self.courses = []
+        self.courses = PersistentList()
 
     def get_courses(self):
         return self.courses
