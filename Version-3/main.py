@@ -70,10 +70,6 @@ def startup_event():
         )
             
                 
-                
-    
-
-    
 @app.on_event("shutdown")
 def shutdown_event():
     if globals.connection:
@@ -252,6 +248,10 @@ def send_prompt(student_id:int, chat_id:int, question:str=Form(...)):
     
     return RedirectResponse(f"/student/{student_id}/chat/{chat_id}", status_code=303)
 
+@app.get("/student/{id}/profile", response_class=HTMLResponse)
+def show_profile(id:int, request:Request):
+    student=globals.root["students"][id]
+    return templates.TemplateResponse("student_profile.html",{"request":request, "student":student, "id":id} )
 
 
 @app.get("/professor/{id}/quizzes", response_class=HTMLResponse)
