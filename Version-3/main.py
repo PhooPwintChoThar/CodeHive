@@ -102,38 +102,48 @@ async def login(request:Request, user_id:int=Form(...)):
             "error": "Invalid ID. Please try again.",
             "version": int(time.time())
         })
-
-@app.get("/student/{id}/courses", response_class=HTMLResponse)
-async def show_courses(id:int, request:Request):
-    student=globals.root["students"][id]
-    courses=student.courses
+@app.get("/student/{id}/quizzes", response_class=HTMLResponse)
+async def show_quizzes(id: int, request: Request):
+    student = globals.root["students"][id]
+    quizzes = []
     
-    return templates.TemplateResponse("student_courses.html", {"request":request, "id":id, "courses":courses, "version": int(time.time())})
+    for course in student.courses:
+        for quiz in course.get_quizzes():
+            if quiz not in student.paticipated_quizzes:
+                quizzes.append(quiz)
 
-@app.get("/student/{id}/chat/{chatid}", response_class=HTMLResponse)
-async def show_chat(id:int, chatid:int, request:Request):
-    chatlist=globals.root["chat_histories"]
-    course_id=int(str(chatid)[len(str(id)):])
-    course=globals.root["courses"][course_id]
-    if chatid not in chatlist:
-        chatlist[chatid]=Chat_history.Chat_history(chatlist)
-        chatlist[chatid].messages.append({"role": "TA",
-                "content": "Hello! I'm your AI tutor. How can I help you with your studies today?"})
-        transaction.commit()
-    return templates.TemplateResponse("student_chat.html", {"request":request, "id":id, "course":course,"history":chatlist[chatid].messages,"chatid":chatid, "version": int(time.time())})
-
-@app.post("/student/{student_id}/chat/{chat_id}", response_class=HTMLResponse)
-def send_prompt(student_id:int, chat_id:int, question:str=Form(...)):
-    history=globals.root["chat_histories"][chat_id].messages
-    history.append({"role":"student", "content":question})
-    course_id=int(str(chat_id)[len(str(student_id)):])
-    course=globals.root["courses"][course_id]
-    filepath=course.file_path
-    print(filepath)
-    response=teacher_assistant.chat(question, filepath)
-    history.append({"role":"TA", "content":response})
+    quizzes = list(set(quizzes))
     
-    return RedirectResponse(f"/student/{student_id}/chat/{chat_id}", status_code=303)
+    quizzes.sort(key=lambda x: x.duedate, reverse=True)
+    
+    return templates.TemplateResponse(
+        "student_quizzes.html", 
+        {
+            "request": request, 
+            "student_id": id,  
+            "quizzes": quizzes, 
+            "version": int(time.time())
+        }
+    )
+   
+@app.get("/student/{sid}/quiz/{id}/solve", response_class=HTMLResponse)
+async def show_form(sid:int, id:int,request:Request):
+    quiz=globals.root["quizzes"][id]
+    return templates.TemplateResponse("student_quiz_answer.html", {"request":request, "quiz":quiz, "sid":sid, "version": int(time.time())})
+
+
+@app.post("/student/{sid}/quiz/{id}/submit", response_class=HTMLResponse)
+async def submit_quiz(request:Request, sid:int, id:int, student_code:str=Form(...)):
+    quiz=globals.root["quizzes"][id]
+    student=globals.root["students"][sid]
+    quiz.participated_students.append(student)
+    student.join_quiz(quiz)
+    calculated_result=code_evaluator.evaluate_code(quiz.question,quiz.sample_sol,student_code,quiz.languages,quiz.restriction,quiz.total_s)
+    print(calculated_result)
+    quizzes=[]
+    for c in student.courses:
+            quizzes+=c.get_quizzes()
+    return templates.TemplateResponse("student_quizzes.html", {"request":request, "student_id":sid,  "quizzes":quizzes, "version": int(time.time())})
 
 @app.get("/student/{id}/discussions", response_class=HTMLResponse)
 async def show_discussions(id:int, request:Request):
@@ -210,47 +220,37 @@ async def dislike_discussion(id:int, disc_id:int):
     transaction.commit()
     return {"likes": discussion.like_counts}
 
-@app.get("/student/{id}/quizzes", response_class=HTMLResponse)
-async def show_quizzes(id: int, request: Request):
-    student = globals.root["students"][id]
-    quizzes = []
+@app.get("/student/{id}/courses", response_class=HTMLResponse)
+async def show_courses(id:int, request:Request):
+    student=globals.root["students"][id]
+    courses=student.courses
     
-    for course in student.courses:
-        for quiz in course.get_quizzes():
-            if quiz not in student.paticipated_quizzes:
-                quizzes.append(quiz)
+    return templates.TemplateResponse("student_courses.html", {"request":request, "id":id, "courses":courses, "version": int(time.time())})
 
-    quizzes = list(set(quizzes))
-    
-    quizzes.sort(key=lambda x: x.duedate, reverse=True)
-    
-    return templates.TemplateResponse(
-        "student_quizzes.html", 
-        {
-            "request": request, 
-            "student_id": id,  
-            "quizzes": quizzes, 
-            "version": int(time.time())
-        }
-    )
-    
-@app.get("/student/{sid}/quiz/{id}/solve", response_class=HTMLResponse)
-async def show_form(sid:int, id:int,request:Request):
-    quiz=globals.root["quizzes"][id]
-    return templates.TemplateResponse("student_quiz_answer.html", {"request":request, "quiz":quiz, "sid":sid, "version": int(time.time())})
+@app.get("/student/{id}/chat/{chatid}", response_class=HTMLResponse)
+async def show_chat(id:int, chatid:int, request:Request):
+    chatlist=globals.root["chat_histories"]
+    course_id=int(str(chatid)[len(str(id)):])
+    course=globals.root["courses"][course_id]
+    if chatid not in chatlist:
+        chatlist[chatid]=Chat_history.Chat_history(chatlist)
+        chatlist[chatid].messages.append({"role": "TA",
+                "content": "Hello! I'm your AI tutor. How can I help you with your studies today?"})
+        transaction.commit()
+    return templates.TemplateResponse("student_chat.html", {"request":request, "id":id, "course":course,"history":chatlist[chatid].messages,"chatid":chatid, "version": int(time.time())})
 
-@app.post("/student/{sid}/quiz/{id}/submit", response_class=HTMLResponse)
-async def submit_quiz(request:Request, sid:int, id:int, student_code:str=Form(...)):
-    quiz=globals.root["quizzes"][id]
-    student=globals.root["students"][sid]
-    quiz.participated_students.append(student)
-    student.join_quiz(quiz)
-    calculated_result=code_evaluator.evaluate_code(quiz.question,quiz.sample_sol,student_code,quiz.title,quiz.restriction,quiz.total_s)
-    print(calculated_result)
-    quizzes=[]
-    for c in student.courses:
-            quizzes+=c.get_quizzes()
-    return templates.TemplateResponse("student_quizzes.html", {"request":request, "student_id":sid,  "quizzes":quizzes, "version": int(time.time())})
+@app.post("/student/{student_id}/chat/{chat_id}", response_class=HTMLResponse)
+def send_prompt(student_id:int, chat_id:int, question:str=Form(...)):
+    history=globals.root["chat_histories"][chat_id].messages
+    history.append({"role":"student", "content":question})
+    course_id=int(str(chat_id)[len(str(student_id)):])
+    course=globals.root["courses"][course_id]
+    filepath=course.file_path
+    print(filepath)
+    response=teacher_assistant.chat(question, filepath)
+    history.append({"role":"TA", "content":response})
+    
+    return RedirectResponse(f"/student/{student_id}/chat/{chat_id}", status_code=303)
 
 
 
@@ -269,11 +269,11 @@ async def show_create_quiz(id:int, request:Request):
 
 
 @app.post("/professor/{id}/quiz/new")
-async def create_quiz(request:Request,id:int, title:str=Form(...), course: int=Form(...), question:str=Form(...), sample_output:str=Form(...), duedate:date=Form(...), duration:int=Form(...),restriction:str=Form("None"), total_s:int=Form(...)):
+async def create_quiz(request:Request,id:int, title:str=Form(...), course: int=Form(...), question:str=Form(...), sample_output:str=Form(...), duedate:date=Form(...), duration:int=Form(...),restriction:str=Form("None"),languages:str=("Any") ,total_s:int=Form(...)):
     prof=globals.root["professors"][id]
     quiz_list = globals.root["quizzes"]
     quiz_id = max(quiz_list.keys()) + 1 if quiz_list else 1  
-    quiz = Quiz.Quiz(quiz_id, title, question, sample_output, duedate, duration, restriction, total_s)
+    quiz = Quiz.Quiz(quiz_id, title, question,languages, sample_output, duedate, duration, restriction, total_s)
     quiz.professor_id=id
     quiz.course_id=course
     globals.root["quizzes"][quiz_id] = quiz  
@@ -291,7 +291,6 @@ async def create_quiz(request:Request,id:int, title:str=Form(...), course: int=F
             "version": int(time.time())
         }
     )
-    
     
 
 @app.get("/professor/{id}/quiz/submissions", response_class=HTMLResponse)
