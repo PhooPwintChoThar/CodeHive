@@ -102,25 +102,64 @@ async def login(request:Request, user_id:int=Form(...)):
             "version": int(time.time())
         })
         
-        
+    
+
 @app.get("/student/{id}/quizzes", response_class=HTMLResponse)
 async def show_quizzes(id: int, request: Request):
     student = globals.root["students"][id]
     quizzes = []
+    
     for course in student.courses:
         for quiz in course.get_quizzes():
-            if quiz.id not in student.paticipated_quizzes:
-                quizzes.append(quiz)
+            quizzes.append({
+                "id": quiz.id,
+                "title": quiz.title,
+                "duedate": str(quiz.duedate),
+                "question": quiz.question,
+                "sample_sol": quiz.sample_sol,
+                "duration": quiz.duration,
+                "languages": quiz.languages,
+                "restriction": quiz.restriction,
+                "total_s": quiz.total_s
+            })
     
-    quizzes = list(set(quizzes))
-    quizzes.sort(key=lambda x: x.duedate, reverse=True)
+   
+    seen = set()
+    unique_quizzes = []
+    for quiz in quizzes:
+        if quiz["id"] not in seen:
+            seen.add(quiz["id"])
+            unique_quizzes.append(quiz)
+    
+  
+    unique_quizzes.sort(key=lambda x: x["duedate"], reverse=True)
+    
+
+    participated_quiz_ids = list(student.paticipated_quizzes)
+    
+ 
+    quiz_responses = {}
+    for quiz_id in participated_quiz_ids:
+        if quiz_id in globals.root["quizzes"]:
+            quiz = globals.root["quizzes"][quiz_id]
+            if id in quiz.participated_students:
+                rid = quiz.participated_students[id]
+                if rid in globals.root["responses"]:
+                    response = globals.root["responses"][rid]
+                    quiz_responses[quiz_id] = {
+                        "score": response.score,
+                        "mistakes": response.mistakes,
+                        "comments": response.comments
+                    }
     
     return templates.TemplateResponse(
         "student_quizzes.html",
         {
             "request": request,
             "student_id": id,
-            "quizzes": quizzes,
+            "quizzes": unique_quizzes,
+            "participated_quizzes": participated_quiz_ids,
+            "quiz_responses": quiz_responses,
             "version": int(time.time())
         }
     )
