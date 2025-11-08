@@ -133,6 +133,15 @@ disabled
 <label class="form-label">Comment<br> {{response.comments}}</label>
 </div>
 {%endif%}
+{% if response.system_log %}
+<div class="form-group">
+<label class="form-label">System Log<br> 
+  {%for log in response.system_log %}
+  <p>{{log}}</p><br>
+  {%endfor%}
+</label>
+</div>
+{%endif%}
 </form>
 </div>
 </div>
