@@ -2079,3 +2079,41 @@ body {
     margin-top: 1rem;
   }
 }
+
+  .score-edit-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .edit-icon {
+    cursor: pointer;
+    color: var(--primary);
+    font-size: 18px;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+
+  .edit-icon:hover {
+    background-color: var(--light);
+  }
+
+  .form-input:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+  }
+
+  .form-input:not(:disabled) {
+    background-color: white;
+    cursor: text;
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn:not(:disabled) {
+    cursor: pointer;
+  }
