@@ -4,7 +4,7 @@ import persistent.mapping
 class Discussion(persistent.Persistent):
     def __init__(self, id, student, topic, message, timestamp):
         self.id = id
-        self.student = student
+        self.student = student #id
         self.topic = topic
         self.message = message
         self.comment = persistent.mapping.PersistentMapping()

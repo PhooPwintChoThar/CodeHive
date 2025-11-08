@@ -1,19 +1,20 @@
 import persistent
-import bcrypt
-import ZODB, ZODB.FileStorage
-from datetime import date
+from persistent import Persistent
+
 class Quiz(persistent.Persistent):
-    def __init__(self, id = 0,title="Quiz", question = "", sample_sol = "",  duedate=date, duration=15,restriction = "", total_s = 5):
+    def __init__(self, id=0, title="", question="", sample_sol="", duedate=None, 
+                 duration=0, restriction="None", total_s=0):
         self.id = id
-        self.title=title
+        self.title = title
         self.question = question
         self.sample_sol = sample_sol
-        self.total_s = total_s
+        self.duedate = duedate
+        self.duration = duration
         self.restriction = restriction
-        self.participated_students = []
-        self.duedate=duedate
-        self.duration=duration
-        
+        self.total_s = total_s
+        self.participated_students = {}
+        self.professor_id = None  
+        self.course_id = None  
 
     def show_student_list(self):
         return self.participated_students

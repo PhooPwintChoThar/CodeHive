@@ -17,38 +17,14 @@ class Professor(persistent.Persistent):
         return self.courses
     
     def get_quizzes(self):
-        created_quizzes=[]
-        if self.courses:
-            for c in self.courses:
-                created_quizzes+=c.get_quizzes()
-        return created_quizzes
-    
-    def create_quiz(self, course, title, question, sample_output, duedate, duration, restriction, total_s):
-        quiz_list = globals.root["quizzes"]
-        course=globals.root["courses"][course]
-       
-
-        id = random.randint(100, 999)
-        while id in quiz_list:
-            id = random.randint(100, 999)
-        quiz = Quiz(id, title, question,  sample_output, duedate, duration, restriction, total_s)
-        course.quizzes.append(quiz)
-        quiz_list[id]=quiz
-        transaction.commit()
-
         
-    
-    def create_course(self, name, file_path, curriculum):
-        course_list=globals.root["courses"]
-        id = random.randint(100, 999)
-        while id in course_list:
-            id = random.randint(100, 999)
-
-        course = Course(id, name, self.id, file_path, curriculum)
-
-        self.courses.append(course)
-        course_list[id]=course
-        transaction.commit()
+        created_quizzes = []
+        for quiz_id in globals.root["quizzes"]:
+            if globals.root["quizzes"][quiz_id].professor_id == self.id:
+                    created_quizzes.append(globals.root["quizzes"][quiz_id])
+        
+        
+        return created_quizzes
        
 
 

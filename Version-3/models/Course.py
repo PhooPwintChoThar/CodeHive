@@ -3,18 +3,23 @@ import bcrypt
 import ZODB, ZODB.FileStorage
 from persistent import Persistent
 import transaction
-
+import globals
 class Course(persistent.Persistent):
-    def __init__(self, id = 0, name = "", professor = 0, file_path = "", curriculum=68, ):
+    def __init__(self, id = 0, name = "", file_path = "", curriculum=11, ):
         self.id = id
         self.name = name
-        self.professor = professor
+        self.professor= "Not Assigned"
         self.file_path = file_path
         self.enrolled_student = []
         self.curriculum=curriculum
-        self.quizzes=[]
+        
     
     def get_quizzes(self):
-        return self.quizzes
+        quizzes=[]
+        for quiz in globals.root["quizzes"]:
+            if globals.root["quizzes"][quiz].course_id==self.id:
+                quizzes.append(globals.root["quizzes"][quiz])
+        return quizzes
+                
 
     
