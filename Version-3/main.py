@@ -8,7 +8,7 @@ from ai_assistant import CodeEvaluator, TeacherAssistant
 import ZODB, ZODB.FileStorage
 import BTrees._OOBTree
 import transaction
-from models import Professor, Student, Discussion,Chat_history,Quiz,Course
+from models import Professor, Student, Discussion,Chat_history,Quiz,Course,Response
 import globals 
 from datetime import date,datetime
 from data import Courses, Students,Professors
@@ -28,7 +28,7 @@ def startup_event():
     globals.connection = globals.db.open()
     globals.root = globals.connection.root()
 
-    class_names = ['professors', 'courses', 'students', 'quizzes', 'discussions', 'chat_histories']
+    class_names = ['professors', 'courses', 'students', 'quizzes', 'discussions', 'chat_histories', 'responses']
     for c in class_names:
         if c not in globals.root:
             globals.root[c] = BTrees._OOBTree.BTree()
@@ -70,6 +70,10 @@ def startup_event():
         )
             
                 
+                
+    
+
+    
 @app.on_event("shutdown")
 def shutdown_event():
     if globals.connection:
@@ -86,10 +90,8 @@ async def show_home(request:Request):
 
 @app.post("/login")
 async def login(request:Request, user_id:int=Form(...)):
-    # Check if professor
     if user_id in globals.root["professors"]:
         return RedirectResponse(f"/professor/{user_id}/quizzes", status_code=303)
-    # Check if student
     elif user_id in globals.root["students"]:
         return RedirectResponse(f"/student/{user_id}/quizzes", status_code=303)
     else:
@@ -98,30 +100,29 @@ async def login(request:Request, user_id:int=Form(...)):
             "error": "Invalid ID. Please try again.",
             "version": int(time.time())
         })
+        
+        
 @app.get("/student/{id}/quizzes", response_class=HTMLResponse)
 async def show_quizzes(id: int, request: Request):
     student = globals.root["students"][id]
     quizzes = []
-    
     for course in student.courses:
         for quiz in course.get_quizzes():
-            if quiz not in student.paticipated_quizzes:
+            if quiz.id not in student.paticipated_quizzes:
                 quizzes.append(quiz)
-
-    quizzes = list(set(quizzes))
     
+    quizzes = list(set(quizzes))
     quizzes.sort(key=lambda x: x.duedate, reverse=True)
     
     return templates.TemplateResponse(
-        "student_quizzes.html", 
+        "student_quizzes.html",
         {
-            "request": request, 
-            "student_id": id,  
-            "quizzes": quizzes, 
+            "request": request,
+            "student_id": id,
+            "quizzes": quizzes,
             "version": int(time.time())
         }
     )
-   
 @app.get("/student/{sid}/quiz/{id}/solve", response_class=HTMLResponse)
 async def show_form(sid:int, id:int,request:Request):
     quiz=globals.root["quizzes"][id]
@@ -129,18 +130,39 @@ async def show_form(sid:int, id:int,request:Request):
 
 
 @app.post("/student/{sid}/quiz/{id}/submit", response_class=HTMLResponse)
-async def submit_quiz(request:Request, sid:int, id:int, student_code:str=Form(...)):
-    quiz=globals.root["quizzes"][id]
-    student=globals.root["students"][sid]
-    quiz.participated_students.append(student)
-    student.join_quiz(quiz)
-    calculated_result=code_evaluator.evaluate_code(quiz.question,quiz.sample_sol,student_code,quiz.languages,quiz.restriction,quiz.total_s)
+async def submit_quiz( sid: int, id: int, student_code: str = Form(...)):
+    quiz = globals.root["quizzes"][id]
+    student = globals.root["students"][sid]
+    
+    calculated_result = code_evaluator.evaluate_code(
+        quiz.question, quiz.sample_sol, student_code, 
+        quiz.languages, quiz.restriction, quiz.total_s
+    )
+    
+    res_list = globals.root["responses"]
+    res_id = max(res_list.keys()) + 1 if res_list else 1
+    
+    response = Response.Response(
+        res_id, quiz, student_code, calculated_result[0], 
+        calculated_result[1], calculated_result[2], datetime.now()
+    )
+    quiz.participated_students[sid] = res_id
+    quiz._p_changed = True  
+    
+    globals.root["responses"][res_id] = response
+    transaction.commit()
+    
+    student.join_quiz(id)
+    student._p_changed = True 
+    transaction.commit()
+    
     print(calculated_result)
-    quizzes=[]
+    quizzes = []
     for c in student.courses:
-            quizzes+=c.get_quizzes()
-    return templates.TemplateResponse("student_quizzes.html", {"request":request, "student_id":sid,  "quizzes":quizzes, "version": int(time.time())})
-
+        quizzes += c.get_quizzes()
+    
+    return RedirectResponse(f"/student/{sid}/quizzes", status_code=303)
+    
 @app.get("/student/{id}/discussions", response_class=HTMLResponse)
 async def show_discussions(id:int, request:Request):
     discussions = list(globals.root["discussions"].values())
@@ -254,6 +276,8 @@ def show_profile(id:int, request:Request):
     return templates.TemplateResponse("student_profile.html",{"request":request, "student":student, "id":id} )
 
 
+
+
 @app.get("/professor/{id}/quizzes", response_class=HTMLResponse)
 async def show_created_quizzes(request:Request, id:int):
     quizzes=globals.root["professors"][id].get_quizzes()
@@ -292,12 +316,40 @@ async def create_quiz(request:Request,id:int, title:str=Form(...), course: int=F
         }
     )
     
+    
 
-@app.get("/professor/{id}/quiz/submissions", response_class=HTMLResponse)
-async def show_quiz_submissions(id:int, request:Request):
-    return templates.TemplateResponse("teacher_submissions.html", {"request":request, "id":id, "version": int(time.time())})
+@app.get("/professor/{id}/quiz/{qid}/submissions", response_class=HTMLResponse)
+async def show_quiz_submissions(id:int,qid:int, request:Request):
+    quiz=globals.root["quizzes"][qid]
+    s_and_result={}
+    for s in quiz.participated_students:
+        stu=globals.root["students"][s]
+        res=globals.root["responses"][quiz.participated_students[s]]
+        s_and_result[stu]=res
+    return templates.TemplateResponse("teacher_submissions.html", {"request":request, "id":id, "quiz":quiz, "student_result_list":s_and_result, "version": int(time.time())})
 
 
-@app.get("/professor/{id}/quiz/responses", response_class=HTMLResponse)
-async def show_quiz_submissions(id:int, request:Request):
-    return templates.TemplateResponse("teacher_responses.html", {"request":request, "version": int(time.time())})
+@app.get("/professor/{id}/quiz/{qid}/{sid}/responses", response_class=HTMLResponse)
+async def show_quiz_submissions(id:int,qid:int, sid:int, request:Request):
+    quiz=globals.root["quizzes"][qid]
+    print(quiz.participated_students)
+    rid=quiz.participated_students[sid]
+    response=globals.root["responses"][rid]
+    student=globals.root["students"][sid]
+    return templates.TemplateResponse("teacher_responses.html", {"request":request,"response":response,"student":student,"id":id, "qid":qid, "version": int(time.time())})
+
+
+# Add this route to your app.py
+
+@app.post("/professor/{id}/quiz/{qid}/{sid}/update-score")
+async def update_score(id: int, qid: int, sid: int, score:int=Form(...) ):
+    
+    quiz=globals.root["quizzes"][qid]
+    if  score:    
+        if sid  in quiz.participated_students:
+            rid = quiz.participated_students[sid]
+            response = globals.root["responses"][rid]
+            response.score = score
+            response._p_changed = True
+            transaction.commit()
+    return RedirectResponse(f"/professor/{id}/quiz/{qid}/{sid}/responses", status_code=303)
