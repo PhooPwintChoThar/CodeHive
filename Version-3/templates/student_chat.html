@@ -69,71 +69,42 @@
         <a href="/student/{{id}}/courses" class="btn btn-secondary back-btn"
           >← Back to Courses</a
         >
-        <h2 class="section-title" id="chatCourseName">AI Tutor</h2>
+        <h2 class="section-title" id="chatCourseName">{{course.name}}</h2>
         <div class="chat-container">
-          <div class="chat-header">Ask me anything about your course!</div>
+          <div class="chat-header">Ask me anything about your {{course.name}} course</div>
           <div class="chat-messages" id="chatMessages">
+            {% for msg in history %}
+            {% if msg["role"] == "TA"%}
             <div class="message message-ai">
-              Hello! I'm your AI tutor. How can I help you with your studies
-              today?
+            {{msg["content"]}}
             </div>
+            {%else%}
+            <div class="message message-user">
+            {{msg["content"]}}
+            </div>
+            {%endif%}
+            {%endfor%}
           </div>
+          <form action="/student/{{id}}/chat/{{chatid}}" method="POST">
           <div class="chat-input-area">
             <input
               type="text"
               class="chat-input"
               id="chatInput"
               placeholder="Type your question..."
+              name="question"
             />
-            <button class="btn btn-primary" onclick="sendMessage()">
+            <button class="btn btn-primary" type="submit">
               Send
             </button>
           </div>
+        </form>
         </div>
       </div>
     </div>
 
     <script>
-      // Get course name from URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const courseName = urlParams.get("course") || "Course";
-      document.getElementById(
-        "chatCourseName"
-      ).textContent = `${courseName} - AI Tutor`;
-
-      function sendMessage() {
-        const input = document.getElementById("chatInput");
-        const message = input.value.trim();
-        if (message) {
-          const messagesDiv = document.getElementById("chatMessages");
-
-          const userMessage = document.createElement("div");
-          userMessage.className = "message message-user";
-          userMessage.textContent = message;
-          messagesDiv.appendChild(userMessage);
-
-          input.value = "";
-          messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-          // Simulate AI response
-          setTimeout(() => {
-            const aiMessage = document.createElement("div");
-            aiMessage.className = "message message-ai";
-            aiMessage.textContent = `Great question about ${courseName}! Let me help you understand that concept better. This is a simulated response - in a real application, this would connect to an AI service to provide detailed explanations tailored to your question.`;
-            messagesDiv.appendChild(aiMessage);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-          }, 1000);
-        }
-      }
-
-      // Send message on Enter key
-      document
-        .getElementById("chatInput")
-        .addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            sendMessage();
-          }
-        });
+  
     </script>
   </body>
 </html>

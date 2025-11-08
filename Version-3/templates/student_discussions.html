@@ -83,13 +83,13 @@
           <div class="discussion-card">
             <div class="discussion-post">
               <div class="post-header">
-                <span class="post-author">{{ discussion.student.name }}</span>
+                <span class="post-author">{{ student.name }}</span>
                 <div style="display: flex; align-items: center; gap: 15px">
                   <span class="post-time"
                     >{{ discussion.timestamp.strftime('%B %d, %Y at %I:%M %p')
                     }}</span
                   >
-                  {% if discussion.student.id == id %}
+                  {% if discussion.student == id %}
                   <div class="dropdown">
                     <button class="dropdown-btn" onclick="toggleDropdown(this)">
                       ⋮

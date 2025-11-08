@@ -69,11 +69,11 @@
         <h2 class="section-title">My Courses</h2>
         <div class="course-list">
           {%for c in courses%}
-          <a href="/student/{{id}}/chat/{{c.id}}" class="course-card">
+          <a href="/student/{{id}}/chat/{{id}}{{c.id}}" class="course-card">
             <div class="course-title">{{c.name}}</div>
             <div class="course-meta">
-              <span>{{c.professor}}</span>
-              <span>{{c.enrolled_student | length}}</span>
+              <span>Prof.{{c.professor}}</span>
+              <span>{{c.enrolled_student | length}} students enrolled</span>
             </div>
           </a>
           {%endfor%}
