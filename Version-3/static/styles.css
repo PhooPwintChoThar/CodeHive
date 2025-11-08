@@ -2117,3 +2117,59 @@ body {
   .btn:not(:disabled) {
     cursor: pointer;
   }
+
+
+      .lockdown-warning {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+
+      .lockdown-modal {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      .lockdown-modal h3 {
+        color: #d32f2f;
+        margin-bottom: 15px;
+        font-size: 20px;
+      }
+
+      .lockdown-modal p {
+        color: #666;
+        margin-bottom: 20px;
+        font-size: 16px;
+      }
+
+      .timer {
+        color: var(--primary);
+        font-size: 18px;
+        font-weight: bold;
+        margin: 15px 0;
+      }
+
+      .fullscreen-btn {
+        background-color: var(--primary);
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 15px;
+      }
+
+      .fullscreen-btn:hover {
+        background-color: var(--primary-dark);
+      }
