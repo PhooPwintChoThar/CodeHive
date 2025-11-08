@@ -51,6 +51,7 @@ def startup_event():
             if cr not in profe.courses:
                 cou=globals.root["courses"][cr]
                 profe.courses.append(cou)
+                profe._p_changed = True  
                 cou.professor=profe.name
         transaction.commit()
         
@@ -130,7 +131,9 @@ async def show_form(sid:int, id:int,request:Request):
 
 
 @app.post("/student/{sid}/quiz/{id}/submit", response_class=HTMLResponse)
-async def submit_quiz( sid: int, id: int, student_code: str = Form(...)):
+async def submit_quiz( sid: int, id: int, student_code: str = Form(...), system_log:str=Form(None)):
+    if not student_code:
+        student_code=""
     quiz = globals.root["quizzes"][id]
     student = globals.root["students"][sid]
     
@@ -146,6 +149,8 @@ async def submit_quiz( sid: int, id: int, student_code: str = Form(...)):
         res_id, quiz, student_code, calculated_result[0], 
         calculated_result[1], calculated_result[2], datetime.now()
     )
+    if system_log:
+        response.system_log=system_log.split('\n')
     quiz.participated_students[sid] = res_id
     quiz._p_changed = True  
     
