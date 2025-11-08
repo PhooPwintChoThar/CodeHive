@@ -1,95 +1,418 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EduHub - Student Dashboard</title>
-    <link
-      rel="stylesheet"
-      href="{{url_for('static', path='styles.css')}}?v={{ version }}"
-    />
-  </head>
-  <body>
-    <div class="header">
-      <div class="header-content">
-        <div class="brand">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduHub - Student Dashboard</title>
+<link
+rel="stylesheet"
+href="{{url_for('static', path='styles.css')}}?v={{ version }}"
+ />
+<style>
+  .filter-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 10px 20px;
+    border: 2px solid var(--primary);
+    background-color: white;
+    color: var(--primary);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+
+  .filter-btn:hover {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  .filter-btn.active {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  .quiz-section {
+    margin-bottom: 40px;
+  }
+
+  .section-header {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary);
+  }
+
+  .quiz-card {
+    display: block;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s;
+  }
+
+  .quiz-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .quiz-card.disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .quiz-card.disabled:hover {
+    box-shadow: none;
+    transform: none;
+  }
+
+  .quiz-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+
+  .quiz-meta {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  .quiz-status {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .status-badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .status-unparticipated {
+    background-color: #e3f2fd;
+    color: #1976d2;
+  }
+
+  .status-participated {
+    background-color: #e8f5e9;
+    color: #388e3c;
+  }
+
+  .status-overdue {
+    background-color: #ffebee;
+    color: #d32f2f;
+  }
+
+  .score-display {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--primary);
+  }
+
+  .mistakes-display {
+    font-size: 13px;
+    color: #f57c00;
+  }
+
+  .comments-display {
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+  }
+
+  .empty-message {
+    padding: 30px;
+    text-align: center;
+    color: #999;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
+  .no-quizzes {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+  }
+</style>
+</head>
+<body>
+<div class="header">
+<div class="header-content">
+<div class="brand">
           CodeHive
-          <img
-            src="{{url_for('static', path='test4.png')}}"
-            alt="CodeHive"
-            width="40"
-            height="35"
-          />
-        </div>
-        <div
-          class="tab"
-          style="
+<img
+src="{{url_for('static', path='test4.png')}}"
+alt="CodeHive"
+width="40"
+height="35"
+ />
+</div>
+<div
+class="tab"
+style="
             display: flex;
             flex: 1;
             justify-content: center;
             align-items: center;
           "
-        >
-          <span style="margin: 0 40px">
-            <a
-              href="/student/{{student_id}}/quizzes"
-              class="btn btn-tabs"
-              style="font-size: 16px"
-              >Quiz</a
-            >
-          </span>
-          <span style="margin: 0 40px">
-            <a
-              href="/student/{{student_id}}/discussions"
-              class="btn btn-tabs"
-              style="font-size: 16px"
-              >Discussion</a
-            >
-          </span>
-          <span style="margin: 0 40px">
-            <a
-              href="/student/{{student_id}}/courses"
-              class="btn btn-tabs"
-              style="font-size: 16px"
-              >Courses</a
-            >
-          </span>
-          <span style="margin: 0 40px">
-            <a
-              href="/student/{{student_id}}/profile"
-              class="btn btn-tabs"
-              style="font-size: 16px"
-              >Profile</a
-            >
-          </span>
-        </div>
-        <a href="/" class="loginandout" style="font-size: 16px">Logout</a>
-      </div>
-    </div>
+>
+<span style="margin: 0 40px">
+<a
+href="/student/{{student_id}}/quizzes"
+class="btn btn-tabs"
+style="font-size: 16px"
+>Quiz</a
+>
+</span>
+<span style="margin: 0 40px">
+<a
+href="/student/{{student_id}}/discussions"
+class="btn btn-tabs"
+style="font-size: 16px"
+>Discussion</a
+>
+</span>
+<span style="margin: 0 40px">
+<a
+href="/student/{{student_id}}/courses"
+class="btn btn-tabs"
+style="font-size: 16px"
+>Courses</a
+>
+</span>
+<span style="margin: 0 40px">
+<a
+href="/student/{{student_id}}/profile"
+class="btn btn-tabs"
+style="font-size: 16px"
+>Profile</a
+>
+</span>
+</div>
+<a href="/" class="loginandout" style="font-size: 16px">Logout</a>
+</div>
+</div>
+<div class="container">
+<div class="content">
+<h2 class="section-title">Available Quizzes</h2>
 
-    <div class="container">
-      <div class="content">
-        <h2 class="section-title">Available Quizzes</h2>
-        <div class="quiz-list">
-          {%for quiz in quizzes%}
-          <!-- directed to /quiz/solve-->
-          <a
-            href="/student/{{student_id}}/quiz/{{quiz.id}}/solve"
-            class="quiz-card"
-          >
-            <div class="quiz-title">{{quiz.title}}</div>
-            <div class="quiz-meta">
-              <span>📅 Due:{{quiz.duedate}}</span>
-            </div>
-          </a>
-          {%endfor%}
+<!-- Filter Buttons -->
+<div class="filter-container">
+  <button class="filter-btn active" data-filter="all">All Quizzes</button>
+  <button class="filter-btn" data-filter="unparticipated">Not Attempted</button>
+  <button class="filter-btn" data-filter="participated">Participated</button>
+  <button class="filter-btn" data-filter="overdue">Overdue</button>
+</div>
+
+<!-- Quizzes Container -->
+<div class="quiz-list">
+  <!-- Unparticipated Quizzes Section -->
+  <div id="unparticipatedSection" class="quiz-section">
+    <div class="section-header">📝 Not Yet Attempted</div>
+    <div id="unparticipatedQuizzes"></div>
+  </div>
+
+  <!-- Participated Quizzes Section -->
+  <div id="participatedSection" class="quiz-section" style="display: none;">
+    <div class="section-header">✅ Completed</div>
+    <div id="participatedQuizzes"></div>
+  </div>
+
+  <!-- Overdue Quizzes Section -->
+  <div id="overdueSection" class="quiz-section" style="display: none;">
+    <div class="section-header">⏰ Overdue</div>
+    <div id="overdueQuizzes"></div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+  // Quiz data from backend
+  const allQuizzes = {%if quizzes%}{{quizzes | safe}}{%else%}[]{%endif%};
+  const participatedQuizIds = {{participated_quizzes | safe}};
+  
+  // Parse quiz data from HTML if needed
+  const quizzes = [];
+  const participatedMap = {};
+  
+  // Extract quiz information from DOM
+  document.querySelectorAll('a.quiz-card').forEach(card => {
+    const title = card.querySelector('.quiz-title')?.textContent || '';
+    const dueDateText = card.querySelector('.quiz-meta')?.textContent || '';
+    const href = card.getAttribute('href');
+    const quizId = href.split('/').filter(x => x)[3]; // Extract quiz ID from URL
+    
+    quizzes.push({
+      id: quizId,
+      title: title,
+      duedate: dueDateText,
+      element: card
+    });
+  });
+
+  // Categorize quizzes
+  function categorizeQuizzes() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const unparticipated = [];
+    const participated = [];
+    const overdue = [];
+
+    quizzes.forEach(quiz => {
+      const dueDateStr = quiz.duedate.replace('📅 Due:', '').trim();
+      const dueDate = new Date(dueDateStr);
+      dueDate.setHours(0, 0, 0, 0);
+
+      const isParticipated = participatedQuizIds.includes(parseInt(quiz.id));
+
+      if (isParticipated) {
+        participated.push(quiz);
+      } else if (dueDate < today) {
+        overdue.push(quiz);
+      } else {
+        unparticipated.push(quiz);
+      }
+    });
+
+    return { unparticipated, participated, overdue };
+  }
+
+  const categorized = categorizeQuizzes();
+
+  // Render functions
+  function renderUnparticipated() {
+    const container = document.getElementById('unparticipatedQuizzes');
+    if (categorized.unparticipated.length === 0) {
+      container.innerHTML = '<div class="empty-message">No quizzes available</div>';
+      return;
+    }
+    container.innerHTML = categorized.unparticipated.map(quiz => `
+      <a href="/student/{{student_id}}/quiz/${quiz.id}/solve" class="quiz-card">
+        <div class="quiz-title">${quiz.title}</div>
+        <div class="quiz-meta">${quiz.duedate}</div>
+        <div class="quiz-status">
+          <span class="status-badge status-unparticipated">Not Started</span>
+        </div>
+      </a>
+    `).join('');
+  }
+
+  function renderParticipated() {
+    const container = document.getElementById('participatedQuizzes');
+    if (categorized.participated.length === 0) {
+      container.innerHTML = '<div class="empty-message">No completed quizzes</div>';
+      return;
+    }
+    
+    container.innerHTML = categorized.participated.map((quiz, idx) => {
+      // Get score, mistakes, and comments from page data
+      const responses = document.querySelectorAll('[data-response-id]');
+      let score = 'N/A', mistakes = '', comments = '';
+      
+      responses.forEach(resp => {
+        if (resp.getAttribute('data-quiz-id') === quiz.id) {
+          score = resp.getAttribute('data-score') || 'N/A';
+          mistakes = resp.getAttribute('data-mistakes') || '';
+          comments = resp.getAttribute('data-comments') || '';
+        }
+      });
+
+      return `
+        <div class="quiz-card">
+          <div class="quiz-title">${quiz.title}</div>
+          <div class="quiz-meta">${quiz.duedate}</div>
+          <div class="quiz-status">
+            <span class="status-badge status-participated">Completed</span>
+            <span class="score-display">Score: ${score}</span>
+          </div>
+          ${mistakes ? `<div class="mistakes-display">⚠️ Mistakes: ${mistakes}</div>` : ''}
+          ${comments ? `<div class="comments-display">💬 ${comments}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderOverdue() {
+    const container = document.getElementById('overdueQuizzes');
+    if (categorized.overdue.length === 0) {
+      container.innerHTML = '<div class="empty-message">No overdue quizzes</div>';
+      return;
+    }
+    
+    container.innerHTML = categorized.overdue.map(quiz => `
+      <div class="quiz-card disabled">
+        <div class="quiz-title">${quiz.title}</div>
+        <div class="quiz-meta">${quiz.duedate}</div>
+        <div class="quiz-status">
+          <span class="status-badge status-overdue">Overdue - Cannot Attempt</span>
         </div>
       </div>
-    </div>
-    {% if message %}
-    <script>
-      alert("{{ message }}");
-    </script>
-    {% endif %}
-  </body>
+    `).join('');
+  }
+
+  // Filter functionality
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      // Update active button
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+
+      const filter = this.getAttribute('data-filter');
+      const sections = {
+        unparticipatedSection: document.getElementById('unparticipatedSection'),
+        participatedSection: document.getElementById('participatedSection'),
+        overdueSection: document.getElementById('overdueSection')
+      };
+
+      // Hide all sections
+      Object.values(sections).forEach(section => section.style.display = 'none');
+
+      // Show selected sections
+      if (filter === 'all') {
+        Object.values(sections).forEach(section => section.style.display = 'block');
+      } else if (filter === 'unparticipated') {
+        sections.unparticipatedSection.style.display = 'block';
+      } else if (filter === 'participated') {
+        sections.participatedSection.style.display = 'block';
+      } else if (filter === 'overdue') {
+        sections.overdueSection.style.display = 'block';
+      }
+    });
+  });
+
+  // Initial render
+  renderUnparticipated();
+  renderParticipated();
+  renderOverdue();
+</script>
+
+{% if message %}
+<script>
+alert("{{ message }}");
+</script>
+{% endif %}
+</body>
 </html>
