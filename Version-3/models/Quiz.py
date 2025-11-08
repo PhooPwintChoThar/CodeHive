@@ -2,10 +2,11 @@ import persistent
 from persistent import Persistent
 
 class Quiz(persistent.Persistent):
-    def __init__(self, id=0, title="", question="", sample_sol="", duedate=None, 
+    def __init__(self, id=0, title="", question="", languages="Any", sample_sol="", duedate=None, 
                  duration=0, restriction="None", total_s=0):
         self.id = id
         self.title = title
+        self.languages=languages
         self.question = question
         self.sample_sol = sample_sol
         self.duedate = duedate
