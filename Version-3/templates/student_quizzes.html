@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub - Student Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', path='styles.css')}}?v={{ version }}"
+    />
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <div class="brand">
+          CodeHive
+          <img
+            src="{{url_for('static', path='test4.png')}}"
+            alt="CodeHive"
+            width="40"
+            height="35"
+          />
+        </div>
+        <div
+          class="tab"
+          style="
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{student_id}}/quizzes"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Quiz</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{student_id}}/discussions"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Discussion</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{student_id}}/courses"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Courses</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{id}}/profile"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Profile</a
+            >
+          </span>
+        </div>
+        <a href="/" class="loginandout" style="font-size: 16px">Logout</a>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="content">
+        <h2 class="section-title">Available Quizzes</h2>
+        <div class="quiz-list">
+          {%for quiz in quizzes%}
+          <!-- directed to /quiz/solve-->
+          <a
+            href="/student/{{student_id}}/quiz/{{quiz.id}}/solve"
+            class="quiz-card"
+          >
+            <div class="quiz-title">{{quiz.title}}</div>
+            <div class="quiz-meta">
+              <span>📅 Due:{{quiz.duedate}}</span>
+            </div>
+          </a>
+          {%endfor%}
+        </div>
+      </div>
+    </div>
+    {% if message %}
+    <script>
+      alert("{{ message }}");
+    </script>
+    {% endif %}
+  </body>
+</html>
