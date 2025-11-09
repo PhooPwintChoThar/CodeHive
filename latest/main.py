@@ -3,7 +3,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 import time
-from ai_assistant import CodeEvaluator, TeacherAssistant
+from ai_assistant import CodeEvaluator, TeacherAssistant,QuestionChecker
 #Database
 import ZODB, ZODB.FileStorage
 import BTrees._OOBTree
@@ -17,6 +17,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates=Jinja2Templates(directory="templates")
 code_evaluator=CodeEvaluator()
 teacher_assistant=TeacherAssistant()
+question_checker=QuestionChecker()
 
 
 @app.on_event("startup")
@@ -48,11 +49,11 @@ def startup_event():
             transaction.commit()
         profe=globals.root["professors"][p[0]]
         for cr in p[2]:
-            if cr not in profe.courses:
-                cou=globals.root["courses"][cr]
-                profe.courses.append(cou)
+            cous=globals.root["courses"][cr]
+            if cous not in profe.courses:
+                profe.courses.append(cous)
                 profe._p_changed = True  
-                cou.professor=profe.name
+                cous.professor=profe.name
         transaction.commit()
         
     
@@ -71,10 +72,6 @@ def startup_event():
         )
             
                 
-                
-    
-
-    
 @app.on_event("shutdown")
 def shutdown_event():
     if globals.connection:
@@ -103,7 +100,6 @@ async def login(request:Request, user_id:int=Form(...)):
         })
         
         
-# Replace your existing show_quizzes route with this
 
 @app.get("/student/{id}/quizzes", response_class=HTMLResponse)
 async def show_quizzes(id: int, request: Request):
@@ -346,32 +342,113 @@ async def show_create_quiz(id:int, request:Request):
     
     return templates.TemplateResponse("teacher_create_quiz.html", {"request":request, "id":id, "courses":courses, "version": int(time.time())})
 
+@app.post("/professor/{id}/quiz/validate")
+async def validate_question(id: int, request: Request):
+    """Validate question without creating quiz"""
+    try:
+        data = await request.json()
+        question = data.get('question')
+        course_id = data.get('course_id')
+        sample_output = data.get('sample_output')
+        restriction = data.get('restriction', 'None')
+
+        if course_id not in globals.root["courses"]:
+            return {"correct": False, "message": "Course not found"}
+        
+        course = globals.root["courses"][course_id]
+        course_name = course.name
+
+        question_check_result = question_checker.check(
+            question, 
+            course_name, 
+            sample_output, 
+            restriction
+        )
+
+        return question_check_result
+
+    except Exception as e:
+        print(f"Error validating question: {e}")
+        return {"correct": False, "message": f"Validation error: {str(e)}"}
+
 
 @app.post("/professor/{id}/quiz/new")
-async def create_quiz(request:Request,id:int, title:str=Form(...), course: int=Form(...), question:str=Form(...), sample_output:str=Form(...), duedate:date=Form(...), duration:int=Form(...),restriction:str=Form("None"),languages:str=("Any") ,total_s:int=Form(...)):
-    prof=globals.root["professors"][id]
-    quiz_list = globals.root["quizzes"]
-    quiz_id = max(quiz_list.keys()) + 1 if quiz_list else 1  
-    quiz = Quiz.Quiz(quiz_id, title, question,languages, sample_output, duedate, duration, restriction, total_s)
-    quiz.professor_id=id
-    quiz.course_id=course
-    globals.root["quizzes"][quiz_id] = quiz  
-    print(globals.root["quizzes"][quiz_id].title + " is added")
-    transaction.commit()
-    courses=prof.get_courses()
-    
-    return templates.TemplateResponse(
-        "teacher_create_quiz.html",
-        {
-            "request":request,
-            "id":id,
-            "courses":courses,
-            "message": "Quiz created successfully!",
-            "version": int(time.time())
-        }
-    )
-    
-    
+async def create_quiz(
+    request: Request,
+    id: int,
+    title: str = Form(...),
+    course: int = Form(...),
+    question: str = Form(...),
+    sample_output: str = Form(...),
+    duedate: date = Form(...),
+    duration: int = Form(...),
+    restriction: str = Form("None"),
+    languages: str = Form("Any"),
+    total_s: int = Form(...)
+):
+    try:
+        prof = globals.root["professors"][id]
+        course_obj = globals.root["courses"][course]
+        courses = prof.get_courses()
+
+        question_check_result = question_checker.check(
+            question, 
+            course_obj.name, 
+            sample_output, 
+            restriction
+        )
+
+        quiz_list = globals.root["quizzes"]
+        quiz_id = max(quiz_list.keys()) + 1 if quiz_list else 1
+        
+        quiz = Quiz.Quiz(
+            quiz_id, 
+            title, 
+            question, 
+            languages, 
+            sample_output, 
+            duedate, 
+            duration, 
+            restriction, 
+            total_s
+        )
+        quiz.professor_id = id
+        quiz.course_id = course
+        
+        globals.root["quizzes"][quiz_id] = quiz
+        quiz._p_changed = True
+        transaction.commit()
+        
+        print(globals.root["quizzes"][quiz_id].title + " is added")
+
+        success_message = "Quiz created successfully!"
+        
+        return templates.TemplateResponse(
+            "teacher_create_quiz.html",
+            {
+                "request": request,
+                "id": id,
+                "courses": courses,
+                "message": success_message,
+                "version": int(time.time())
+            }
+        )
+
+    except Exception as e:
+        print(f"Error creating quiz: {e}")
+        prof = globals.root["professors"][id]
+        courses = prof.get_courses()
+        
+        return templates.TemplateResponse(
+            "teacher_create_quiz.html",
+            {
+                "request": request,
+                "id": id,
+                "courses": courses,
+                "message": f"Error creating quiz: {str(e)}",
+                "version": int(time.time())
+            }
+        )
 
 @app.get("/professor/{id}/quiz/{qid}/submissions", response_class=HTMLResponse)
 async def show_quiz_submissions(id:int,qid:int, request:Request):
