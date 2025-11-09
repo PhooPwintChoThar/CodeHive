@@ -131,12 +131,14 @@ href="{{url_for('static', path='styles.css')}}?v={{ version }}"
   .mistakes-display {
     font-size: 13px;
     color: #f57c00;
+    margin-top: 8px;
   }
 
   .comments-display {
     font-size: 13px;
     color: #666;
     font-style: italic;
+    margin-top: 8px;
   }
 
   .empty-message {
@@ -148,10 +150,8 @@ href="{{url_for('static', path='styles.css')}}?v={{ version }}"
     font-size: 16px;
   }
 
-  .no-quizzes {
-    text-align: center;
-    padding: 40px;
-    color: #999;
+  .section-hidden {
+    display: none;
   }
 </style>
 </head>
@@ -218,195 +218,144 @@ style="font-size: 16px"
 
 <!-- Filter Buttons -->
 <div class="filter-container">
-  <button class="filter-btn active" data-filter="all">All Quizzes</button>
-  <button class="filter-btn" data-filter="unparticipated">Not Attempted</button>
-  <button class="filter-btn" data-filter="participated">Participated</button>
-  <button class="filter-btn" data-filter="overdue">Overdue</button>
+  <button class="filter-btn active" data-filter="all" onclick="filterQuizzes('all', event)">All Quizzes</button>
+  <button class="filter-btn" data-filter="unparticipated" onclick="filterQuizzes('unparticipated', event)">Not Attempted</button>
+  <button class="filter-btn" data-filter="participated" onclick="filterQuizzes('participated', event)">Participated</button>
+  <button class="filter-btn" data-filter="overdue" onclick="filterQuizzes('overdue', event)">Overdue</button>
 </div>
 
 <!-- Quizzes Container -->
 <div class="quiz-list">
+  <div id="allquizzesSection" class="quiz-section">
+    <div class="section-header">All Quizzes</div>
+    {% if quizzes %}
+      {% for quiz in quizzes %}
+          <!-- directed to /quiz/solve-->
+          <a
+            href="/student/{{student_id}}/quiz/{{quiz["id"]}}/solve"
+            class="quiz-card"
+          >
+            <div class="quiz-title">{{quiz["title"]}}</div>
+            <div class="quiz-meta">
+              <span>📅 Due:{{quiz["duedate"]}}</span>
+            </div>
+          </a>
+      {% endfor %}
+    {% else %}
+      <div class="empty-message">No unparticipated quizzes available</div>
+    {% endif %}
+  </div>
+  
   <!-- Unparticipated Quizzes Section -->
   <div id="unparticipatedSection" class="quiz-section">
     <div class="section-header">📝 Not Yet Attempted</div>
-    <div id="unparticipatedQuizzes"></div>
+    {% if unparticipated %}
+      {% for  quiz in unparticipated %}
+        <a href="/student/{{student_id}}/quiz/{{quiz["id"]}}/solve" class="quiz-card">
+          <div class="quiz-title">{{quiz["title"]}}</div>
+          <div class="quiz-meta">📅 Due: {{quiz["duedate"]}}</div>
+          <div class="quiz-status">
+            <span class="status-badge status-unparticipated">Not Started</span>
+          </div>
+        </a>
+      {% endfor %}
+    {% else %}
+      <div class="empty-message">No unparticipated quizzes available</div>
+    {% endif %}
   </div>
 
   <!-- Participated Quizzes Section -->
-  <div id="participatedSection" class="quiz-section" style="display: none;">
+  <div id="participatedSection" class="quiz-section">
     <div class="section-header">✅ Completed</div>
-    <div id="participatedQuizzes"></div>
+    {% if participated_quizzes %}
+      {% for quiz_id in participated_quizzes %}
+        {% for quiz in quizzes %}
+          {% if quiz["id"] == quiz_id %}
+            <div class="quiz-card">
+              <div class="quiz-title">{{quiz["title"]}}</div>
+              <div class="quiz-meta">📅 Due: {{quiz["duedate"]}}</div>
+              <div class="quiz-status">
+                <span class="status-badge status-participated">Completed</span>
+                <span class="score-display">Score: {{participated_quizzes[quiz_id]["score"]}}</span>
+              </div>
+              {% if participated_quizzes[quiz_id]["mistakes"] %}
+                <div class="mistakes-display">⚠️ Mistakes: {{participated_quizzes[quiz_id][mistakes]}}</div>
+              {% endif %}
+              {% if participated_quizzes[quiz_id]["comments"] %}
+                <div class="comments-display">💬 {{participated_quizzes[quiz_id]["comments"]}}</div>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    {% else %}
+      <div class="empty-message">No completed quizzes</div>
+    {% endif %}
   </div>
 
   <!-- Overdue Quizzes Section -->
-  <div id="overdueSection" class="quiz-section" style="display: none;">
+  <div id="overdueSection" class="quiz-section">
     <div class="section-header">⏰ Overdue</div>
-    <div id="overdueQuizzes"></div>
+    {% if overdue_quizzes %}
+      {% for quiz in overdue_quizzes %}
+        <div class="quiz-card disabled">
+          <div class="quiz-title">{{quiz.title}}</div>
+          <div class="quiz-meta">📅 Was Due: {{quiz.duedate}}</div>
+          <div class="quiz-status">
+            <span class="status-badge status-overdue">Overdue - Cannot Attempt</span>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-message">No overdue quizzes</div>
+    {% endif %}
   </div>
+
 </div>
 
 </div>
 </div>
 
 <script>
-  // Quiz data from backend
-  const allQuizzes = {%if quizzes%}{{quizzes | safe}}{%else%}[]{%endif%};
-  const participatedQuizIds = {{participated_quizzes | safe}};
+
+const sections = {
+  allquizzesSection :document.getElementById('allquizzesSection'),
+  unparticipatedSection: document.getElementById('unparticipatedSection'),
+  participatedSection: document.getElementById('participatedSection'),
+  overdueSection: document.getElementById('overdueSection')
+};
+
+// Hide all sections except allquizzesSection on page load
+window.addEventListener('load', function() {
+ 
+  // Hide all sections
+  Object.values(sections).forEach(section => section.classList.add('section-hidden'));
   
-  // Parse quiz data from HTML if needed
-  const quizzes = [];
-  const participatedMap = {};
+  // Show only allquizzesSection
+  sections.allquizzesSection.classList.remove('section-hidden');
+});
+function filterQuizzes(filterType, event) {
+  event.preventDefault();
   
-  // Extract quiz information from DOM
-  document.querySelectorAll('a.quiz-card').forEach(card => {
-    const title = card.querySelector('.quiz-title')?.textContent || '';
-    const dueDateText = card.querySelector('.quiz-meta')?.textContent || '';
-    const href = card.getAttribute('href');
-    const quizId = href.split('/').filter(x => x)[3]; // Extract quiz ID from URL
-    
-    quizzes.push({
-      id: quizId,
-      title: title,
-      duedate: dueDateText,
-      element: card
-    });
-  });
+  // Update active button
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
 
-  // Categorize quizzes
-  function categorizeQuizzes() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
 
-    const unparticipated = [];
-    const participated = [];
-    const overdue = [];
+  // Hide all sections
+  Object.values(sections).forEach(section => section.classList.add('section-hidden'));
 
-    quizzes.forEach(quiz => {
-      const dueDateStr = quiz.duedate.replace('📅 Due:', '').trim();
-      const dueDate = new Date(dueDateStr);
-      dueDate.setHours(0, 0, 0, 0);
-
-      const isParticipated = participatedQuizIds.includes(parseInt(quiz.id));
-
-      if (isParticipated) {
-        participated.push(quiz);
-      } else if (dueDate < today) {
-        overdue.push(quiz);
-      } else {
-        unparticipated.push(quiz);
-      }
-    });
-
-    return { unparticipated, participated, overdue };
+  // Show selected sections
+  if (filterType === 'all') {
+    sections.allquizzesSection.classList.remove('section-hidden');
+  } else if (filterType === 'unparticipated') {
+    sections.unparticipatedSection.classList.remove('section-hidden');
+  } else if (filterType === 'participated') {
+    sections.participatedSection.classList.remove('section-hidden');
+  } else if (filterType === 'overdue') {
+    sections.overdueSection.classList.remove('section-hidden');
   }
-
-  const categorized = categorizeQuizzes();
-
-  // Render functions
-  function renderUnparticipated() {
-    const container = document.getElementById('unparticipatedQuizzes');
-    if (categorized.unparticipated.length === 0) {
-      container.innerHTML = '<div class="empty-message">No quizzes available</div>';
-      return;
-    }
-    container.innerHTML = categorized.unparticipated.map(quiz => `
-      <a href="/student/{{student_id}}/quiz/${quiz.id}/solve" class="quiz-card">
-        <div class="quiz-title">${quiz.title}</div>
-        <div class="quiz-meta">${quiz.duedate}</div>
-        <div class="quiz-status">
-          <span class="status-badge status-unparticipated">Not Started</span>
-        </div>
-      </a>
-    `).join('');
-  }
-
-  function renderParticipated() {
-    const container = document.getElementById('participatedQuizzes');
-    if (categorized.participated.length === 0) {
-      container.innerHTML = '<div class="empty-message">No completed quizzes</div>';
-      return;
-    }
-    
-    container.innerHTML = categorized.participated.map((quiz, idx) => {
-      // Get score, mistakes, and comments from page data
-      const responses = document.querySelectorAll('[data-response-id]');
-      let score = 'N/A', mistakes = '', comments = '';
-      
-      responses.forEach(resp => {
-        if (resp.getAttribute('data-quiz-id') === quiz.id) {
-          score = resp.getAttribute('data-score') || 'N/A';
-          mistakes = resp.getAttribute('data-mistakes') || '';
-          comments = resp.getAttribute('data-comments') || '';
-        }
-      });
-
-      return `
-        <div class="quiz-card">
-          <div class="quiz-title">${quiz.title}</div>
-          <div class="quiz-meta">${quiz.duedate}</div>
-          <div class="quiz-status">
-            <span class="status-badge status-participated">Completed</span>
-            <span class="score-display">Score: ${score}</span>
-          </div>
-          ${mistakes ? `<div class="mistakes-display">⚠️ Mistakes: ${mistakes}</div>` : ''}
-          ${comments ? `<div class="comments-display">💬 ${comments}</div>` : ''}
-        </div>
-      `;
-    }).join('');
-  }
-
-  function renderOverdue() {
-    const container = document.getElementById('overdueQuizzes');
-    if (categorized.overdue.length === 0) {
-      container.innerHTML = '<div class="empty-message">No overdue quizzes</div>';
-      return;
-    }
-    
-    container.innerHTML = categorized.overdue.map(quiz => `
-      <div class="quiz-card disabled">
-        <div class="quiz-title">${quiz.title}</div>
-        <div class="quiz-meta">${quiz.duedate}</div>
-        <div class="quiz-status">
-          <span class="status-badge status-overdue">Overdue - Cannot Attempt</span>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  // Filter functionality
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      // Update active button
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-
-      const filter = this.getAttribute('data-filter');
-      const sections = {
-        unparticipatedSection: document.getElementById('unparticipatedSection'),
-        participatedSection: document.getElementById('participatedSection'),
-        overdueSection: document.getElementById('overdueSection')
-      };
-
-      // Hide all sections
-      Object.values(sections).forEach(section => section.style.display = 'none');
-
-      // Show selected sections
-      if (filter === 'all') {
-        Object.values(sections).forEach(section => section.style.display = 'block');
-      } else if (filter === 'unparticipated') {
-        sections.unparticipatedSection.style.display = 'block';
-      } else if (filter === 'participated') {
-        sections.participatedSection.style.display = 'block';
-      } else if (filter === 'overdue') {
-        sections.overdueSection.style.display = 'block';
-      }
-    });
-  });
-
-  // Initial render
-  renderUnparticipated();
-  renderParticipated();
-  renderOverdue();
+}
 </script>
 
 {% if message %}
