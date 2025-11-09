@@ -1,0 +1,25 @@
+import persistent
+from persistent.list import PersistentList
+
+class Student(persistent.Persistent):
+    def __init__(self, id=0, name="", batch=68):
+        self.id = id
+        self.name = name
+        self.paticipated_quizzes = PersistentList() 
+        self.discussions = PersistentList()  
+        self.courses = PersistentList()  
+        self.chats = PersistentList()  
+        self.batch = batch
+
+    def join_quiz(self, quiz_id):
+        if quiz_id not in self.paticipated_quizzes:
+            self.paticipated_quizzes.append(quiz_id)
+            self._p_changed = True  
+    
+    def enroll_course(self, course):
+        self.courses.append(course)
+        course.enrolled_student.append(self.id)
+
+
+
+
