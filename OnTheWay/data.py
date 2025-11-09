@@ -1,0 +1,161 @@
+Courses = [[1006710, "INTRODUCTION TO CALCULUS", "lecture/IntroductionToCalculus", 11],
+ [1286111, "CIRCUITS AND ELECTRONICS", "lecture/CircuitsAndElectronics", 11],
+ [1286120, "ELEMENTARY SYSTEMS PROGRAMMING", "lecture/ElementarySystemsProgramming", 11],
+ [1286121, "COMPUTER PROGRAMMING", "lecture/ComputerProgramming", 11],
+ [96642170, "INTRODUCTION TO LOGIC", "lecture/IntroductionToLogic", 11],
+ [1006717, "DIFFERENTIAL EQUATIONS", "lecture/DifferentialEquations", 12],
+ [1006718, "DISCRETE MATHEMATICS", "lecture/DiscreteMathematics", 12],
+ [1286112, "DIGITAL SYSTEM FUNDAMENTALS", "lecture/DigitalSystemFundamentals", 12],
+ [1286131, "OBJECT-ORIENTED PROGRAMMING", "lecture/ObjectOrientedProgramming", 12],
+ [1006730, "PROBABILITY MODELS AND DATA ANALYSIS", "lecture/ProbabilityModelsAndDataAnalysis", 21],
+ [1286213, "COMPUTER ARCHITECTURE AND ORGANIZATION", "lecture/ComputerArchitectureAndOrganization", 21],
+ [1286222, "DATA STRUCTURES AND ALGORITHMS", "lecture/DataStructuresAndAlgorithms", 21],
+ [1286233, "WEB PROGRAMMING", "lecture/WebProgramming", 21],
+ [1006716, "LINEAR ALGEBRA", "lecture/LinearAlgebra", 22],
+ [1286223, "COMPUTER NETWORKS", "lecture/ComputerNetworks", 22],
+ [1286228, "ALGORITHM DESIGN AND ANALYSIS", "lecture/AlgorithmDesignAndAnalysis", 22],
+ [1286232, "SOFTWARE ENGINEERING PRINCIPLES", "lecture/SoftwareEngineeringPrinciples", 22],
+ [1286241, "DATABASE SYSTEMS", "lecture/DatabaseSystems", 22],
+ [1286391, "SEMINAR IN SOFTWARE ENGINEERING", "lecture/SeminarInSoftwareEngineering", 22],
+ [96642022, "PHILOSOPHY OF SCIENCE", "lecture/PhilosophyOfScience", 22]]
+
+Students = [[67011073, "Adisorn Numpradit", 67],
+ [67011087, "Bhawat Kolkitchaiwan", 67],
+ [67011090, "Chananyu Chinnawuth", 67],
+ [67011093, "Chavit Saritdeechaikul", 67],
+ [67011096, "Chayut Panangkasiri", 67],
+ [67011103, "Chirawad Koollachote", 67],
+ [67011110, "Ebboonya Srisook", 67],
+ [67011118, "Hsu Myat Shwe Sin", 67],
+ [67011140, "Khanin Chuanchaisit", 67],
+ [67011152, "Koses Suyarnasuddhi", 67],
+ [67011155, "Kyi Thant Sin", 67],
+ [67011177, "Napatrapee Chieowwit", 67],
+ [67011212, "Nuttamon Ketkaeo", 67],
+ [67011235, "Paphavee Yanmook", 67],
+ [67011247, "Payut Kapsuwan", 67],
+ [67011287, "Ramida Laphasphokin", 67],
+ [67011297, "Sarun Rattanapan", 67],
+ [67011300, "Singchayapon Kliengma", 67],
+ [67011304, "Sirapop Satarntraipope", 67],
+ [67011318, "Supichaya Ratanaopas", 67],
+ [67011322, "Switchaya Chintawan", 67],
+ [67011336, "Thanaphat Chongkananurak", 67],
+ [67011352, "Theepakorn Phayonrat", 67],
+ [67011353, "Theepapon Khwanna", 67],
+ [67011362, "Thunthanut Teemaethawee", 67],
+ [67011596, "Han Ni Aung", 67],
+ [67011615, "La Min Maung", 67],
+ [67011619, "May Nyein Chan", 67],
+ [67011627, "Nopparath Nonraksanukul", 67],
+ [67011628, "Norrapat Nimdit", 67],
+ [67011637, "Passakorn Yangnithichalothorn", 67],
+ [67011638, "Pasu Leelahajiva", 67],
+ [67011642, "Phone Myat Pyae Sone", 67],
+ [67011653, "Saw Zi Dunn", 67],
+ [67011669, "Theerasan Saisutat", 67],
+ [67011725, "San Aung", 67],
+ [67011731, "Thiri Thaw", 67],
+ [67011755, "Phoo Pwint Cho Thar", 67],
+ [68011278, "ANANDA STALLARD", 68],
+ [68011284, "ARKAR ZAW HTET", 68],
+ [68011298, "BHURIPAT RUEDEESIRICHOT", 68],
+ [68011303, "CHAN MYAE SAN", 68],
+ [68011315, "CHITSANUPONG KITILERTNAPAKORN", 68],
+ [68011316, "CHITSNUCHA KRIMJAI", 68],
+ [68011322, "DAVID SENECLAUZE", 68],
+ [68011334, "GUSE LEE", 68],
+ [68011350, "JEERAPATR SRIMAHA-EK", 68],
+ [68011354, "JIRAMET HARNJAN", 68],
+ [68011361, "KAMPANAT WONGNIN", 68],
+ [68011367, "KHANT HTAY", 68],
+ [68011370, "KONGPHOP THONSUNGNOEN", 68],
+ [68011378, "KWANCHANOK RUCHIVANICHKUL", 68],
+ [68011392, "NAPAT TESRUMPUN", 68],
+ [68011405, "NATTAWAT REVTRAKUL", 68],
+ [68011409, "NICHAPA MATTAYANPOL", 68],
+ [68011410, "NIPPIT TORAKTRAKUL", 68],
+ [68011414, "NOPPAKORN KRABBOONMA", 68],
+ [68011433, "PANNATAT THONGKAM", 68],
+ [68011440, "PARAVEE KESSIMLEE", 68],
+ [68011471, "PICHAYAWADEE WANICHANONT", 68],
+ [68011480, "PODCHARA TRAIRATTANAWARAPORN", 68],
+ [68011488, "PRAKHUN TANTAWIWAT", 68],
+ [68011492, "PUMIPAT HOAPRAPAI", 68],
+ [68011495, "PUNNAWIT BUKHUNTOD", 68],
+ [68011503, "RATCHAPOL INBUMRUNG", 68],
+ [68011517, "SIRAPONG SAICHAMCHAN", 68],
+ [68011531, "SUPICHAYA LEELAHAVANICKHKUL", 68],
+ [68011537, "TANAMATE CHOMEWONG", 68],
+ [68011540, "TANAPHUM CHULLAPAK", 68],
+ [68011541, "TANATORN KAMONRATTANAMONGKON", 68],
+ [68011542, "TATSUHIRO NODA", 68],
+ [68011550, "THAMMATAT SRISITTIDECHARAK", 68],
+ [68011553, "THANANUTTAPHON MUANGYOUNG", 68],
+ [68011560, "THARATHEP LAOHAVIROJ", 68],
+ [68011564, "THEERADAMRONG SINPITAK", 68],
+ [68011567, "THEINT NO NO AUNG", 68],
+ [68011570, "THIRADEJ CHUENCHOM", 68],
+ [68011576, "TUCCHAPONG SINGHADECH", 68],
+ [68011581, "VIRULPATCH SUTDHAKORN", 68],
+ [68011583, "VORRAPHOP RUKSATMAN", 68],
+ [68011590, "WATCHARAWEE TANTIPANYATHEP", 68],
+ [68011599, "WORRARUETHAI SRISUPARBH", 68],
+ [68011604, "ZIN MYO LATT", 68],
+ [68011860, "ACHIRAWAT NIKROPITAK", 68],
+ [68011892, "KRITCHAI TANGYINGYONG", 68],
+ [68011904, "NONJAKKORN BOONSAKLERT", 68],
+ [68011937, "PYAE KAUNG", 68],
+ [68011950, "SIWAT SRISOMBOON", 68],
+ [68011956, "SYED SAAIM ASIF CHASHOO", 68],
+ [68011963, "THANAKORN PORNTHANACHAI", 68],
+ [68011975, "YE KHAUNG SOE", 68],
+ [68011977, "YOONSUNG CHOI", 68],
+ [68011982, "CHANUN NUNTHASUMREUNG", 68],
+ [68011998, "SAN WIN", 68]]
+
+Professors = [[100, "RONNACHAI TIYARATTANACHAI", [1006710, 1006717]],
+ [101, "KASIN VICHIENCHOM", [1286111]],
+ [102, "VISIT HIRANKITTI", [1286120, 1286121, 1286131, 1286213, 1286233, 1286232, 1286391, 96642022]],
+ [103, "NATTHAPONG JUNGTEERAPANICH", [96642170, 1286228]],
+ [104, "VEERA BOONJING", [1006718]],
+ [105, "SURIPON SOMKUARNPANIT", [1286112]],
+ [106, "PANARAT CHERNTANOMWONG", [1006730]],
+ [107, "SUNTANA OUDOMYING", [1286222]],
+ [108, "UDOM JANJARASSUK", [1006716]],
+ [109, "PIPAT SOOKVATANA", [1286223]],
+ [110, "SUPHAMIT CHITTAYASOTHORN", [1286241]]]
+
+SKILLS=["Mathematical & Analytical Skills","Programming & Software Development Skills", "Computer Systems & Hardware Skills","Data & Networking Skills"]
+"""
+1. Mathematical & Analytical Skills
+Courses:
+Calculus
+Differential Equations
+Discrete Mathematics
+Linear Algebra
+Probability Models & Data Analysis
+Introduction to Logic
+Philosophy of Science
+
+2. Programming & Software Development Skills
+Courses:
+Computer Programming
+Elementary Systems Programming
+Object-Oriented Programming
+Data Structures & Algorithms
+Algorithm Design & Analysis
+Software Engineering Principles
+Seminar in Software Engineering
+Web Programming
+
+3. Computer Systems & Hardware Skills
+Courses:
+Circuits and Electronics
+Digital System Fundamentals
+Computer Architecture & Organization
+4. Data & Networking Skills
+Courses:
+Database Systems
+Computer Networks
+"""
