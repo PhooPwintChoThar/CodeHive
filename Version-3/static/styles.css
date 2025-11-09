@@ -725,7 +725,7 @@ iframe {
   border-color: var(--secondary);
 }
 .form-textarea {
-  min-height: 100px;
+  min-height: 400px;
   resize: vertical;
   font-family: inherit;
 }
@@ -2080,96 +2080,45 @@ body {
   }
 }
 
-  .score-edit-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+.score-edit-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-  .edit-icon {
-    cursor: pointer;
-    color: var(--primary);
-    font-size: 18px;
-    padding: 5px;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-  }
+.edit-icon {
+  cursor: pointer;
+  color: var(--primary);
+  font-size: 18px;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
 
-  .edit-icon:hover {
-    background-color: var(--light);
-  }
+.edit-icon:hover {
+  background-color: var(--light);
+}
 
-  .form-input:disabled {
-    background-color: #f5f5f5;
-    cursor: not-allowed;
-  }
+.response-form-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
 
-  .form-input:not(:disabled) {
-    background-color: white;
-    cursor: text;
-  }
+.response-form-input:not(:disabled) {
+  background-color: white;
+  cursor: text;
+}
 
-  .btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+.check-icon {
+  cursor: pointer;
+  color: green;
+  font-size: 18px;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  display: none;
+}
 
-  .btn:not(:disabled) {
-    cursor: pointer;
-  }
-
-
-      .lockdown-warning {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.7);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-      }
-
-      .lockdown-modal {
-        background-color: white;
-        padding: 30px;
-        border-radius: 10px;
-        text-align: center;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      }
-
-      .lockdown-modal h3 {
-        color: #d32f2f;
-        margin-bottom: 15px;
-        font-size: 20px;
-      }
-
-      .lockdown-modal p {
-        color: #666;
-        margin-bottom: 20px;
-        font-size: 16px;
-      }
-
-      .timer {
-        color: var(--primary);
-        font-size: 18px;
-        font-weight: bold;
-        margin: 15px 0;
-      }
-
-      .fullscreen-btn {
-        background-color: var(--primary);
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-        margin-top: 15px;
-      }
-
-      .fullscreen-btn:hover {
-        background-color: var(--primary-dark);
-      }
+.check-icon:hover {
+  background-color: var(--light);
+}
