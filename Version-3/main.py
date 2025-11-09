@@ -102,13 +102,15 @@ async def login(request:Request, user_id:int=Form(...)):
             "version": int(time.time())
         })
         
-    
+        
+# Replace your existing show_quizzes route with this
 
 @app.get("/student/{id}/quizzes", response_class=HTMLResponse)
 async def show_quizzes(id: int, request: Request):
     student = globals.root["students"][id]
     quizzes = []
     
+    # Get all available quizzes from student's courses
     for course in student.courses:
         for quiz in course.get_quizzes():
             quizzes.append({
@@ -123,21 +125,20 @@ async def show_quizzes(id: int, request: Request):
                 "total_s": quiz.total_s
             })
     
-   
-    seen = set()
-    unique_quizzes = []
+    overdue_quizzes = []
     for quiz in quizzes:
-        if quiz["id"] not in seen:
-            seen.add(quiz["id"])
-            unique_quizzes.append(quiz)
-    
-  
-    unique_quizzes.sort(key=lambda x: x["duedate"], reverse=True)
-    
+        duedate = datetime.fromisoformat(quiz["duedate"])
 
-    participated_quiz_ids = list(student.paticipated_quizzes)
+        now = datetime.now()
+
+        is_overdue = now > duedate
+        
+        if is_overdue:
+            overdue_quizzes.append(quiz)
     
- 
+    
+    participated_quiz_ids = list(student.paticipated_quizzes)
+    unparticipated={}
     quiz_responses = {}
     for quiz_id in participated_quiz_ids:
         if quiz_id in globals.root["quizzes"]:
@@ -151,15 +152,19 @@ async def show_quizzes(id: int, request: Request):
                         "mistakes": response.mistakes,
                         "comments": response.comments
                     }
+            else:
+                unparticipated[quiz_id]=quizzes[quiz_id]
+                
     
     return templates.TemplateResponse(
         "student_quizzes.html",
         {
             "request": request,
             "student_id": id,
-            "quizzes": unique_quizzes,
-            "participated_quizzes": participated_quiz_ids,
-            "quiz_responses": quiz_responses,
+            "quizzes": quizzes,
+            "participated_quizzes": quiz_responses,
+            "overdue_quizzes": overdue_quizzes,
+            "unparticipated":unparticipated,
             "version": int(time.time())
         }
     )
