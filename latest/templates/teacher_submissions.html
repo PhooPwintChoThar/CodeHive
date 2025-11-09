@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub - Quiz Submissions</title>
+    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <div class="brand">
+          CodeHive
+          <img
+            src="{{url_for('static', path='test4.png')}}"
+            alt="CodeHive"
+            width="40"
+            height="35"
+          />
+        </div>
+        <a href="/" class="loginandout">Logout</a>
+        <div style="width: 40px"></div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="content">
+        <a href="/professor/{{id}}/quizzes" class="btn btn-secondary back-btn"
+          >← Back to Quizzes</a
+        >
+        <h2 class="section-title" id="submissionQuizTitle">Quiz Submissions</h2>
+        <div class="student-list">
+          {%for student in student_result_list%}
+          <a
+            href="/professor/{{id}}/quiz/{{quiz.id}}/{{student.id}}/responses"
+            class="student-item"
+          >
+            <div>
+              <div class="student-name">{{student.name}}</div>
+              <div class="student-score">
+                {{student_result_list[student].score.replace('[',
+                '').replace(']', '')}}
+              </div>
+              <div class="student-time">
+                Submitted: {{student_result_list[student].submitted_time}}
+              </div>
+            </div>
+            <span>→</span>
+          </a>
+          {%endfor%}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
