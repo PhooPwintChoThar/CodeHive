@@ -10,6 +10,7 @@ class Response(persistent.Persistent):
         self.mistakes=mistakes
         self.comments=comments
         self.submitted_time=time_stamp
+        self.system_log=None
         
         
 
