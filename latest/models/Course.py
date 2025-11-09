@@ -1,8 +1,5 @@
 import persistent
-import bcrypt
-import ZODB, ZODB.FileStorage
-from persistent import Persistent
-import transaction
+from persistent.list import PersistentList
 import globals
 class Course(persistent.Persistent):
     def __init__(self, id = 0, name = "", file_path = "", curriculum=11, ):
@@ -10,7 +7,7 @@ class Course(persistent.Persistent):
         self.name = name
         self.professor= "Not Assigned"
         self.file_path = file_path
-        self.enrolled_student = []
+        self.enrolled_student = PersistentList()
         self.curriculum=curriculum
         
     
