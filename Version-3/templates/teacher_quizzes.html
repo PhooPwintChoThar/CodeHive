@@ -4,17 +4,47 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EduHub - Teacher Dashboard</title>
-    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}" />
   </head>
   <body>
     <div class="header">
       <div class="header-content">
         <div class="brand">
           CodeHive
-          <img src="{{url_for('static', path='test4.png')}}" alt="CodeHive" width="40" height="35" />
+          <img
+            src="{{url_for('static', path='test4.png')}}"
+            alt="CodeHive"
+            width="40"
+            height="35"
+          />
         </div>
-        <a href="/" class="loginandout">Logout</a>
-        <div style="width: 40px"></div>
+        <div
+          class="tab"
+          style="
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{id}}/quizzes"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Quiz</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{id}}/discussions"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Courses</a
+            >
+          </span>
+        </div>
+        <a href="/" class="loginandout" style="font-size: 16px">Logout</a>
       </div>
     </div>
     <div class="container">
@@ -37,7 +67,10 @@
         </div>
         <div class="quiz-list">
           {%for q in quizzes %}
-          <a href="/professor/{{id}}/quiz/{{q.id}}/submissions" class="quiz-card">
+          <a
+            href="/professor/{{id}}/quiz/{{q.id}}/submissions"
+            class="quiz-card"
+          >
             <div class="quiz-title">{{q.title}}</div>
             <div class="quiz-meta">
               <span>📅 Created:{{q.duedate}}</span>
