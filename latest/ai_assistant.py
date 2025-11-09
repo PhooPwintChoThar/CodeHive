@@ -1,5 +1,6 @@
 from openai import OpenAI
 import os
+import re
 
 def getAPI():
     return OpenAI(
@@ -238,4 +239,90 @@ class TeacherAssistant:
         except Exception as e:
             raise RuntimeError(f"Error processing question: {e}")
 
+class QuestionChecker:
+        def __init__(self):
+            self.client = getAPI()
+        
+        def check(self, question:str, course, sample_outputs="not provided", restrctions="not provided"):
+            if not question.strip():
+                return {"correct":False, "message":"Qustion should not be empty"}
+            
+            system_prompt="""You are a Quiz Validation AI. 
+                            Your task is to check whether the provided quiz question, sample output, and course restriction are logically consistent and suitable for quiz creation.
+
+                            Given:
+                            - course_name: the course the quiz belongs to
+                            - question: the quiz question text
+                            - sample_output: the expected example answer(if not provided, suggest sample_output)
+                            - restriction: any constraints (e.g., data types, allowed operations, input limits)
+
+                            You must analyze the following:
+
+                            1. **Course Relevance**  
+                            - Check if the question is related to the course.  
+                            Example: If course = "Mathematics" but the question is about "Python programming", then it's invalid.
+
+                            2. **Question–Output Alignment**  
+                            - Check if the sample output is realistic and logically possible given the question.
+                            - Detect contradictions, impossible outputs, missing steps, or wrong formats.
+
+                            3. **Restriction Compatibility**  
+                            - Check if the question and sample output follow the stated restrictions.
+                            - If restrictions contradict the question/output (e.g., "no loops allowed" but the task requires loops), mark invalid.
+
+                            4. **Quality Check**  
+                            - Identify minor issues such as grammar mistakes, unclear wording, or missing information.
+
+                            ### ✅ Required Response Format
+
+                            Respond strictly in this format:
+                            [True, suggestions] If everything is valid.
+                            Or:
+                            [False, explanation or suggestions]
+                            Where suggestions may include:
+                            - wrong course
+                            - wrong or impossible sample output
+                            - mismatch between question and output
+                            - unclear question
+                            - violation of restriction
+                            - minor mistakes detected
+                            ### The response must always be:
+                            [boolean, suggestion]
+                            """
+                            
+                            
+            user_prompt=f"""course_name : {course}
+                            question :{question} 
+                            sample_output:{sample_outputs}
+                            restrictions : {restrctions}"""
+                            
+           
+            response = self.client.chat.completions.create(
+                        model="google/gemini-2.0-flash-exp:free",
+                        messages=[
+                        {
+                            "role": "system",
+                            "content": system_prompt
+                        },
+                        {
+                            "role": "user",
+                            "content": user_prompt
+                        }
+                    ],
+                        temperature=0.7,
+                        max_tokens=100
+                )
+            
+            raw = response.choices[0].message.content.strip()
+
+            match = re.match(r"\[(True|False)\s*,\s*(.*)\]", raw, re.DOTALL)
+                
+            if match:
+                is_correct = match.group(1) == "True"
+                message = match.group(2)
+            else:
+                is_correct = False
+                message = "AI API was busy"
+
+            return {"correct": is_correct, "message": message}
         
