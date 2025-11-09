@@ -1,0 +1,476 @@
+Characteristics of Good
+Data Structures & Algorithms
+(kmitl) cs -departmentCh.02Outline
+•(Efficiency) Operations Counting
+•(Asympotic Analysis) ( 𝑶(𝒈(𝒏)), 𝜴(𝒈(𝒏)), 𝜽(𝒈(𝒏)))
+Recap (Last Chapter)
+•Data Structures: Structures for keeping data
+•Algorithms: Steps for solving problem
+•Data Structures and Algorithms works together to solve problems.•Good Characteristic : correctness and efficiency
+•(Efficiency) Benchmark
+2Good Characteristics
+•Good characteristics of Data Structures 
+& Algorithms
+•Correctness
+•Efficiency  
+•Time
+•Space
+•Efficiency (in space)
+•At the early age, we did care about 
+space
+•After memory becomes cheap, we 
+tends to care for speed more
+•In the age of Big Data, space 
+becomes important again, in a whole 
+new level.
+•We typically use the same tool for 
+evaluate efficiency in speed and 
+space.
+•Another key good characteristic is 
+readability  •Proof of correctness
+•Formal reasoning , a.k.a.
+       Mathematical proof 
+       - (Example of proving techniques)
+       - Direct proof
+       - Proof by contradiction
+       - Proof by contraposition
+       - Proof by Mathematical Induction
+•Empirical analysis
+       -  Good for confirming theory
+       -  Good enough if we don’t 
+           have theory?
+       -  Your “test cases” should be
+          complete enough.
+       -  Beware of confirmation bias
+3Correctness
+4Recap
+•Characteristics of good Data Structures and Algorithms are 
+correctness  and efficiency (and readability)
+•To proof the correctness, we can test it (empirical analysis), or we 
+can formally (mathematically) proof it. 
+•Formal proof can guarantee the correctness.
+•Empirical analysis  need good test cases.
+5•Measuring Efficiency
+Benchmark vs. Asymptotic Analysis
+•Benchmark
+•Similar to empirical test
+•Good for measuring end products.
+•Asymptotic analysis
+•Similar to Mathematical proof.
+•Concentrate on how time or space are increase as the size of input increase.
+•Compare the increasing trend to a familiar function.
+6publicclassCountPiN {
+staticboolean isPrime0(int n){
+if(n==1) returnfalse;
+if(n<=3) returntrue;
+intm=n/2;
+for(inti=2;i<=m;i++){
+if(n%i==0)returnfalse;
+}
+returntrue;
+}publicstaticvoidmain(String[] args){
+   intcount=0;
+intN=100;
+for(intn=1;n<N;n++){
+if(isPrime0(n)) count++;
+}
+System.out.println ("Pi("+N+")="+count);
+}
+}CountPiN.java
+7•𝐶𝑜𝑢𝑛𝑡𝑃𝑖𝑁 (𝑛) is a function that return number of prime (e.g. 
+𝐶𝑜𝑢𝑛𝑡𝑃𝑖𝑁 100 =25  Another two algorithms
+static boolean isPrime1(int n) {
+ if(n==1) return false;
+ if(n<=3) return true;
+ int m = (int) Math.sqrt (n);
+ for(int i=2; i<=m; i++) {
+  if(n%i==0) return false;
+ }
+ return true;
+}
+8Another two algorithms
+static boolean isPrime2(int n) {
+if(n==1) return false;
+ if(n<=3) return true;
+if((n%2==0)||(n%3==0)) return false;
+int m = (int) Math.sqrt (n);
+for(int i=5; i<=m; i+=6){
+ if(n%i==0)return false;
+if(n%(i+ 2)==0)return false;
+}
+return true;
+}
+9Modified main() method
+publicstaticvoidbench_isPrime( L2_IsPrimeInterface obj) { 
+intyour_cpu_factor = 1; /* increase by 10 times */
+intN = 100;
+intcount = 0;
+for(N = 100_000; N<= 1_000_000 * your_cpu_factor; N+= 100_000 * your_cpu_factor) {
+longstart = System.currentTimeMillis();
+for(intn = 1; n < N; n++) {
+if(obj.isPrime(n)) count++;
+}
+longtime = (System.currentTimeMillis() -start);
+System.out.println(N + "\t"+ count + "\t"+ time);
+}
+}
+10Recorded Results
+N 𝜋(𝑛)Times(milliseconds)
+isPrime0 isPrime1 isPrime2
+100,000 9,592 1,828 38 26
+200,000 17,984 6,927 66 29
+300,000 25,997 15,153 108 37
+400,000 33,860 26,004 163 54
+500,000 41,538 39,993 219 75
+600,000 49,098 57,139 280 94
+700,000 56,543 73,301 353 118
+800,000 63,951 95,851 419 139
+900,000 71,274 121,327 492 141
+1,000,000 78,498 148,958 576 164
+11Performance Graph
+020,00040,00060,00080,000100,000120,000140,000160,000
+0 200,000 400,000 600,000 800,000 1,000,000 1,200,000Time (milliseconds)
+isPrime0 isPrime1 isPrime2
+12Performance Graphs
+020,00040,00060,00080,000100,000120,000140,000160,000
+0 250,000 500,000 750,000 1,000,000isPrime0
+0100200300400500600700
+0 250,000 500,000 750,000 1,000,000isPrime1
+isPrime2
+13Observations
+•As N grows, the computing time is longer.
+•isPrime0 is noticeably slower, comparing to the other two
+•isPrime1 and isPrime2 are comparatively similar
+•We can safely say that isPrime0 is inferior to the other two
+•However, if our program only need to compute 𝜋(𝑛) where n is 
+relatively small, and only for a few times, any methods will do.
+050,000100,000150,000200,000
+0100200300400500600700
+14Benchmark ing 
+•Good for measuring finished products.
+•We see them a lot in hardware testing. 
+•Key Properties
+•Relevance: Focus on vital features.
+•Representativeness: Accepted 
+performance metrics.
+•Equity: Should be fairly compared.
+•Repeatability: Can be verified.
+•Cost -effectiveness: Should be 
+economical.
+•Scalability: Should be able to test all 
+range of system.
+•Transparency: Should be easy to 
+understand.
+15•For comparing algorithms, using 
+benchmark has its limitations . We need 
+to be careful in these issues:
+•Must be done in the same 
+environment, including hardware, 
+operating system, selected computer 
+language, etc.
+•Implementation details should be the 
+same
+•May not reflect the real environment
+•May not reflect size of data, especially 
+in the future. Why don’t we use real world clock?
+•Real world clock measurement is possible but has many drawback
+•System dependency
+•Too complex (we have to  build the system.)
+•Too specific 
+•Ultimately, we want to know how long our program takes to do each 
+operation
+•Use in design, how much resource we need 
+•Help us choose appropriate data structure  
+16Estimating Time by Counting Operations
+•We will start by assuming that one command, one programming 
+statement, takes a fixed amount of time.
+•If we have 𝑚 statement, it will take 𝑘𝑚 milliseconds to follow them.
+•Linearly proportional to each other. 
+•For simplicity, we will assume that any statement takes the same 
+amount time to compute. 
+•For example, x=3;  or Math.abs (-178) are consider to take the same amount of 
+time to compute.
+•This might not be true, but good enough for our purpose.
+•Note that int m=n/2;  is count as 3 operations: declaration, assignment, and 
+division.
+•Let’s start counting
+17isPrime0()
+code operation count
+1
+2
+3
+4
+5
+6
+7
+8
+9static boolean isPrime0(int n) {
+ if(n==1) return false;
+ if(n<=3)return true;
+ int m=n/2;
+ for(int i=2; i<=m; i++) {
+if(n%i==0)return false;
+ }
+ return true;
+  }1
+1
+3
+2+ ((m-1)+1) +(m-1) = 2m+1
+2(m-1)
+1
+total= 𝟒𝒎 +𝟓
+= 𝟐𝒏+𝟓
+18isPrime 1()
+code operation count
+1
+2
+3
+4
+5
+6
+7
+8
+9static boolean isPrime1(int n) {
+ if(n==1) return false;
+ if(n<=3) return true;
+ int m=(int)Math.sqrt (n);
+ for(int i=2; i<=m; i++) {
+if(n%i==0)return false;
+ }
+ return true;
+  }1
+1
+4
+2+ ((m-1)+1) +(m-1) = 2m+1
+2(m-1)
+1
+total= 𝟒𝒎 +𝟔
+= 𝟒𝒏+𝟔
+19isPrime2()code operation count
+1static boolean isPrime2(int n) {
+2if(n==1) return false; 1
+3if(n<=3) return true; 1
+4if((n%2==0)||(n%3==0)) return false; 5
+5int m=(int)Math.sqrt (n); 4
+6for(int i=5; i<=m; i+=6) {2+(𝒎
+𝟔+1)+𝒎
+𝟔 = 2𝒎
+𝟔+3
+7 if(n%i==0) return false;2𝒎
+𝟔
+8   if(n%(i+2)==0) return false;3𝒎
+𝟔
+9}
+10return true; 1
+11}
+total= 𝟕𝒎
+𝟔+𝟏𝟓
+= 𝟕𝒏
+𝟔+𝟏𝟓20Operation Function 
+•These are functions of number operations where n is the size of the 
+input 
+𝑓0𝑛= 2𝑛+5
+𝑓1𝑛=4𝑛+6
+𝑓2𝑛=7𝑛
+6+15
+Let’s call them Operation Function
+• Let’s plot some graph
+21Small input (n ≤20)
+22Large Input
+23Large Input w/o isPrime0
+24Some Discussion
+•The result of statement counting is similar to our benchmark results.
+•isPrime0 grows at the same rate as the input.
+•isPrime1 and isPrime2 grows proportion to the square root of the input.
+•isPrime1 and isPrime2 are comparable, while isPrime0 is by far the slowest.
+•It is typically possible to count number of operations of algorithms.
+•(Remark) While the actual time depends on machines, number of 
+operations does not.
+•Make it good for directly compare algorithms
+•It is also applicable to counting space.
+•Rather than remember the functions of all known algorithms, 
+we will compare them to well -known functions using 
+Asymptotic Analysis.𝑓0𝑛=2𝑛+5         𝑓1𝑛=4𝑛+6         𝑓2𝑛=7𝑛
+6+15
+25Recap (cont.)
+•Measuring efficiency can be done by benchmark and asymptotic 
+analysis. 
+•Benchmark good for measuring end products
+•Asymptotic analysis measure growth rate of time or space comparing to 
+the growth rate input.
+•Rather than measuring the time, we can count number of operations in 
+algorithms
+•Number of operations are just an estimate number, which is good enough 
+for our purpose.
+•If we know the function of operations of algorithms, we can compare them 
+easily.
+•However,  we will not have to memorize the exact function of 
+operations of each algorithm, we will use Asymptotic Analysis to 
+compare them to well -known function.26Measurement by Growth Rate
+•Growth Rate = how much resource 
+usage growth with respect to 
+change of input 
+•Resource usage = number of 
+instruction used 
+•input = size of data 
+•Emphasize long term trend 
+27What? Why?
+•System Independent
+•The result can be used to predict 
+behavior on any system
+•Focus on change of resource with 
+respect to size of input
+•Can disregard small details
+•Simple to calculate
+•Applicable in real world Why should we care for large n?
+28
+Comparing Growth Rate
+•These are functions from size of input to number of computing 
+operation of isPrime0, isPrime1, and isPrime2
+•We can say that the growth rates of  𝑓1𝑛 and 𝑓2𝑛 are 
+mathematically similar taking a limit as n approach infinity
+lim
+𝑛→∞𝑓1𝑛
+𝑓2𝑛=lim
+𝑛→∞4𝑛+6
+7𝑛
+6+15=24
+7
+•These means that, 𝑓1𝑛 and 𝑓2𝑛 grows together to infinity. 𝑓0𝑛=2𝑛+5         𝑓1𝑛=4𝑛+6         𝑓2𝑛=7𝑛
+6+15
+29Comparing Growth Rate
+•How about 𝑓0𝑛 comparing to 𝑓1𝑛?
+lim
+𝑛→∞𝑓0𝑛
+𝑓1𝑛=lim
+𝑛→∞2𝑛+5
+4𝑛+6=∞
+•This means that 𝑓0𝑛 is bigger than 𝑓1𝑛 if n is large enough.
+•Now, let compare 𝑓2𝑛 to 𝑓0𝑛:
+lim
+𝑛→∞𝑓2𝑛
+𝑓0𝑛=lim
+𝑛→∞7𝑛
+6+15
+2𝑛+5=0
+•This means 𝑓2𝑛 is small comparing to 𝑓0𝑛 if n is large enough.
+30Asymptotic Analysis  (𝑶(𝒈(𝒏)), 𝜴(𝒈(𝒏)), 𝜽(𝒈(𝒏)))
+•We are to compare growth rates of functions, as their input 
+increase (up to infinity), to another function. 
+•There are three asymptotic analysis commonly used in 
+Computer Science: 
+•𝑓(𝑛)∈𝑶(𝒈(𝒏)) read Big-Oof 𝑓(𝑛) is 𝑔𝑛, means that g𝑛 is an upper 
+bound  of f(𝑛) or f(𝑛) grows asymptotically no faster than g (𝒏). 
+•Upper bound implies not worse than 
+•𝑓(𝑛)∈𝜴(𝒈(𝒏)) read Big-Omega  of 𝑓(𝑛) is 𝑔𝑛, means that g𝑛 is a lower 
+bound of  𝑓(𝑛) f(𝑛) grows asymptotically  faster than g (𝒏).
+•Lower bound implies no better than 
+•𝑓(𝑛)∈𝜽(𝒈(𝒏)) read Big-Theta  of 𝑓(𝑛) is 𝑔𝑛, means that 𝑓(𝑛) and g𝑛 
+are growing at that same rate or f(𝒏) grows asymptotically as fast as g(𝒏).
+Note that 𝑓(𝑛) and 𝑔𝑛 are defined on unbound subset of positive real 
+number and 𝑔𝑛 is strictly positive for all large enough 𝑛.
+31Formal Definition
+* images from diimdeep  GitHub32Simple g(n)
+•Rather than comparing to each other, we will compare each function 
+with a simple function, for example 
+𝑓0𝑛=2𝑛+5∈𝑂(𝑛)
+𝑓1𝑛=4𝑛+6∈𝑂(𝑛)         
+𝑓2𝑛=7𝑛
+6+13∈𝑂(𝑛)
+•So, we are saying that isPrime0 has 𝑂(𝑛) while isPrime1 and isPrime2 
+has 𝑂 𝑛. 
+•Thus, we regards isPrime1 and isPrime2 as equal and superior to isPrime0
+33Note on Big -O
+•In Computer Science, we often use only Big -O for asymptotic 
+analysis.
+•However, people are expecting the smallest Big -O.
+•Although we say Big -O, we are expecting Big-Theta . 
+•To prevent side effect of big -o broad definition ( < ∞ ), though people 
+normally imply Big -O in tight upper -bound manner.
+•For example, if you say 𝑓1𝑛=4𝑛+6∈𝑂(𝑛) is technically correct , but 
+people will be expecting 𝑂(𝑛) and tends to think you are wrong .
+•Thus, to be the safe side, although we say Big -O, we should use Big -Theta 
+whenever possible.
+34Comparing Growth Rate (more example)
+•f(n) = 4 + 3n + 4n2 
+•g(n) = n2 
+lim
+𝑛→∞(4𝑛2+3𝑛+4
+𝑛2 )=lim
+𝑛→∞(4+3
+𝑛+4
+𝑛2)=4
+•Hence f(n) grows similar to  g(n)
+•Therefore f(n) = θ(n2) //  usually we determine whether it is theta by
+    //  examining the code
+•(More example growth rate) f(n) = log(n) vs. g(n) = sqrt(n)?
+35In practice – determine the big O
+(most frequently executed line) 
+36function  partition(array, low, high) 
+// Choose the last element as the pivot
+pivot = array[high]
+i = low - 1 // Index of smaller element
+for j = low to high - 1 do
+ if array[j] <= pivot then
+ i = i + 1
+  swap array[i] and array[j]
+ end if
+end for
+// Place the pivot in its correct position
+swap array[i + 1] and array[high] 
+return i + 1 // Return the pivot index 
+end function In practice – determine the big O
+(most frequently executed line) 
+37function  hoare_partition(arr, low, high):  
+    # Choose a pivot (e.g., the first element)
+    pivot = arr[low]
+    i = low - 1
+    j = high + 1
+    while True: # Move i to the right until an element >= pivot is found
+ do
+ i = i + 1
+ while arr[i] < pivot # Move j to the left until an element <= pivot is found
+ do
+ j = j -1
+ while arr[j] > pivot
+ if i >= j: # If i and j have crossed, partitioning is done
+ return j # or return i, either is fine
+    swap(arr[i], arr[j]) # Swap the elements at i and jMore on O(n) vs. θ(n) 
+38
+Typical Big -O
+Big-O Name
+𝑂(1) Constant
+𝑂(log𝑛) Logarithmic 
+𝑂(𝑛) Linear
+𝑂(𝑛 log𝑛)Just 𝑛log𝑛
+𝑂(𝑛2) Quadratic
+𝑂(𝑛𝑘) Polynomial
+𝑂(𝑐𝑛) Exponential
+𝑂(𝑛!) Factorial
+𝑂(𝑛𝑛) Very bad!
+* image from adrianmejia.com39P vs NP problems
+•If a problem is solvable with polynomial
+time, 𝑂𝑛𝑘, or less, we call them 
+a P class problem .
+•NP-complete problem means a problem 
+withno polynomial time solution. 
+•Although widely accept, there is 
+no definite proof that P≠𝑁𝑃
+NP is short for 
+“nondeterministic polynomial time”
+40
+Summary
+•To proof the correctness, we can test it (empirical analysis), or we can 
+formally (mathematically) proof it. 
+•Empirical analysis need good test cases.
+•Formal proof can guarantee the correctness.
+•Measuring efficiency can be done by benchmark and asymptotic 
+analysis. 
+•Benchmark good for measuring end products
+•Asymptotic analysis measure growth rate of time or space comparing to 
+the growth rate input.
+•Asymptotic analysis measures computational complexity by comparing 
+them asymptotically to well known functions.
+•There are several well known  functions that we are typically compare our 
+function to.
+41

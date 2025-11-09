@@ -1,0 +1,420 @@
+Advanced Tree
+(kmitl) cs -departmentCh.11Outline
+•AVL Tree
+•Red-Black Tree 
+•SPLAY Tree
+2Balance/Unbalance Tree
+•Recall that, if a tree is balance, height of the tree is O(log n)
+•However, if a tree is deformed, the height approaches O(n)
+3Balancing the BST
+There are several ways to balance the BST. We are going to talk about 
+three of them.
+1.Keep it balance
+2.Keep it pretty balance
+•AVL Tree, Red -Black Tree
+3.(other strategy) Keep recent access node on top
+•Making the tree somewhat balance along the way 
+•SPLAY Tree
+Note that you can always left it to chance by not balancing the tree. 
+However, it’s a very bad practice.
+4Keep It Balance
+•Very costly
+•One way is to sort the element before building a tree 
+•Thus, we need O(n log n) just to add one element. Comparing to O(log 
+n)
+•Applicable if we have a fixed list that rarely or never update .
+•How to build a balance BST from sorted list is left for your 
+exercise
+5Keep It Pretty Balance
+AVL Tree
+•Introducing AVL-Tree  (Adelson -Velsky  and 
+Landis – Tree)
+•In AVL -Tree, height of left and right subtree can differ by no 
+more than 1
+•Done by book -keeping
+•Heights of left and right subtree 
+are stored in the current node.
+•height of node = h ( hleaf_node  = 0)
+•balance factor = hleft -hright
+•empty height = -1
+•h < 1.44 log2 n
+•Pretty balance!
+6
+ http://www.btechsmartclass.com/data_structures/avl -trees.html  
+https://gcekbpatna.ac.in/assets/documents/lecturenotes/dsMODULE -5.pdfAVL Tree Operations
+•Insertion of new node
+•Deletion of a node 
+•Delete a node from the Right subtree
+•Delete a node from the left subtree
+•Balancing AVL tree operations 
+•Single Rotation
+•LL Rotation (Left Rotation)
+•RR Rotation (Right Rotation)
+•Double Rotation
+•LR Rotation (Left Right Rotation)
+•RL Rotation (Right Left Rotation)
+•Searching a node in AVL tree
+7
+https://www.sanfoundry.com/c -program -implement -avl-tree/RR Imbalance (Left Rotation)
+•In LL rotation, all the nodes are moved by one position to the 
+left.
+8
+LL Imbalance (Right Rotation)
+•In RR rotation, all the nodes are moved by one position to the 
+right. 
+9
+LR Imbalance (Left Right Rotation)
+•In LR rotation, at the first step, every node moves to the left and 
+then moves one step to the right from the current position.
+10
+RL Imbalance (Right Left Rotation)
+•In RL rotation, at the first step, every node moves to the right 
+and then moves one step to the left from the current position.
+11
+Insert and Rotation
+•Insertion can cause balance factor 
+to be come 2 or -2 for some 
+ancestor node
+•To keep the balance
+•Move up tree one by one  and check 
+balance factor
+•After a rotation, the tree might still violate 
+the AVL requirements above the rotated 
+node.
+•If there is unbalance node, rotate  it 
+to make it balance.
+•Left-heavy → +
+•Right -heavy → –   
+12
+Height (matters)
+•Height (matters)
+•Height(BNode n) is always called.
+•Insert ,delete, rotate 
+•Always recompute height 
+attribute  so that height(BNode) is 
+O(1)
+• 
+13
+The Four Unbalance Cases
+Outside cases
+(include right -right)Inside cases
+(include right -left)
+14Outside Case: Single Rotation
+15Inside Case: Double Rotation
+16Construction of the AVL Tree for the given Sequence 
+21, 26, 30, 9 , 4, 14, 28, 18,15,10, 2, 3, 7
+17
+https://www.ques10.com/p/66219/construct -avl-tree-for-the-following -data -21263094/  
+Construction of the AVL Tree for the given Sequence 
+21, 26, 30, 9, 4, 14, 28 , 18,15,10, 2, 3, 7
+18
+Construction of the AVL Tree for the given Sequence 
+21, 26, 30, 9, 4, 14, 28, 18,15,10 , 2, 3, 7
+19
+Construction of the AVL Tree for the given Sequence 
+21, 26, 30, 9, 4, 14, 28, 18,15,10, 2, 3, 7
+20
+Implementation
+public class TreeNode  {
+  int data, h_left=-1, h_right=-1;
+  TreeNode  left=null, right=null, parent=null;
+  public TreeNode (int d) {
+    data = d;
+  }
+}
+21Right Rotation
+void roationFromRight (TreeNode  n) {
+  TreeNode  p = n.right;
+  n.right = p.left;                            /* 1 */
+  p.left.parent  = n;                           /* 2 */
+  if (n == root) {
+      root = p; 
+      p.parent = null;                         /* 3a */
+  } else { 
+p.parent = n.parent;                      /* 3b */
+      if(n.parent.left ==n) n.parent.left  = p;  /* 4 */
+      else n.parent.right  = p;
+  }
+  p.left = n;                                  /* 5 */
+  n.parent  = p;                                /* 6 */
+  // now, update the height..
+}
+22Double Rotation: 
+void doubleRotationFromRight (TreeNode  n) {
+  rotationFromLeft (n.right);
+  rotationFromRight (n);
+}
+23AVL-Tree Deletion
+•A little more complex than insertion
+•Rotations/double rotations may be needed at the node and all its ancestors.
+24
+  n.height = 1 + Math.max(height(n.left), height(n.right)); /* 5*/ 
+  int bf = getBalance(n); // balance factor   /* 6.1*/ 
+  if (bf > 1 && getBalance(n.left) >= 0)               /* 6.2*/
+    return rightRotate(n); // left left imbalance
+  if (bf > 1 && getBalance(n.left) < 0) {              /* 6.3*/
+    n.left = leftRotate(n.left);
+    return rightRotate(n);
+  }
+  if (bf < -1 && getBalance(n.right) <= 0)             /* 6.4*/ 
+    return leftRotate(n);  // right right imbalance 
+  if (bf < -1 && getBalance(n.right) > 0) {            /* 6.5*/ 
+    n.right = rightRotate(n.right);
+    return leftRotate(n);
+  }
+ } /* found */   
+ /* 7*/ return n;
+}algorithmic trade -offs and implementation 
+style for BNode (with parent and w/o parent)
+•BST/AVL With  Parent Pointer
+•Pros:
+•Easy to move up the tree (e.g. successor, predecessor, transplant during delete).
+•Sometimes cleaner code for delete, since you don’t need to keep track of ancestors 
+during recursion.
+•Helpful if you want to implement iterative operations without recursion.
+•Cons:
+•Extra memory per node (parent reference).
+•More bookkeeping: every rotation (AVL/Red -Black) must carefully update parent 
+pointers → more bug -prone.
+•Slightly slower insertion/deletion because you update both child links and parent links.
+algorithmic trade -offs and implementation 
+style for BNode (with parent and w/o parent)
+•BST/AVL Without  Parent Pointer
+•Pros:
+•Simpler node structure (left, right, maybe height). (easier to follow the code.)
+•Less risk of forgetting to update parents during rotations.
+•Slightly smaller memory footprint.
+•Cons:
+•To find successor/predecessor (without right/left subtree), you must re -traverse from 
+the root to track ancestors.
+•If you want iterative algorithms (non -recursive), keeping track of parents in code is a bit 
+messier.
+algorithmic trade -offs and implementation 
+style for BNode (with parent and w/o parent)
+•In practice
+•Simple BSTs: Both styles are common. Parent pointers can simplify 
+delete/iterator logic, but most academic or interview code skips them.
+•AVL trees: Almost always implemented without parent pointers (because 
+rotations already require height updates, adding parent maintenance makes 
+them messy).
+•Red-Black trees (used in libraries like TreeMap in Java): Often use parent 
+pointers, because balancing logic benefits from quick upward movement.
+•Rule of thumb:
+•A teaching/demo implementation (AVL, BST for algorithms class) 
+→ without parent is preferred (cleaner).
+•writing a production data structure (like a map/set that needs iterators) 
+→ with parent may be better.
+AVL tree Summary
+•Tree balancing can be done in three ways: perfectly balance, pretty 
+balance, and keep the recent node on top
+•We will see the last case in the next video
+•Perfectly balance case is costly and only applicable to tree that rarely or 
+never update.
+•Pretty balance tree can be done using AVL -Tree where we do book -
+keeping and rebalancing upon insertion and delete
+•Height of AVL -Tree is h < 1.44 log2 n, making the tree pretty balance.
+•Insertion and deletion (also accessing) can be done in O(log n)
+•However, each insert/delete operation can be costly 
+•Done in k log n time, but k is huge
+28Red-Black Tree
+•A red -black tree is a self -balancing binary search tree.
+•The properties of the red -black tree:
+1.Each node is either red or black.
+2.The root is black.
+3.New insertions are always red.
+4.All NIL leaves are black.
+5.A red node must not have red children. (No path can have two consecutive 
+red nodes, (two consecutive black nodes are okay.))
+6.All paths from a node to the leaves below contain the same number of black 
+nodes.
+•Java tree API implementation is an instance of this data structure.
+29https://www.developer.com/design/understanding -java-tree-apis/Red-Black Tree
+•Provided Operations
+•Insertion, Deletion, Search
+•After inserting and deleting nodes, quite complex algorithms are applied 
+to check compliance with the rules – and, in case of deviations, to 
+restore the prescribed properties by recoloring nodes and rotations.
+•(Compliance Rule) The longest path  
+from the root to a leaf (not counting 
+the root) is at most twice as long as 
+the shortest path from the root to 
+a leaf.
+30https://www.developer.com/design/understanding -java-tree-apis/
+(Red -Black Tree) Search Time
+•The search cost is thus proportional to the tree height.
+•We denote by n the number of tree nodes. In the "Height of a Red -
+Black Tree" section, we have recognized that the longest path is at 
+most twice as long as the shortest path . It follows that the height of 
+the tree is bounded by O(log n).
+•Thus, the time complexity for finding a node in a red -black tree is: 
+O(log n)
+31(Red -Black Tree) Insertion Time
+•When inserting, we first perform a search. We have just determined the 
+search cost as O(log n).
+•Next, we insert a node. The cost of this is constant regardless of the tree 
+size, so O(1).
+•Then we check the red -black rules and restore them if necessary. We do 
+this starting at the inserted node and ascending to the root. At each level, 
+we perform one or more of the following operations:
+•Checking the color of the parent node
+•Determination of the aunt/uncle  node and checking its color
+•Recoloring one up to three nodes
+•Performing one or two rotations
+•(Each of these operations has constant time, O(1), in itself.)
+•So the time complexity for inserting into a red -black tree is also: O(log n)
+32(Red -Black Tree) Deletion Time
+•Search for the node to be deleted in time O(log n).
+•The deletion cost is independent of the tree size, so it is constant O(1).
+•For checking the rules and repairing the tree, one or more of the following 
+operations occur – at most once per level:
+•Checking the color of the deleted node
+•Determining the sibling and examining its color
+•Checking the colors of the sibling's children
+•Recoloring the parent node
+•Recoloring the sibling node and one of its children
+•Performing one or two rotations
+•(These operations also all have a constant complexity in themselves. Thus, the total 
+effort for checking and restoring the rules after deleting a node is also proportional to 
+the tree height.)
+•So the time complexity for deleting from a red -black tree is also: O(log n))
+33(Red -Black Tree) Insertion 
+•This inserted red node could result in a violation of the red condition 
+but that can be fixed by performing either 
+•(The violation node’s aunt  is red do) a color change or 
+•(The violation node’s aunt  is black do) a rotation. 
+•Fixing one violation of the red condition could cause it to propagate up the 
+tree. The violations should be fixed until the root of the tree is reached.
+•https://faculty.cs.niu.edu/~freedman/340/340notes/340redblk.htm  
+•Three possible cases arise: 
+•Case 1: If the parent node is a black node, then insertion is finished.
+34(Red -Black Tree) Insertion 
+•Case 2: If the parent node is a red node 
+and the aunt /uncle node is black . 
+•Case 2a: If the node was inserted into the left child 
+of the left child of the grandparent, then the violation 
+is fixed by performing a single right rotation . 
+•Case 2b: If the node was inserted into the right child 
+of the right child of the grandparent, then the violation 
+is fixed by performing a single left rotation .
+•Case 2c: If the node was inserted into the right child 
+of the left child of the grandparent, then the violation 
+is fixed by performing a left-right rotation . 
+•Case 2d: If the node was inserted into the left child 
+of the right child of the grandparent, then the 
+violation is fixed by performing a right -left rotation .
+35
+(Red -Black Tree) Insertion 
+•Case 3: If the parent node is a red node and the aunt/uncle node is 
+red. 
+•The parent and aunt/uncle nodes will be made black  and the grandparent 
+node will be made red. The exception to the grandparent becoming red is if 
+the grandparent is the root of the tree - in this case it will remain black.
+36
+Java TreeSet
+•TreeSet is a sorted collection that extends the AbstractSet class and 
+implements the NavigableSet interface.
+•A quick summary of the 
+most important aspects 
+of this implementation
+•It stores unique  elements
+•It doesn't preserve the 
+insertion order of the 
+elements
+•It sorts  the elements in 
+ascending order
+•It's not thread -safe 
+•Note sorted -map in java is treeMap
+37https://www.baeldung.com/java -tree-set 
+https://www.geeksforgeeks.org/treeset -in-java-with -examples/  Java TreeSet Operations
+•constructor
+•Set<String> treeSet = new TreeSet<>(Comparator.comparing( String::length ));
+•add() 
+•contains() 
+•remove()
+•clear(), size(), isEmpty(), iterator() 
+•first(), last(), and more
+38Red-Black tree Summary
+39AVL Tree Red-Black Tree
+Strictly height -balanced Tree.. Roughly height -balanced tree.
+Comparatively complex to implement. Easy to implement.
+Takes more processing for balancing. Take less processing for balancing because a 
+maximum of two rotation are required.
+Searching operation is faster because of 
+height -balanced structure.Searching operation is comparatively slow.
+Insertion and deletion operations are slow. Insertion and deletion are faster .
+Balance factor is associated with each node. There is no balance factor for nodes.
+Used in database for faster retrievals Used in the language libraires.
+https://www.baeldung.com/cs/red -black -tree-vs-avl-treeSPLAY tree … its origin
+•A splay tree is a binary search 
+tree. It has one interesting 
+characteristic which is that 
+whenever an element is looked 
+up in the tree, the splay tree 
+reorganizes to move that 
+element to the root of the tree, 
+without breaking the binary 
+search tree invariant. 
+•If the next lookup request is for the same element, it can be returned 
+immediately. In general, if a small number of elements are being heavily 
+used, they will tend to be found near the top of the tree and are thus found 
+quickly.
+40https://www.cs.cornell.edu/courses/cs3110/2013sp/recitations/rec08 -splay/rec08.htmlSplay Tree
+•Sacrifice balance to keep often -accessed items on top
+•Only a small subset of data responsible for a large percentage of the accesses
+•Splaying mean moving the last accessed item to the root 
+•Rarely access items will be slowly go to the bottom
+•Splay tree operations is shown to use O(log n) time by amortized 
+analysis
+•Amortized analysis → perform a lot of operation and compute average time 
+•Splay tree implements this idea by adopting rotation technique from 
+AVL-Tree
+•Making the tree somewhat balance
+•However, we don’t need book -keeping  and we don’t have to care about how 
+balance the tree is
+•Linear search time may appear, but only few time
+41Six Possible Cases
+42Which node to perform the rotation 
+•Zig / Zag:   parent (only)
+•Zig-Zig / Zag -Zag grandparent first
+•Zig-Zag / Zag -Zig parent first
+43Splay 40 After Access
+44
+Zig Operation
+•Only one rotation needed
+•Example:
+•Zag operation can be done similarly 
+45Zig-zig Operation
+•Need two rotations
+•Rotate top, then bottom
+•Zag-zag can be done the same way
+46Zig-zag Operation
+•Need two rotations
+•Rotate bottom first, then top
+•Again, zag -zig operation follow these steps
+47Example: Splay up 40
+48Example: Splay up 60
+49Splay Tree Operations
+•Search
+•Splay the found item up
+•If not found, splay the last accessed item up
+•Insert 
+•Splay the inserted item up
+•Delete 
+•Do the search, splay the found item up to the root
+•Splay the maximum from left subtree up to the root of left subtree
+•Replace the root with the root of left subtree, point the right of new root to 
+the right of the old root.
+50Example: Delete 8
+51SPLAY Tree Summary
+•Splay tree idea of portion of the data is actually frequently 
+accessed in real environment (than the rest of the data) will 
+always be around the top of the tree.
+•Amortized analysis can be done on splay tree
+•Splay tree is somewhat balance (in fact, we don’t care if it is balance or 
+not).
+•With only the capability of rotation (without having to do the 
+bookkeeping on height)
+•Performing a sequence of M operation on splay tree of size N requires 
+O(M log N) time, making the amortized running time O(log N) 
+•Rebalancing guarantee that we will not have O(MN ) time 
+52

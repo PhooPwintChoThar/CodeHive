@@ -1,0 +1,63 @@
+Examples
+41voidcode_1( intn) { 
+// Sqrt Time
+for(inti = 1; i * i <= n; i++) {
+cout << i << endl;
+}
+// the code below is O(log n)
+// for (int i = 2; i < n; i *= 2) {
+// cout << i << endl;
+// }
+}Examples
+42voidcode_2( intn) { 
+// LinearLog
+for(inti = 0; i < n; i++) {
+for(intj = 1; j < n; j *= 2) {
+cout << i << ","<< j << endl;
+}
+}
+}Examples
+43voidcode_3( intn) {
+// Sqrt Nested (n sqrt(n))
+for(inti = 0; i < n; i++) {
+for(intj = 1; j * j < n; j++) {
+cout << i << ","<< j << endl;
+}
+}
+}Examples
+44voidcode_4( intn) { 
+// Log-Squared
+for(inti = 1; i < n; i *= 2) {
+for(intj = 1; j < n; j *= 2) {
+cout << i << ","<< j << endl;
+}
+}
+}Examples
+45voidcode_5( intn) { 
+// O(log log n)
+// 2 + 4 + 16 + 256 + ... 
+for(inti = 2; i < n; i = pow(i, 2)) {
+cout << i << endl;
+}
+}Examples
+46voidcode_6( intn) { 
+// Quasilinear with Nested Log
+// O ( n (log * log) n )
+for(inti = 0; i < n; i++) {
+for(intj = 1; j < n; j *= 2) {
+for(intk = 1; k < n; k *= 2) {
+cout << i << ","<< j << ","<< k << endl;
+}
+}
+}
+}Examples
+47voidcode_7( intn) {
+// Logarithmic Halving with Linear Inner
+// O(n)
+// because n + (n/2) + (n/4) + ... = 2n = O(n)
+for(inti = n; i > 0; i /= 2) {
+for(intj = 0; j < i; j++) {
+cout << i << ","<< j << endl;
+}
+}
+}

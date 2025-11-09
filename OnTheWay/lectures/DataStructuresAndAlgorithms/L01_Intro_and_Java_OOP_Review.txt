@@ -1,0 +1,398 @@
+Data Structure and Algorithm
+(Introduction to Data Structure )
+(kmitl) cs -departmentCh.012
+Outline
+•Overview
+•Introduction
+•Why Data Structures & 
+Algorithms?
+•What is data? 
+•Data vs Information 
+•What is Algorithms?
+•What is computer?
+•What to learn in DSA class?
+•An example of Data Structure in 
+real life•Java Review
+•Java Programming 
+•Built -in Data Types
+•Operators 
+•String and Math Library
+•Type Conversion  
+•Flow Control
+•1-D Array, 2 -D Array 
+•Object Oriented Programming  
+•Class and Object
+•Instance variables
+•Instance methods 
+•OOP principles
+3Why Data Structures & Algorithms?
+Data structures + algorithms = program
+4What is data?
+•Data vs Information
+•In some definition, data  mean 
+raw data where information  
+mean data ready to be used
+•We process  data to make it 
+useful 
+5•Data is facts
+•There are abundant data in the 
+world, we can only make use some  
+of them
+•With computer, have capability to 
+make use more and more of them.
+•Basic Operations – CRUD
+•Create
+•Retrieve
+•Update
+•DeleteWhat is Algorithms?
+•Can be viewed as “ways to achieve a certain goal”.
+•Processing data is one of them.
+•An algorithm is a recipe which leads to the required output.
+•Recent development: data can be mined, algorithms can be learnt.
+What is computer?
+•Information processing machine
+•Help us solving problem by processing information faster 
+6What to learn in DSA class?
+•Characteristics of good data 
+structures / algorithms and tool 
+for analyzing them. 
+•Basic data structures
+•Array, Linked List
+•Concept of Abstract Data Type 
+(ADT) and some simple ADT
+•Stack, Queue, Heap, Tree , Graph 
+•A mathematical model of data 
+types. 
+•We only care about what it can 
+do and sometimes its efficiency, 
+but not how it implement.
+7•Abstraction (Daily life 
+perception)
+•More example → speaker
+What to learn in DSA class? (cont.)
+8•Fundamental algorithms
+•Sorting and searching
+•Some advance data structures and algorithms
+•Binary Search Tree (BST), AVL Tree, Splay Tree
+•Minimal Spanning Tree, Shortest Path
+•HashingImagine if you have only one book.
+•You don’t need any structure or algorithm 
+for your data (book)
+9How about seven books
+•Well, still manageable.
+10Make it a hundred
+•Now, I think  we need some order!
+•We need to structure them somehow.
+•We also need a way (an algorithm)
+to deal with them.
+11Structured them
+•Alphabetical order seems to be a smart choice
+•Binary search can be used to find a book quickly
+•Data structure → ordered array
+•Algorithm → binary search
+•What other algorithms are involved?
+12Let keep going..
+•Is alphabetical order still enough?
+•Any good idea?
+13Let structure them!
+•Dewey Decimal Classification – DDC 
+•a.k.a. Library System
+•Using hierarchy classification
+•For example
+500 Natural sciences and mathematics
+    510 Mathematics
+        516 Geometry
+            516.3 Analytic geometries
+                516.37 Metric differential geometries
+                    516.375 Finsler  geometry
+** Cuypers  Library, Amsterdam, Netherlands
+14Beyond Data Structures & Algorithms
+•Where to physically store the books?
+•How to connect an alphabetical order to the DDC?
+•How to add/take out/return/remove books?
+•What is the function of librarian, comparing to computer system?
+15Summarize
+•Data Structures + Algorithms = 
+Program
+•There are abundant data in the 
+world
+•Some of them are useful to us.
+•We have capability to make use 
+more and more of them.
+•We create, retrieve, update, and 
+delete useful data. 
+•Data can be processed to make it 
+even more useful.•Algorithms can be thought as 
+ways to process data
+•Computer makes DSA necessary
+•although DSA are useful even 
+before the age of computer
+•In Data Structures and Algorithm 
+class, we will learn
+•Some basic data structures and 
+algorithms
+•How to recognize good ones
+•Also, some advanced ones
+16JAVA Review
+References:
+https://introcs.cs.princeton.edu/java/11cheatsheet/
+https://www.upgrad.com/blog/types -of-literals -in-java/
+http://www2.hawaii.edu/~tp_200/lectureNotes/review_of_some_java_basics.htm
+http://comet.lehman.cuny.edu/sfakhouri/teaching/cmp/cmp338/lecturenotes -
+3rdEdition/Chapter -01.pdfLecture 1JAVA Application
+•Collection of classes
+•One of them have a designated main method.
+•Can be packed into JAVA archive (.jar) and run as an executable (.exe) in 
+JAVA ready machine
+•Create by SUN Microsystem
+•Slogan from 1995: Write (and compile) once, run anywhere
+•Bought by Oracle in 2010, 
+•Thus, Oracle’s implementation (licensed) is the de facto standard.
+•OpenJDK is one of the notable free implementation.
+18JAVA Programing 
+19JAVA Virtual Machine – JVM 
+20HelloYou.java
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12importjava.util.Scanner ;
+publicclassHelloYou {
+publicstaticvoidmain(String args[]){
+Scanner in=newScanner(System.in );
+System.out.print ("Enter yourname:");
+StringyourName =in.nextLine ();
+System.out.println ("Hello "+yourName +"!");
+}
+}
+21Built -in Data Types
+•Declaration and assignment
+22Literals
+•boolean  
+•{true, false}
+•char
+•{'a','b',…}
+•int
+•Decimal: 232
+•Octal: 0231 ** leading zero 
+•Hexadecimal: 0X1A  ** capital X
+•Binary: 0b1101 
+•String
+•"String" ** not primitives
+•Object
+•nullPrimitives and 
+Wrapper Classes
+•Boolean type
+•boolean → Boolean 
+•Character type
+•char → Character **Unicode
+•Integer types
+•byte → Byte
+•short → Short
+•int → Integer
+•long → Long
+•Floating point
+•float → Float
+•double → Double
+23Operators
+24Comparison Operators
+25String
+26Output
+Parsing from String to number
+27Math Library
+28Type Conversion
+29Flow Control
+30•Condition statement
+•If, If else
+•Switch
+•Terary expression (Ternary operator)
+•Interative statements
+•while
+•do – while
+•for 
+•Control Transfer
+•return, break, continueArray 
+31Typical array -processing code
+322D Array
+33Building blocks of an OOP program
+https://www.slideshare.net/AnushkaGupta763558/oops -252140976
+34Classes
+https://server2client.com/javaobjclasses/classstructure.html
+35Using an Object
+https://dotnettutorials.net/lesson/object -oriented -
+programming -in-java/
+36Instance Variable
+37Object Constructors
+38Instance Methods
+39Static vs. Dynamic
+40•It's important to understand the distinction between static and 
+dynamic behaviors in classes.
+•You can invoke a class static  attribute or method  directly by naming the 
+class .
+•Whereas, in a (dynamic) non-static  class: you need to create an instance  
+with the new operator.
+•(Again) A class is just a packaging of methods and data.
+•Static: There is only ONE copy of the data, and only ONE copy of the 
+methods in memory.
+•You can create any number of instances of a dynamic class.
+•each instance  has its own copy of variables
+•It helps to also think: each instance has its own copy of methods
+https://www2.seas.gwu.edu/~simhaweb/java/objects.htmlStatic vs. Dynamic
+41public class A {
+  static int val_a1 = 1;
+  static void method_a1(int x) {
+      print("From method_a1() " + val_a1 );
+      println(" local argument value 
+                            is " + x);
+  }
+}
+public class B {
+  int val_b1;
+  B(int v) { val_b1 = v;  }
+  void method_b1() {
+    print("From method_b1() " + val_b1 );
+    println(" There is not argument received.");
+  }
+}static void demo1() {
+   println(" -demo1---");
+   A.method_a1(890);
+ }
+ static void demo2() {
+   println(" -demo2---");
+   B b1 = new B(22);
+   B b2 = new B(33);
+   b1.method_b1();
+   b2.method_b1();
+ }Static vs. Dynamic
+42•non-static attribute / method may not be 
+accessed / invoked in static method method public class C {
+  int val_c1;
+  static int val_c2 = 3;
+  C(int v) {  val_c1 = v;  }
+  void method_c1(int x) {
+    print("From method_b1() " 
+                            + val_c1 );
+    println(" local argument value 
+                             is " + x);
+    println("** non static method may 
+    access static attribute " + val_c2);
+  }
+  static void method_c2() {
+    println("static method cannot access
+             non-static attribute " 
+                    /* + val_c1 */  );
+      // methed_c2 does not knows 
+      // **whose** val_c1 is being
+      // referred to.
+    println("non static method
+      **may**access static attribute " 
+      + val_c2);
+  }
+}public class D {
+  int val_d1;
+  static int val_d2 = 4;
+  D(int v) {
+      val_d1 = v;
+  }
+  static void method_d1() {
+    println("this is my only assigned task");
+  }
+  static void method_d2() {
+    // method may be called from another method
+    method_d1();
+    println("leaving method_d2()");
+  }
+  void method_d3() {
+      // method may be called from another method
+      // static method may be called from non -static
+      method_d1();
+      println("leaving method_d3()");
+  }
+  static void method_d4() {
+      // but not the other way around (again 
+      // think of non -static method of **which**
+      // instance)
+    // method_d3();
+    println("leaving method_d4()");
+  }
+}static void demo3() {
+  println(" -demo3---");
+  C c1 = new C(444);
+  C c2 = new C(555); 
+  c1.method_c1(908);
+  c1.method_c1(908);
+  C.method_c2();
+}
+static void demo4() {
+  println(" -demo4---");
+  D d1 = new D(6666);
+  D d2 = new D(7777);
+  D.method_d1();
+  D.method_d2();
+  d1.method_d3();
+  d2.method_d3();
+  D.method_d4();
+}Java OOP
+https://www.slideshare.net/AnushkaGupta763558/oops -252140976
+43Encapsulation (Access Modifier)
+•Used for classes, variables, and methods
+https://www.w3resource.com/java -tutorial/java -class -
+methods -instance -variables.php  
+ https://www.netjstech.com/2015/04/encapsulation -
+in-java.html  
+https://www.startertutorials.com/corejava/access -control.html  
+https://www.pinterest.com/pin/why -encapsulation --
+733805333044557573/  44Inheriance vs Abstraction
+https://www3.ntu.edu.sg/home/ehchua/programming/java/J3b_OOPInh
+eritancePolymorphism.html
+polymorphism
+https://www.thecodingshala.com/2019/07/java -runtime -
+polymorphism -coding -shala.html
+45Collections Framework Hierarchy in Java
+46
+https://www.freecodecamp.org/news/java -collections -framework -reference -guide / Java Collections Efficiency
+47
+https://slideplayer.com/slide/9739625 / ArrayList
+•Java ArrayList is the resizable -array implementation of the List 
+interface. 
+•The size, isEmpty , get, set, iterator , and list iterator operations 
+run in constant time. The add operation runs in amortized 
+constant time, that is, adding n elements requires O(n) time. All 
+of the other operations run in linear time (roughly speaking). The 
+constant factor is low compared to that for the LinkedList 
+implementation.
+48HashSet
+•Java HashSet is the basic implementation the Set interface that 
+is backed by a HashMap. It makes no guarantees for iteration 
+order of the set and permits the null element.
+•This class offers constant time performance  for basic operations 
+(add, remove , contains  and size), assuming the hash function 
+disperses the elements properly among the buckets. 
+•We can set the initial capacity and load factor for this collection. 
+The load factor is a measure of how full the hash map is allowed 
+to get before its capacity is automatically increased.
+49HashMap
+•HashMap class is roughly equivalent to Hashtable, except that it 
+is unsynchronized and permits null. This class makes no 
+guarantees for the order of the map. It is implemented on the 
+Map interface.
+•This implementation provides constant -time performance for 
+the basic operations ( get and put). 
+•It provides constructors to set initial capacity and load factor for 
+the collection
+50Summary
+•Required for this course
+•General Programming Skills
+•Java Basics
+•OOP concepts
+•Collections (a little)
+https://javarevisited.blogspot.com/2019/10/the -java-developer -
+roadmap.html#axzz81BEe6xrA
+51

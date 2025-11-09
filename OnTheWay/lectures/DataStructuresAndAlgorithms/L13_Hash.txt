@@ -1,0 +1,247 @@
+Hash Table
+(kmitl) cs -departmentCh.13Hash Table
+•Array is a data structure 
+where random access is O(1)
+•Hash table tries to mimic 
+such property
+•Hash value is computed to 
+act as index of array
+•Hash table is a collection where data is stored according to a 
+computed key calls hash value .
+•Hash value computed using hash function
+•Hash value  can be computed from data or key to the data
+•Hash value indicates where the data belongs in the hash table.
+•Example:
+•Books can be structured that all books with title starts with the same letter are 
+stored in the same bookshelf
+•In this case, hash function maps title of the book to the first letter 
+of the title
+2Hash Table Properties
+•Complexities
+Algorithms Average Worst case
+Space O(n) O(n)
+Search O(1) O(n)
+Insert O(1) O(n)
+Delete O(1) O(n)
+3Simple Example
+•Store 83, 72, 95, 124, 7, 109 into a hash table 
+•Set hash function H(x) = x mod 10
+•Hash table = array of 10 int’s
+•H(83) = 3
+•H(72) = 2
+•H(95) = 5
+•H(124) = 4
+•H(7) = 7
+•H(109) = 9
+•Everything is nice and simple
+•Insert, search, and delete can be done in O(1)0
+1
+272
+383
+4124
+595
+6
+77
+8
+9109
+4Hash Table Parameters
+•Hash function
+•Should be O(1) 
+•Maps keys to data to slots in hash table
+•The mapping should be spread out (uniform distribution)
+•What happen if multiple keys are mapped to the same slot?
+•Hash Table 
+•Load factor = n / k
+•n = number of data, k = number of slot
+•Higher load factor = more collision0
+1
+272
+383
+4124
+595
+6
+77
+8
+9109
+5What is a good hash function?
+1.As random as possible 
+•The has function distributes the keys from the universe U uniformly 
+over the m slots (out of M slots in 
+direct -address array).
+•The hash function has to  be as 
+independent as possible from patterns 
+that might occur in the input.
+2.Fast to compute 
+6Java .hashcode() 
+7
+Java .hashcode() 
+8
+Java .hashcode() 
+9
+Java .hashcode() 
+•E.g. class Person 
+10
+Classical hashing techniques
+•Digit Analysis 
+•Multiplicative Hashing 
+•Folding
+•Modulus Hashing
+11Classical hashing techniques
+Digit Analysis 
+•Concept:
+•Examines the digits of the key and selects or rearranges specific ones to 
+form the hash.
+•How it works: 
+•Choose certain digits (e.g., last 4 digits) from the key.
+•Use them as the hash value.
+•Use case: 
+•Effective when keys have non -uniform distributions or common 
+prefixes. 
+•Example: 
+•Key = 123456789  → Hash = 6789  (extract last four digits)
+12Classical hashing techniques
+Folding Method  
+•Concept:
+•Divide the key into equal parts, then combine (add or XOR) them to 
+produce the hash.
+•How it works: 
+•Break the key into groups of digits.
+•Add or mix the groups together.
+•If key length not divisible evenly, adjust the last group.
+•Use case: 
+•Works well for numeric or long keys. 
+•Example: 
+•Key = 1234567890  → (123 + 456 + 789 + 0) = 1368
+13Classical hashing techniques
+Multiplicative Hashing   
+•Concept:
+•Multiplies the key by a constant fraction and extracts the fractional part.
+•How it works: 
+•h(k)=⌊m (kA – ⌊kA⌋) ⌋
+•e.g. A = 0.6180339887 
+•m is table size  
+•Use case: 
+•Gives a uniform distribution and minimizes clustering.
+•Example: 
+•A=0.618, 𝑚=1000, 𝑘=12345 ➔h(k) = 310
+14Classical hashing techniques
+Modulus Hashing  
+•Concept:
+•The simplest method — use the remainder when the key is divided by 
+table size.
+•How it works: 
+•h(k)=k mod m 
+•Use case: 
+•Fast and easy; choose 𝑚m as a prime number close to table size to 
+reduce collisions. 
+•Good m may not be easy to find.
+•Example: 
+•Key = 12345, 𝑚=1000m=1000 → Hash = 345 
+15Examples of Hashing Function  
+16int h1(int x) {
+  return (2654435769 * x) >> 22;
+}
+int h2(int x) {
+  x = ~x + (x << 15); 
+  x ^= (x >> 11);
+  x += (x << 3);
+  x ^= (x >> 5);
+  x += (x << 10);
+  x ^= (x >> 16);
+  return x & 0x3FF;
+}k 1 2 3 4 5 6 7 8
+h1(k) 632 241 874 483 92 725 334 966
+h2(k) 500 1001 507 978 486 1014 403 933Collision Resolution
+•Separate Chaining 
+•Open Addressing 
+•Linear probing
+•Quadratic probing
+•Double hashing
+17Collision Resolution
+Separate Chaining
+•Example (m = 1000)
+ h(k1) = h(k5) = h(k7) = 2 
+ h(k2) = 4
+ h(k4) = h(k6) = 5
+ h(k8) = 996
+ h(k9) = h(k3) = 998  
+18Collision Resolution
+Separate Chaining
+•What to do when there are collisions?
+•Separate chaining: each slot acts as a collection. 
+•Put all the collided data in one 
+collection
+•Originally use linked list
+•Big-O can become O(n)
+•In practice, self -balancing BST
+is used.
+•Better time performance  for the 
+worst case: O(log n) 
+19Collision Resolution
+Open Addressing
+•What to do when there are collisions?
+•Open Addressing
+•A.K.A. closed hashing
+•Probe for empty slot to put the 
+collided data
+•Well -known probe sequence
+•Linear probing
+•Quadratic probing
+•Double hashing
+20Linear Probing
+•Look for the empty slot next to 
+the current slot
+•Hash function: 𝐻𝑖𝑥=𝐻𝑥+𝑖
+•Where 𝑖 is the number of collision
+•(One of the) pseudocode
+21Linear Probing
+•Deletion:
+•Deletion requires marking  slots as deleted 
+(lazy deletion) to preserve the probe 
+sequence. (clean the marking by calling 
+rehash)
+•Another choice is to remove everything 
+after the deleted item and re -insert them 
+back again.
+22
+https://en.wikipedia.org/wiki/Linear_probing  https://www.cs.emory.edu/~cheung/Courses/253/Syllabus
+/Map/open -addr -delete.html  Quadratic Probing
+•New “jump ” sequence to avoid Primary Clustering effect
+•Works a little better due to Central Limit Theorem.
+•Hash function: 𝐻𝑖𝑥=𝐻𝑥+𝑖2
+•Where 𝑖 is the number of collision 
+•probes for collisions 0, 12, 22, 32 → +1, +4, +9
+•If the load factor is too high, an empty slot 
+may not be found.
+•Managable issue. 
+•Note on deletion 
+•Deletion requires marking slots as deleted (lazy deletion) to preserve the 
+probe sequence.
+23
+https://www.codingeek.com/data -structure/complete -guide -
+open -addressing -classification -eliminate -collisions/  Double Hashing
+•Use new hash function for jump sequence
+•Hash function: 𝐻𝑖𝑥=𝐻𝑥+𝑖𝐻2(𝑥)
+•Where 𝑖 is the number of collision
+•𝑖𝐻2(𝑥) is a new hash function
+•The secondary hash function, 𝐻2(𝑥), should:
+•never yield an index of zero
+•cycle through the whole table (relative prime to number of slots)
+•be very fast to compute
+•be pair -wise independent of 𝐻𝑥
+•The distribution characteristics of 𝐻2(𝑥) are irrelevant. 
+•It is analogous to a random -number generator.
+24Comparison of Average Number of ProbesSummary
+•A hash table mimics array -like random access using the hash value as 
+an index..
+•Understanding the key distribution characteristic and/or the key distribution 
+of the hash function impacts the hash table performance.
+•Collision resolution can be done by separate chaining and open 
+addressing .
+•For separated chaining, modern implementations often use self -balancing 
+BSTs instead of linked lists.
+•Open addressing looks for empty slot in the table. Sequence of looking 
+(probing) is open for discussion. 
+•In open addressing, deletion requires marking a slot as deleted to preserve 
+the probe sequence.
+26

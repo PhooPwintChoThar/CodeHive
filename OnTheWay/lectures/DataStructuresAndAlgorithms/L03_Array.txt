@@ -1,0 +1,580 @@
+Array
+(kmitl) cs -departmentCh.03Outline
+•Array Introduction
+•Declaration and Instantiation
+•Random access (retrieve/update)
+•Add/Insert unordered/ordered array
+•Search in unordered/ordered array
+•Delete unordered/ordered array
+•Array Limitation
+•Expanding an array 
+2Array Introduction
+•One of the most basic data 
+structure.
+•An array (hence the name) of 
+data of the same type  referred 
+to by a common name.
+•Data are put next to each other, 
+without any space, in the physical 
+memory.
+•In JAVA, the data are in heap 
+(dynamic memory) of JVM.
+3•Starts from variable declaration
+byte b[];
+•Note that we can write byte[] b;
+•Another note, the follow two lines of 
+code are not the same:
+          byte a[], c; // c is just byte 
+          byte[] b, d;// both b and d are 
+•Now, create it.
+b = new byte[5];
+•data are allocated next to each others .
+•We can refer to them as b[0]..b[4]
+•In C/C++ and some other languages address 
+of b is the actual physical memory address. 
+So, we can access memory at 
+the address (b+2) for b[2].
+Declaration and Instantiation
+•Let’s assume there are 64 bytes of 
+dynamic memory 
+4Array Operations
+•We are to analyze the following array operation
+•Random access (retrieve/update)
+•Add/Insert unordered/ordered array
+•Search in unordered/ordered array
+•Delete unordered/ordered array
+5
+Process Memory LayoutMyArray.java & ArrayTester.java
+MyArray.java
+publicclassMyArray {
+intMAX_SIZE =5;
+intdata[]=newint[MAX_SIZE];
+intsize=0;
+    // your code here
+publicStringtoString (){
+StringBuffer sb=newStringBuffer ();
+sb.append ("[");
+for(int i=0;i<size-1;i++){
+sb.append (data[i]);
+sb.append (",");
+}
+if(size>0) sb.append (data[size -1]);
+sb.append ("]");
+returnsb.toString ();
+}
+}ArrayTester.java
+publicclassArrayTester {
+publicstaticvoidmain(String args[]){
+MyArray mArray=newMyArray();
+        // your test code here
+System.out.print (mArray.toString ());
+}
+}What is the Big -O of 
+toString ()?
+6MyArray  Setup
+•In practice, we do not care
+about the actual address.
+MyArray.java
+publicclassMyArray {
+intMAX_SIZE =5;
+intdata[]=newint[MAX_SIZE ];
+intsize=0;
+// more code below here
+7Accessing Array Data
+•Random access data in arrays 
+is done by access array at the 
+starting point + index
+•Ex: address of data[2] is 
+at 1+2 = 3
+•In MyArray, we encapsulate 
+data by method getAt()/setAt(). 
+•This way, we can control what happen
+to our data. 
+•The figure illustrates getAt(2) which will 
+return 8.
+•What is the Big -O of setAt()/getAt?getAt() & setAt()
+publicintgetAt(inti){
+returndata[i];
+}
+publicvoidsetAt(intd,inti){
+data[i]=d;
+}8
+Method add(int d)
+•We want to add a new data into our 
+array.
+•We do not care about order.
+•Best place to put is at the end of array.
+•So, we do not have to move any of the old 
+data.•Let’s implement this.
+Method add() version 1
+public void add(int d) {
+    data[size]=d;
+    size=size+1;
+}
+Method add() more compact version
+public void add(int d) {
+    data[size++]=d;
+}
+9Method isFull() and isEmpty()
+•Simple methods, I will just put 
+it here
+•They are both 𝑂(1)
+Method isFull()
+public boolean isFull() {
+    return size==MAX_SIZE;
+}
+Method isEmpty()
+public boolean isEmpty() {
+    return size==0;
+}•Error Checking
+•When to check isFull()/isEmpty()?
+•Three ways to do this:
+•Before calling the method ( v1)
+•In method ( v2)
+•Check exception ( v3)
+•We will use methods add()  and 
+isFull()  for demonstration
+•The following ideas are also 
+applicable to index out of bound.
+10•If you really need performance,
+you can leave add() as is and do
+the checking yourself.
+•fast(?) but need to worry 
+programmers
+ArrayTester.java
+publicclassArrayTester {
+publicstaticvoidmain(String args[]){
+MyArray mArray=newMyArray();
+        /* v1 */
+        if(!mArray.isFull ()) 
+            mArray.add (5);
+System.out.print (mArray.toString ());
+}
+}Method add() revised
+public int add(int d ) {/* v2 */
+    if(isFull()) 
+        return -1;
+    data[size++]=d;
+    return size;
+}Demonstration on isFull()
+•Another implementation 
+practice is to return boolean, 
+true if successfully added and 
+false otherwise.
+•It is a good practice to use 
+isFull() in place of size == 
+MAX_SIZE11ArrayTester.java
+publicclassArrayTester {
+publicstaticvoidmain(String args[]){
+MyArray mArray=newMyArray();
+try{ 
+mArray.add (3);
+mArray.add (7);
+mArray.add (5);
+mArray.add (4);
+mArray.add (6);
+mArray.add (1);
+}catch(MyArray.IsFullException e){
+//errorhandling codehere
+System.out.println (e.toString ());
+}
+System.out.print (mArray.toString ());
+}
+}MyArray.java
+// other code above
+publicclassIsFullException extends Exception {
+    publicStringtoString (){
+        return"MyArray isfull.";
+    }
+}
+publicvoidadd(int d)throwsIsFullException {
+                       /* v3 */
+    if(isFull())thrownewIsFullException ();
+data[size++] =d;
+}
+// other code below
+•Slowest of them all, not good for this situation.
+•A little too advance / too JAVA specific for this classDemonstration on isFull() (try – catch)
+12Recap 
+•Array is an array of data of the same type, referred to by a common 
+name.
+•Array must be in a continuous memory for speed.
+•Array in JAVA is an object, stored in dynamic memory.
+•Random access  data on an array is 𝑂(1)
+•Adding data to an unordered array is 𝑂(1)
+•Later, more comprehensive add method 
+13Method 
+insert(int d, int idx)
+•Say, if we want to insert
+6 at index 2
+•If order does not matter , consider 
+the following operations
+1.Move data[2] to the end of array
+2.Put 6 at data[2]
+3.Increate size by one 
+•Step 1. must be done before 
+step 2, but step 3 can be 
+done at anytime.publicvoidinsert(int d,intindex){
+data[size++]=data[index];
+data[index] =d;
+}
+•Let’s implement this.
+•What is the Big -O?
+14Insertion (Ordered Array)
+•Right shift so that data[index] is available 
+•Remark : the supplied idx must not break the order 
+of data in the array
+•Steps (To insert 6 in this ordered array)
+•Move everything >6 to the 
+right one position.
+•Put 6 at the position
+•Increase size by 1
+15publicvoidinsert(int d,intindex){
+    for(int i=size;i>index; i--){
+    data[i]=data[i-1];
+}
+data[index] =d;
+size++;
+}Big-O of Ordered Array Insertion
+•Best Case (a.k.a. lucky): insert at 
+the end, 𝑂(1)
+•Worst Case: insert at the 
+index 0, 𝑂(𝑛) 
+•Average Case: count everything 
+and average  publicvoidinsert(int d,intindex){
+    for(int i=size;i>index; i--){
+    data[i]=data[i-1];
+}
+data[index] =d;
+size++;
+}
+16•For average case, Let’s start counting
+•Insert at 0: n copy operations
+•Insert at 1: n -1 copy operations
+•Insert at 2: n -2 copy operations
+•…
+•Insert at n -1: 1 copy operations
+•Insert at n: 0 copy operations
+Note that the other operations are constants , 
+not affecting the Big -O
+•Total operations are 
+1+2+3+⋯+𝑛=𝑛(𝑛+1)
+2
+•We insert n times (from 0 to n -1)
+•So, the average  is 
+𝑛(𝑛+1)
+2÷𝑛=(𝑛+1)
+2∈𝑂(𝑛)Overloaded insert(int d) on ordered array
+•Recall, insert(int d, int idx) applies to unordered 
+array
+•insert(int d) is to insert into ordered array via 
+computed index 
+•No need the index parameter because the index 
+must be computed for consistency.
+•Same logic for add(int d) to ordered array 
+•Steps (insert 6 in this ordered array)
+•(Find where to insert and) Move everything > 6 
+to the right one position.
+•Put 6 
+at the 
+position
+•Increase 
+size by 1
+17index = size – 1; 
+while (data[index] > d) {
+    data[index+1] = data[index];
+    index--;
+}
+data[++index] = d;
+size++;Method find(int d)
+•In an unordered  array, best we can do is linear search
+•Big-O is similar to insertion of an ordered array.Simple implementation
+publicintfind(int d){
+intindex=-1;
+for(int i=0;i<size;i++){
+if(data[ i]==d){
+index=i;
+break;
+}
+}
+returnindex;
+}Compact version
+publicintfind(int d){
+for(int i=0;i<size;i++){
+if(data[ i]==d){
+return i;
+}
+}
+return-1;
+}Efficiency
+Best Case:         𝑂(1)
+Worst Case:      𝑂(𝑛) 
+Average Case:  𝑂(𝑛) 
+18Method 
+binarySearch(int d) on Ordered Array
+•Binary search  on ordered  array is by far faster than performing a 
+linear search .
+publicintbinarySearch (intd){
+inta=0,b=size-1;
+while(a<=b) {
+intm=(a+b)/2;
+if(data[m]==d) returnm;
+if(d<data[m]) b=m-1;
+elsea=m+1;//d>data[m]
+}
+return-1;
+}
+19Big-O of binary search
+•Best Case  is still O(1)
+•Worst Case: we need to count
+➢1st  iteration: 𝑛
+➢2nd iteration: 𝑛
+2
+➢3rd: 𝑛
+4
+➢kth: 𝑛
+2𝑘−1
+➢Last iteration: 1 
+•If we run k round, we stop at 
+𝑛
+2𝑘−1=1 or 𝑘=log 𝑛+1
+•So, the worst case  
+is 𝑘 round or 𝑂(log(𝑛))Stop criteria•For average case , Let’s start 
+counting
+•The search data is at index 
+0,1,2,3,…,𝑛−1, not found
+•We will sum the number of operations 
+of all search and divide it by 𝑛+1
+•There are [ 𝑘=log(𝑛+1)]:
+•1 data that need only 1 comparison
+•2 data that need 2 comparisons
+•4 data that need 3 comparisons
+•…
+•2k-1 data that need k comparisons 
+•Total operations 
+  = 1*20+2*21+3*22+4*23+..+k *2k-1
+20Arkkkk ~~Sum 
+ 1*20    = 20        
++2*21     = 21   + 21
++3*22     = 22   + 22   +22
++4*23     = 23   + 23   +23   +23
++..     = … ………
++k*2k-1   = 2k-1 + 2k-1 +2k-1 +2k-1 +… +2k-1
+        = 2k-1 + 2k-1-20 + 2k-1-20-21 + 2k-1-20-21-22 + … 
+          + 2k-1-20-21-22-…-2k-2
+        = 2k-20 + 2k-21 + 2k-22 + 2k-23 + 2k-24 + … + 2k-2k-1
+        = k2k-(20+21+21+21+…+2k-1) 
+        = k2k-(2k-1) = k2k – 2k + 1
+        = (k-1)2k+1
+•So, average = 𝑘−12𝑘+1
+𝑛+1 = 𝑘−12𝑘+1
+2𝑘−1+1 ϵ O(k) = O(log n)Formula
+෍
+𝑖=0𝑘−1
+2𝑖=2𝑘−1
+21Recap
+•Let summarize using a table
+•Now , only method delete left.Methods Best case Worst case Average case
+Add (unordered) 𝑂(1) 𝑂(1) 𝑂(1)
+Insert unordered array 𝑂(1) 𝑂(1) 𝑂(1)
+Insert ordered array / add (ordered) 𝑂(1) 𝑂(𝑛) 𝑂(𝑛)
+Find unordered array 𝑂(1) 𝑂(𝑛) 𝑂(𝑛)
+Binary search ordered array 𝑂(1) 𝑂(log𝑛) 𝑂(log𝑛)
+22Delete from an Unordered  Array 
+delete(int index)
+•If order is not important, it can 
+be done in 𝑂(1) time.
+•If we want to delete 7 at index=2
+1.Copy last data to index 2
+2.Decrease size by one
+Note that the last element will be 
+removed automatically.
+•Very simple to implement
+Note that we skip the searching for data 
+step since that would mean 𝑂(𝑛).publicvoiddelete(int index){
+data[index] = data[ --size];
+}
+23Delete from an Ordered  Array 
+delete(int index)
+•Very similar to insert into an 
+ordered array.
+•Move everyone to the left, instead of 
+the right
+•Steps from delete at index=2
+•Start from the index
+•Move data from the right to the current 
+place
+•Keep going to the right and do the 
+same thing until the end
+•Decrease size by 1
+•Big-O is similar to insert into an 
+ordered array.
+•Let’s implement this.
+publicvoiddelete(int index){
+    for(int i=index; i<size-1;i++){
+    data[i]=data[i+1];
+}
+size--;
+}
+240 0 0 0 0Limitation of Array
+•Given the shaded areas are occupied .
+•It is not possible to 
+•create an array of size 10.
+•Although we have more than
+enough memory.
+var addr
+b 0b
+25Expanding Array (add())
+•Array data structures can not be 
+expanded. 
+•What we can do is 
+•Create a bigger array
+•Copy all data to the new one
+•Point to the new one
+•Delete the old one
+•Modified add(); 
+•Seems too be slow, right?•Two versions of expands() 
+voidexpands() { // version A
+MAX_SIZE =MAX_SIZE+M;
+intnewData[]=newint[MAX_SIZE];
+System.arraycopy (data,0,newData,0,size);
+data=newData;
+System.gc ();
+}
+voidexpands() { // version B
+MAX_SIZE =2*MAX_SIZE;
+intnewData[]=newint[MAX_SIZE];
+System.arraycopy (data,0,newData,0,size);
+data=newData;
+System.gc ();
+}For sufficiently large M such as M=1000
+publicvoidadd(int d){
+if(isFull())expands();
+data[size++] =d;
+}
+26The Big -O
+•For expand() , Big -O is always 𝑂(𝑛)
+•For add()
+•Best case is 𝑂(1), we do not have to expand.
+•Worst case is 𝑂(𝑛), we must expand and copy 𝑛 times.
+•Let compute for the average case for both version.
+27Version A
+MAX_SIZE =MAX_SIZE+M;
+•To compute average, we assume that data are added 𝑛 times
+•Add data from index 0 to S -1 take S operations
+•Add data at index S takes S+1 operations, since we need to copy and add a new data.
+•Add data from index S+1 to S+M -1 take M-1 operations
+•Add data at index S+M takes S+M+1 operations
+•And so on ..
+•Total operation is
+𝑆+𝑘(𝑆+1)+𝑘(𝑀−1)+[𝑀+2𝑀+3𝑀+⋯+(𝑘−1)𝑀]
+=(𝑘+1)𝑆+𝑘𝑀+𝑘−1𝑘
+2𝑀…S M M M MExpands k times
+S
+S+1M-1 M-1 M-1 M-1
+S+M+1 S+2M+1 S+(k-1)M+1
+𝑛=𝑆+𝑘𝑀
+𝑘=𝑛−𝑆
+𝑀
+28Average of Version A
+•Total Operations 
+𝑆𝑢𝑚 =𝑘+1𝑆+𝑘𝑀 +𝑘−1𝑘
+2𝑀
+𝑆𝑢𝑚 =𝑛−𝑆
+𝑀+1𝑆+𝑛−𝑆
+𝑀𝑀+𝑛−𝑆
+𝑀−1𝑛−𝑆
+𝑀
+2𝑀
+𝑆𝑢𝑚 =𝑛−𝑆+𝑀
+𝑀𝑆+𝑛−𝑆+𝑛−𝑆−𝑀(𝑛−𝑆)
+2𝑀
+•Without simplifying it further, we can see that it is 𝑂(𝑛2)
+•Since average is 𝑆𝑢𝑚
+𝑛, so, the average is 𝑂(𝑛).𝑛=𝑆+𝑘𝑀
+𝑘=𝑛−𝑆
+𝑀
+29Version B
+MAX_SIZE =2*MAX_SIZE;
+•First, let compute relationship between n and k
+𝑛=𝑆+𝑆+2𝑆+4𝑆+..+2𝑘−1𝑆
+𝑛=1+1+2+4+..+2𝑘−1𝑆
+𝑛=2𝑘𝑆
+𝑘=log𝑛
+𝑆
+•Let compute average in the next slide
+   S S 2S
+…4SExpands k times
+2k-1S
+30Version B
+MAX_SIZE =2*MAX_SIZE;
+•Again, we assume we add data n times
+•Add data from index 0 to S -1 take S operations
+•Add data at index S takes S+1 operations, from copy and add new data
+•Add data from index S+1 to 2S -1 take S -1 operations
+•Add data at index 2S takes 2S+1 operations
+•And so on..
+•The total operations is 
+𝑆+2𝑆+4𝑆+8𝑆+..+2𝑘𝑆=(2𝑘+1−1)𝑆=2(2𝑘𝑆)−𝑆=2𝑛−𝑆
+•So, average is 2𝑛−𝑆
+𝑛∈𝑂1!S S 2S
+…4SExpands k times
+2k-1S𝑛=2𝑘𝑆
+𝑘=log𝑛
+𝑆
+S S-1 2S-1 4S-1 2k-1S-1
+S+1 2S+1 4S+1 2k-1S+1
+31Example challenge
+public class Solution {
+ public int removeDuplicates( int[] nums ) {
+   return 0;    
+ }
+} 
+/* it is already sorted. Care to swap the first 
+next value to its correct position? */
+32
+Example challengevoid sortColors( int[] nums) {     
+ int tmp, low = 0, mid = 0, high = nums.length - 1;
+ while (mid <= high) {
+  if (nums[mid] == 0) {
+   // Swap arr[low] and arr[mid], move both forward
+   tmp = nums[low];
+   nums[low] = nums[mid];
+   nums[mid] = tmp;
+   /* use below technique leads to unexpected side effect 
+     (accessing same index nums[index] both LHS and RHS)
+   // nums[low] = nums[low] + nums[mid];
+   // nums[mid] = nums[low] - nums[mid];
+   // nums[low] = nums[low] - nums[mid];      */
+   low++;
+   mid++;        
+  } else if (nums[mid] == 1) {
+   mid++;
+  } else {
+   tmp = nums[mid];
+   nums[mid] = nums[high];
+   nums[high] = tmp;
+   // if the same variable is modified in -place incorrectly, 
+   // we may accidentally cause corruption,
+   // Swap arr[mid] and arr[high], move high backward
+   // nums[mid] = nums[mid] + nums[high];
+   // nums[high] = nums[mid] - nums[high];
+    // nums[mid] = nums[mid] - nums[high];
+   high--;
+  } 
+ }
+}33
+Summary
+•Let summarize all methods of array data structures
+Methods Best case Worst case Average case
+Add into an array 𝑂(1) 𝑂(1) 𝑂(1)
+Insert into an unordered array 𝑂(1) 𝑂(1) 𝑂(1)
+Insert / Add into an ordered array 𝑂(1) 𝑂(𝑛) 𝑂(𝑛)
+Find in an unordered array 𝑂(1) 𝑂(𝑛) 𝑂(𝑛)
+Binary search in an ordered array 𝑂(1) 𝑂(log𝑛) 𝑂(log𝑛)
+Delete from an unordered array 𝑂(1) 𝑂(1) 𝑂(1)
+Delete from an ordered array 𝑂(1) 𝑂(𝑛) 𝑂(𝑛)
+Expand an array 𝑂(n) 𝑂(𝑛) 𝑂(𝑛)
+Add with expand 𝑂(1) 𝑂(𝑛) 𝑂(1)version B
+an example of amortized analysis
+34

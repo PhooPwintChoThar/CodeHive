@@ -1,0 +1,282 @@
+Sorting Primer
+(kmitl) cs -departmentCh.08aOutline
+•Classical Intuitive Sorting 
+Algorithm
+•Bubble sort
+•Selection sort
+•Insertion sort 
+•Classic Divide & Conquer 
+(Comparison -based)
+•Quick sort
+•Merge sort
+•Example of non -comparison 
+sorting algorithm 
+•Radix Sort
+•Counting sort 2
+•Using Data Structure
+•Heap sort
+•BST sortReasons for Sorting
+•Making lookup or search efficient;
+•Making merging of sequences efficient.
+•Enable processing of data in a defined order.
+3Sorting Characteristics
+•Time efficiency 
+•If data are compared to each other internally before rearrange, the best we 
+can do is O(n log n)  
+•since each rearrange takes O(n) and we must compare at least O(log n) time
+•Sometimes analyze comparing  and swapping  separately.
+•Memory requirement
+•Internal sort  means it requires no extra (external) memory.
+•Stability
+•Stable sort  means data with same key will not be re ordered. 
+•Sorting can de done by sorting data or sorting keys to data. 
+•For example, a title of a book can be the key to the book.
+•Stable Sorting works with requirements which primary key, secondary key, tertiary 
+key, and so on are required.
+•Trivia 
+•Sorting Order : Ascending → from low to high, Descending → from high to low
+4Well known in -place sorting algorithms
+5
+https://devopedia.org/sorting -algorithms  
+Selection Sort
+https://www.collegenote.net/curriculum/data -structures -and-algorithms/83/465/  Bubble Sort
+•Only for academic purpose, do not 
+use it in practice!  
+•Naïve bubbleSort()
+•All pair
+•Sweep and compare two data next to 
+each other and swap if necessary. 
+•Improved bubble sort 
+•Repeat until no more swapping
+https://sameer9247.wordpress.co
+m/2016/11/15/sorting/  
+6
+https://www.researchgate.net/figure/Sequential -Bubble -
+sort-Pseudocode_fig1_334131761  Bubble Sort: Pseudocode
+7
+Bubble Sort
+•Best case: O(n) comparisons, 
+O(1) swaps
+•Worst case: O(n2) comparisons, 
+O(n2) swaps
+•Average case: O(n2) 
+comparisons, O(n2) swaps
+•Memory requirement: none
+•Stable: yes
+8Selection Sort
+•Select the smallest key and put it in front
+•Very simple to understand and implement
+9Selection Sort: Pseudocode
+10Selection Sort
+•Best case: O(n2) comparisons , 
+O(1) swaps
+•Worst case: O(n2) comparisons, 
+O(n) swaps
+•Average case: O(n2) comparisons, 
+O(n) swaps
+•Memory requirement: none
+•Stable: no
+11Insertion Sort
+•Put the current key in place of 
+sorted list
+•Sorted list starts from no element
+and add in one at a time.
+•A list of size one is sorted
+•Has some usage in practice .
+12Insertion Sort: Pseudocode
+•Without key, 
+swap
+•With key, 
+shift  instead 
+of swap.
+13Insertion Sort
+•Best case: O(n) comparisons, 
+O(1) swap
+•Worst case: O(n2) 
+comparisons, O(n2) swaps
+•Average case: O(n2) 
+comparisons, O(n2) swaps
+•Memory requirement: none
+•Stable: yes
+14Sorting non -trivia
+•Sorted data can be used for solving a number of applications.
+•Big-O of practical sorted algorithms is O(n log n)  
+•A number of use case to transform O(n2) problem to O(n log n) + O(n)  
+by transforming the data to be sorted then solve it linearly.
+•bubble sort, selection sort, and insertion sort are intuitive – not 
+so complex. Hence they share the same big -O of O(n2) 
+•insertion sort has some application because it’s real performance on 
+small data tends to be good enough
+•Other efficiency factor should also be considered such as space 
+required (non -in-memory sort)
+15Do not forget other algorithm characteristics
+•All three algorithms are in-place  i.e. space complexity is O(1). 
+•If the data order is required after sorting, use only algorithms 
+with stable  characteristic.
+•we can find improvements over intuitive sorting algorithms
+•Non-comparison sorting algorithms has been studied, proposed.
+16
+Sorting
+(kmitl) cs -departmentCh.08bOutline
+•Recall
+•insertion sort, etc
+•Quicksort
+•Mergesort
+•Radix sort
+•Counting sort
+•Bucket sort
+•Shell sort  
+•Later
+•Heap sort, BST sort
+18
+Quick Sort
+•Invented by Tony Hoare in 1959, still 
+commonly used today.
+•Nice example of divide -and-conquer 
+algorithm
+•Start by select a pivot and divide to 2 lists: 
+lower and higher lists.
+19
+https://slidetodoc.com/back -to-sorting -more -
+efficient -sorting -algorithms -merge/  Quick Sort
+20
+https://slidetodoc.com/tutorial -4-the-quicksort -algorithm -
+quick -sort-divide/  
+https://www.techiedelight.com/quicksort/  Quick Sort: Pseudocode
+21
+Divide (Partitioning)
+22https://en.ppt -online.org/77315  
+ https://dl.acm.org/doi/fullHtml/10.1145/3274660  Quick Sort: Pseudocode
+23
+https://cis.temple.edu/~pwang/5511 -PT/Lecture/5511 -05.htm  
+Quick Sort
+•Best case: O(n log n)
+•Worst case: O(n2)
+•Due to bad pivot
+•Best pivot is the median
+•But time to compute median is to long
+•Average case: O(n log n)
+•Memory requirement: O(log n)
+•Stable: no
+24Merge Sort
+•Divides list into n sub -lists
+•Merge two sub -lists into 
+one sorted sub -list 
+•This take O(n)
+•Repeat until all sub -lists are merged
+25
+https://www.zhangpengxiang.com/en/archives/2021/3/22 -Merge -Sort
+Merge Sort
+26
+ https://www.jsums.edu/nmeghanathan/files/2019/01/CSC323 -Sp2019 -Module -2-Divide -and-Conquer.pdf  Merge Sort: 
+Pseudocode
+27
+(Recursive) MergeSort Runtime Analysis
+T(n) = 2T(n/2) + cn  ; n >= 2 
+T(1) = 0 
+Hence
+Θ(n log n) 
+28Adapted from https://courses.cs.washington.edu/courses/cse521/13wi/slides/05dc.pdf  
+Food of thought (on divide and conquer)
+•Suppose we’ve dullSort with O(n2) 
+• calling
+ dullSort(first n/2 elements)
+ dullSort(last n/2 elements)
+ merge result
+•Analysis Running time: 2(n/2)2 + n = n2/2 + n  << n2 
+•Moral 1 : “two halves are better than whole”
+•Moral 2 : “If a little’s good, then more’s better”
+•Moral 3 : “Unbalanced division less good” 
+•(0.1n)2 + (0.9n)2 + n = 0.82n2 + n // still 18% improvement 
+29Adapted from https://courses.cs.washington.edu/courses/cse521/13wi/slides/05dc.pdf  // almost twice as fast!Merge Sort : Time complexity 
+•Best case: O(n log n)
+•Worst case: O(n log n)
+•Average case: O(n log n)
+•Memory requirement: O(n)
+•Stable: yes
+3031
+Comparison -based sorting librariesRadix Sort
+•Using “digits” as buckets
+•Help reduce effect of m
+32
+Radix Sort
+•Best case: O( nd) – d = 𝑙𝑜𝑔10𝑛
+•Worst case: O(nd)
+•Average case: O(nd)
+•Memory requirement: O(n+d)
+•Stable: yes
+33
+https://www.brainkart.com/article/Radix -sort_6986/  Counting sort  
+•Non-comparison sorting algorithm
+•It operates by 
+•counting the number of objects  that possess distinct key values, 
+•and applying prefix sum on those counts to determine the positions of 
+each key value in the output sequence. 
+•Its running time is linear in the number of items and the difference between 
+the maximum key value and the minimum key value
+•so it is only suitable for direct use in situations where the variation in 
+keys is not significantly greater than the number of items. 
+•It is often used as a subroutine in radix sort , another sorting algorithm, 
+which can handle larger keys more efficiently.
+34Counting sort 
+•With prefix sum, the sort is 
+stable !!
+35Challenge 
+36Bucket Sort
+•Put keys in their respective 
+buckets,
+then read them out one by one.
+•Example of external comparison 
+sorting.
+•Thus, this may break O(n log n) lower 
+bound.
+•Let talk about bucket sort for 
+sorting list where each element is 
+between [0..max].
+37Bucket Sort: Pseudocode
+•Best case: O(n) – m = n
+•Worst case: O(m+n)
+•Average case: O(m+n)
+•Memory requirement: O(m)
+•Stable: yes
+38
+https://javarevisited.blogspot.com/2017/01/bucket -sort-in-java-with -example.html  
+Shell sort  
+•Shellsort  is an optimization of insertion sort  that allows the 
+exchange of items that are far apart. 
+•The idea is to arrange the list of elements so that, starting 
+anywhere, taking every hth element produces a sorted list (h 
+interleaved lists). Such a list is said to be h -sorted and individualy 
+sorted. 
+•Beginning with large values of h allows elements to move long 
+distances in the original list, reducing large amounts of disorder 
+quickly, and leaving less work for smaller h -sort steps  to do. 
+•Following this idea for a decreasing sequence of h values  ending 
+in 1 is guaranteed to leave a sorted list in the end.
+39Shell sort pseudocode 
+40Shell sort application 
+•Shell Sort can be used for a variety of purposes, including:
+•Shell sort has a more significant cache miss percentage than quicksort 
+and executes more operations.
+•Some versions of the qsort function in the C standard library geared at 
+embedded devices utilize it instead of quicksort because it requires less 
+code and does not use the call stack . The uClibc library, for example, 
+uses Shell sort. The Linux kernel has a Shell Sort implementation for 
+similar reasons.
+•Shell sort can also be used as a sub -algorithm of the introspective sort 
+to sort short subarrays and avoid slowdowns when the recursion depth 
+exceeds a certain threshold. This method is used in the bzip2 
+compression algorithm, for example. 41Heap Sort
+•Put all keys in heap, then take it out one by one.
+•See binary heap video for detail
+•Best case: O(n log n)
+•Worst case: O(n log n)
+•Average case: O(n log n)
+•Memory requirement: O(n)
+•Stable: no
+42Sorting :
+The big picture  
+43
+•https://www.cs.usfca.edu/~galles/visualization/ComparisonSort.html  
+•Sorting Algorithms in Wiki
+44Recommended Resources

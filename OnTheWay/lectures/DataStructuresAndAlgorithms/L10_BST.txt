@@ -1,0 +1,333 @@
+Binary Search Tree (BST)
+(kmitl) cs -departmentCh.10Outline
+•Tree
+•Balance Tree
+•Tree Representation
+•(TreeNode and) Binary Tree 
+•Binary Tree Traversal
+•Binary Search Tree
+•Binary Search Tree Implementation
+•Binary Search Tree Operations
+•search(), insert()
+•delete()
+2Tree
+•An abstract data type where its data 
+are linked together in tree -like structure.
+•Tree terminology
+•Root : the reference to the tree
+•Node : a set of data, links to 
+its children, and sometimes to its parent
+•Parent , children : node that linked together, the one 
+closer to root is called a parent. The ones above 
+parent can be called ancestor .
+•Siblings : nodes with same parent
+•Leaf: Node with no children
+•Depth of node: number of edges 
+from root to the node
+•Height of tree: maximum depth of node in the tree.
+•Subtree : tree structure starting from non -root node.
+3Balance/Unbalance Tree
+•If a tree is balance, height of the tree is O(log n)
+•If tree is very unbalance, the height approaches O(n)
+•We call it deformed tree.
+•Worse case: Tree becomes Linked List
+4Tree Representation
+•Heap represent binary tree, tree with at most two children, using 
+array.
+•What happen if tree is very unbalanced?
+•Typically, tree are represented using Node and references
+•Similar to linked list, but not linear.
+•The follows are example of TreeNode
+5TreeNode : General and Binary Tree.
+class TreeNode  {
+  int data;
+  LinkedList <TreeNode > children;
+}
+class TreeNode  {
+  int data;
+  TreeNode left, right;
+}Any collection of TreeNodeclass BinaryTree  {
+  class TreeNode  {
+    int data;
+    TreeNode  left, right;
+  }
+  TreeNode  root = null;
+  TreeNode  search(int d);
+  void insert(int d);
+  void delete(int d);
+}To be implementedInner class, referred to 
+as  BinaryTree .TreeNode
+6Tree Traversal
+•Traversal through a collection of data is a process of discover 
+and explored each data within the collection. 
+•Each data are in one of three states: undiscovered , discovered , and 
+processed .
+•Tree traversal can be done in any order, but we would like to 
+discover and explore every data in the tree. 
+•There are three typical traversal -orders for tree, in-order, pre -
+order , and post -order
+•in-order  is applicable to only binary tree.
+•We will explore these orders using binary tree.
+7Traversal of Binary Tree
+8Recursive Implementations 
+void printPreOrder (TreeNode  node) {
+  if(node==null) return;
+  System.out.println (node.data +" ");
+  printPreOrder (node.left );
+  printPreOrder (node.right );
+}
+void printInOrder (TreeNode  node) {
+  if(node==null) return;
+  printInOrder (node.left );
+  System.out.println (node.data +" ");      
+  printInOrder (node.right );
+}void printPostOrder (TreeNode  node) {
+  if(node==null) return;
+  printPostOrder (node.left );
+  printPostOrder (node.right );
+  System.out.println (node.data +" ");
+}
+Passing root as the parameter
+9Binary Search Tree - BST
+•Binary tree refers to tree with at most 
+two children
+•We call them left child and right child.
+•Binary search tree requires that, 
+at any node, the value stored the node itself is not less than 
+the left child and not more than the right child.
+•Making binary search possible
+•Search, insert, and delete can be done in O(log n)
+•However, in the unbalanced case, these operations become O(n)
+10Intuitive Draw
+•insert(7)
+•insert(20)
+•insert(5)
+•insert(15)
+•insert(10)
+•insert(4)
+•insert(33)
+•insert(2)
+•insert(25)
+•insert(6)
+11Binary Search Tree Implementation
+public class BinaryTree  {
+  public class TreeNode  {
+    int data;
+    TreeNode  left=null, right=null, parent=null;
+    public TreeNode (int d) {
+      data = d;
+    }
+  }
+  TreeNode  root = null;
+  TreeNode  search(int d);
+  void insert(int d);
+  void delete(int d);
+}public constructure
+12search(int d)
+insert(int d)
+search(int d, TreeNode node)
+calls searchRecurse(int d, TreeNode node)
+Passing root as the parameter is for 
+recursion void insert( int d) {
+  if(root == null) {
+      root = new TreeNode (d);
+      return;
+  }
+  TreeNode current = root;
+  while (current != null) {
+    if (d < current.data) {
+      if (current.left != null){
+          current = current.left;
+      } else {
+          /* your code 1*/
+      }
+    } else { //! (d < p.data)
+      if (current.right != null)
+          /* your code 2*/;
+      else {
+          current.right = new TreeNode(d);
+          current.right.parent = current;
+          return;
+      }
+    }
+  } //while
+}13TreeNode  searchRecurse(int d, TreeNode 
+node) {
+  if(node==null) return null;
+  if(d==node.data ) return node;
+  if(d<node.data ) 
+    return searchRecurse( d, node.left );
+  return searchRecurse( d, node.right );
+}Delete Operation
+•Delete can be complicated 
+since we have to  maintain BST 
+structure.
+•There are three cases 
+•Delete leaf node
+•Delete one -child node
+•Delete two -children node
+14Delete leaf node
+Delete One-child Node
+•Deleting one -child node
+•Still simple, just replace the 
+current node with its child
+•Deleting leaf node
+•We can just simply remove the 
+node
+15Putting All Togethervoid delete(int d, TreeNode  node) {
+ if (node == null) return; // not found
+ if (d < node.data)
+     delete(d, node.left);
+ else if (d > node.data)
+     delete(d, node.right);
+ else { // found node which its value == d  
+     if (node.left == null || node.right == null) {
+         TreeNode q = (node.left == null) ? node.right : node.left;
+         // if node.left is null, q is set to right child
+         if (node.parent != null) {
+             if (node.parent.left == node) {  // node is left child 
+                 node.parent.left = q;
+             } else {
+                 node.parent.right = q;
+             }
+             if (q != null) q.parent = node.parent;  
+             // if q is null, leave the /* no child */ node alone or update its parent
+         } else { root = q;  }
+     } else { 
+       // 2 children … next slide
+     }
+ } /* found */  
+} /* delete */16
+Delete 
+2-children Node
+17else { // 2 children
+    TreeNode q = findMaxFrom(node.left); // predecessor (left for exercise)
+    delete(q.data, node.left);           // delete predecessor
+    // link q to node's parent
+    if (node.parent == null) {
+        root = q;
+    } else if (node.parent.left == node) {
+        node.parent.left = q;
+    } else {
+        node.parent.right = q;
+    }
+    // attach children
+    q.left = node.left;
+    if (q.left != null) q.left.parent = q;
+    q.right = node.right;
+    if (q.right != null) q.right.parent = q;
+    q.parent = node.parent;
+}
+181. node 19 is selected 
+2. delete 19  from  18 
+3. Connect 20’s parent to 19 
+4. 4.1 q.left = node.left 
+ 18 becomes 19’s left child 
+4.2 q.right = node.right 
+ 30 becomes 19’s right child  else { // 2 children
+    TreeNode q = findMaxFrom(node.left); 
+    delete(q.data, node.left);           
+    // link q to node's parent
+    if (node.parent == null) {
+        root = q;
+    } else if (node.parent.left == node) {
+        node.parent.left = q;
+    } else {
+        node.parent.right = q;
+    }
+    // attach children
+    q.left = node.left;
+    if (q.left != null) q.left.parent = q;
+    q.right = node.right;
+    if (q.right != null) q.right.parent = q;
+    q.parent = node.parent;
+}
+Putting All Together
+void delete(int d, TreeNode  node) { 
+// Another approach on 2 children node
+    /*
+    * if node is leaf - set parent pointer to null
+    * if node has one child - set parent pointer to its child   
+    * if node has 2 children - swap with inorder successor (max 
+    * left prefered to min right) then delete the selected child
+    */
+}
+19Delete Two -children Node
+•Now it’s less straight forward. 
+•We must replace the deleted node by the largest value in the left subtree 
+(in the example) or the smallest value in the right subtree. 
+•Update the appropriated node’s parent child link. 
+•node’s inbound edge disappear 
+•Update the candidate node’s parent link. 
+•Another approach could be swapping
+candidate’s 
+value to the deleted
+node value then
+tidy up the 
+candidate’s list
+20
+Example Challenge
+•Given a BST, findMax(MyBST_Basic bst)
+•Do not worry about
+MyBST_Basic, 
+MyBST_Basic.Node
+yet
+21public static void demo_1() {
+  MyBST_Basic  bst = new MyBST_Basic();
+  int[] values = { 5, 3, 8, 2, 4, 7, 9};
+  for (int v : values) bst.insert(v); 
+  System.out.println( findMax(bst) ); // 9  
+}
+private static int findMax( MyBST_Basic  bst) {
+  MyBST_Basic .Node node = bst.root;
+  if (node == null)  
+    return -1; // assume non -negative value
+  while (node.right != null)  
+    node = node.right;
+  return node.val;
+}
+Example Challenge
+•Given a BST, 
+rangeSumBST(MyBST_Basic.Node node, 
+                                          int low, int high) 
+22public static void demo_2() {
+  MyBST_Basic  bst = new MyBST_Basic();
+  int[] values = { 5, 3, 8, 2, 4, 7, 9};
+  for (int v : values) bst.insert(v); 
+  MyBST_Basic .Node root = bst.root;
+  System.out.println( rangeSumBST(root, 4,8) ); // 4 + 5 + 7 + 8 = 24  
+}
+private static int rangeSumBST( MyBST_Basic .Node node, int low, int high) {
+/*A*/  if (node == null) return 0;
+/*B*/  if (node.val < low) return rangeSumBST(node.right, low, high);
+/*C*/  if (node.val > high) return rangeSumBST(node.left, low, high);
+/*D*/  return node.val + rangeSumBST(node.left, low, high)
+          + rangeSumBST(node.right, low, high);
+}
+Example Challenge
+•rangeSumBST(root,4,8)
+23private static int rangeSumBST( MyBST_Basic .Node node, int low, 
+                                                          int high) {
+/*A*/  if (node == null) return 0;
+/*B*/  if (node.val < low) return rangeSumBST(node.right, low, high);
+/*C*/  if (node.val > high) return rangeSumBST(node.left, low, high);
+/*D*/  return node.val + rangeSumBST(node.left, low, high)
+          + rangeSumBST(node.right, low, high);
+}
+1.         D. 5 + sum(left) + sum(right)
+2. sum(left is 3)  B. rangSumBST(3.right = 4, 4, 8)
+3.         D. 4 + sum(null) + sum(null)  => 4
+4. sum(left is 8)  D. 8 + sum(left) + sum(right)
+5. sum(left is 7)  D. 7 + sum(null) + sum(null)
+6. sum(right is 9) C. rangeSumBST(9.left = null, 4, 8) => 0
+hence 4 + 5 + (7 + 8 + 0)Summary
+•Tree is a non -linear ADT where data are kept in a tree like structure.
+•Height of a balance tree is O(log n) , making a lot of algorithms run really 
+fast.
+•However, a deformed tree become linked list. Transforming from O(log n) to O(n)
+•Traversal in any collection of data is a mean to discover and process data. 
+•Each data can be in one of three states: undiscovered, discovered, and processed.
+•Binary Search Tree is a special binary tree, structured in such a way that 
+we can find, insert, delete in O(log n) time.
+•An unbalanced tree makes these operations run in O(n) time.
+24
