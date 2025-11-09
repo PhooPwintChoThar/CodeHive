@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', path='styles.css')}}?v=3"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <div class="brand">
+          CodeHive
+          <img
+            src="{{url_for('static', path='test4.png')}}"
+            alt="CodeHive"
+            width="40"
+            height="35"
+          />
+        </div>
+        <div
+          class="tab"
+          style="
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{id}}/quizzes"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Quiz</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{id}}/discussions"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Discussion</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{id}}/courses"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Courses</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{id}}/profile"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Profile</a
+            >
+          </span>
+        </div>
+        <a href="/" class="loginandout" style="font-size: 16px">Logout</a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="profile-container">
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 2rem;
+        "
+      >
+        <h1 class="profile-title" style="margin-bottom: 0">My Profile</h1>
+        <div class="settings-icon">
+          <img
+            src="{{url_for('static', path='settings.png')}}"
+            alt="user"
+            width="60"
+            height="60"
+          />
+        </div>
+      </div>
+
+      <!-- Profile Card -->
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="profile-avatar">
+            <img
+              src="{{url_for('static', path='user.png')}}"
+              alt="user"
+              width="200"
+              height="200"
+            />
+          </div>
+          <div class="profile-info">
+            <h2>{{student.name}}</h2>
+            <p class="student-id">{{student.id}}</p>
+            <p class="member-since">Member since March 2024</p>
+            <p class="courses-count">
+              Courses Enrolled: {{student.courses |length}}
+            </p>
+          </div>
+        </div>
+
+        <div class="profile-stats">
+          <!--Bar chart here-->
+          <div
+            style="
+              position: relative;
+              height: 350px;
+              margin-top: -20px;
+              width: 100%;
+              grid-column: 1 / -1;
+            "
+          >
+            <canvas id="skillsChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enrolled Courses Section -->
+      <h2 class="section-title">Enrolled Course</h2>
+
+      {% for course in student.courses %}
+      <div class="course-card">
+        <h3 class="course-title">{{course.name}}</h3>
+        <p class="course-id">{{course.id}}</p>
+        <p class="course-professor">Prof. {{course.professor}}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <script>
+      // Custom plugin to draw threshold lines
+      const thresholdLinesPlugin = {
+        id: "thresholdLines",
+        afterDatasetsDraw(chart) {
+          const {
+            ctx,
+            chartArea: { left, right, top, bottom },
+            scales: { y },
+          } = chart;
+
+          // Define thresholds
+          const thresholds = [
+            { value: 80, color: "#4CAF50", label: "Strong (80%)" },
+            { value: 60, color: "#FFC107", label: "Average (60%)" },
+            { value: 40, color: "#F44336", label: "Attention (40%)" },
+          ];
+
+          ctx.save();
+
+          thresholds.forEach((threshold) => {
+            const yPos = y.getPixelForValue(threshold.value);
+
+            // Draw dashed line
+            ctx.strokeStyle = threshold.color;
+            ctx.lineWidth = 3;
+            ctx.setLineDash([10, 5]);
+
+            ctx.beginPath();
+            ctx.moveTo(left, yPos);
+            ctx.lineTo(right, yPos);
+            ctx.stroke();
+
+            // Draw label
+            ctx.fillStyle = threshold.color;
+            ctx.font = "bold 10px Arial";
+            ctx.textAlign = "right";
+            ctx.fillText(threshold.label, right - 10, yPos - 5);
+          });
+
+          ctx.restore();
+        },
+      };
+
+      // Register the plugin
+      Chart.register(thresholdLinesPlugin);
+
+      const ctx = document.getElementById("skillsChart").getContext("2d");
+
+      // Skill categories
+      const skillCategories = [
+        "Mathematical\nReasoning",
+        "Problem\nSolving",
+        "Programming\nSkills",
+        "System\nArchitecture",
+        "Web & Backend\nDevelopment",
+        "Software\nEngineering",
+        "Logical\nThinking",
+      ];
+
+      // Sample grades for each category
+      const categoryGrades = [78, 85, 88, 72, 82, 90, 75];
+
+      // Create gradient colors (blue-purple gradient)
+      function getBarColor(grade) {
+        const intensity = grade / 100;
+        return `rgba(102, 126, 234, ${0.6 + intensity * 0.4})`;
+      }
+
+      const barColors = categoryGrades.map((grade) => getBarColor(grade));
+
+      const skillsChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: skillCategories,
+          datasets: [
+            {
+              label: "Skill Proficiency (%)",
+              data: categoryGrades,
+              backgroundColor: barColors,
+              borderColor: "#667eea",
+              borderWidth: 2,
+              borderRadius: 8,
+              borderSkipped: false,
+              barPercentage: 0.7,
+              categoryPercentage: 0.9,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  let grade = context.parsed.y;
+                  let status = "";
+
+                  if (grade >= 80) {
+                    status = "🏆 Mastery Level - Excellent!";
+                  } else if (grade >= 60) {
+                    status = "📈 Good Progress - Keep it up!";
+                  } else if (grade >= 40) {
+                    status = "⚠️ Needs Improvement";
+                  } else {
+                    status = "❌ Urgent Attention Required";
+                  }
+
+                  return ["Proficiency: " + grade + "%", "Status: " + status];
+                },
+              },
+              backgroundColor: "rgba(0, 0, 0, 0.85)",
+              padding: 15,
+              titleFont: {
+                size: 14,
+                weight: "bold",
+              },
+              bodyFont: {
+                size: 13,
+              },
+              displayColors: false,
+              cornerRadius: 8,
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                stepSize: 10,
+                callback: function (value) {
+                  return value + "%";
+                },
+                font: {
+                  size: 10,
+                },
+              },
+              grid: {
+                color: "rgba(0, 0, 0, 0.05)",
+              },
+            },
+            x: {
+              grid: {
+                display: false,
+              },
+              ticks: {
+                font: {
+                  size: 9,
+                  weight: "bold",
+                },
+                color: "#333",
+              },
+            },
+          },
+          animation: {
+            duration: 2000,
+            easing: "easeInOutQuart",
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
