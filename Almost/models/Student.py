@@ -1,50 +1,26 @@
 import persistent
-import bcrypt
-import ZODB, ZODB.FileStorage
-from BTrees.OOBTree import OOBTree
-from persistent import Persistent
-import transaction
-import BTrees.__OOBTree
-from Discussion import Discussion
-import random
-from Course import Course
+from persistent.list import PersistentList
 
-
-storage = ZODB.FileStorage.FileStorage('mydata.fs')
-db = ZODB.DB(storage)
-connection = db.open()
-root = connection.root()
-
-if 'discussions' not in root:
-    root.discussions = BTrees._OOBTree.BTree()
-
-discussion_list = root.discussions
-
-class Student(persistent.persistent):
-    def __init__(self, id = 0, name = ""):
+class Student(persistent.Persistent):
+    def __init__(self, id=0, name="", batch=68):
         self.id = id
         self.name = name
-        self.paticipated_quizzes = []
-        self.discussions = []
-        self.courses = []
-        self.chats = []
+        self.paticipated_quizzes = PersistentList() 
+        self.discussions = PersistentList()  
+        self.courses = PersistentList()  
+        self.chats = PersistentList()  
+        self.batch = batch
 
-    def join_quiz(self, quiz):
-        self.paticipated_quizzes.append(quiz)
-    
-    def create_discussion(self, student, topic, message, timestamp):
-
-        id = random.randint(100, 999)
-        while id in discussion_list:
-            id = random.randint(100, 999)
-
-        discussion = Discussion(id, student, topic, message, timestamp)
-
-        self.discussions.append(discussion)
+    def join_quiz(self, quiz_id):
+        if quiz_id not in self.paticipated_quizzes:
+            self.paticipated_quizzes.append(quiz_id)
+            self._p_changed = True  
     
     def enroll_course(self, course):
-        self.courses.append(course)
-        course.enrolled_student.append(self.id)
+        if course not in self.courses:
+            self.courses.append(course)
+            course.enrolled_student.append(self.id)
+            course._p_changed=True
 
 
 
