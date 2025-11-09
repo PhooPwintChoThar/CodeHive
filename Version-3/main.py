@@ -51,7 +51,7 @@ def startup_event():
             if cr not in profe.courses:
                 cou=globals.root["courses"][cr]
                 profe.courses.append(cou)
-                profe._p_changed = True
+                profe._p_changed = True  
                 cou.professor=profe.name
         transaction.commit()
         
@@ -103,17 +103,64 @@ async def login(request:Request, user_id:int=Form(...)):
         })
         
         
+# Replace your existing show_quizzes route with this
+
 @app.get("/student/{id}/quizzes", response_class=HTMLResponse)
 async def show_quizzes(id: int, request: Request):
     student = globals.root["students"][id]
     quizzes = []
+    
+    # Get all available quizzes from student's courses
     for course in student.courses:
         for quiz in course.get_quizzes():
-            if quiz.id not in student.paticipated_quizzes:
-                quizzes.append(quiz)
+            quizzes.append({
+                "id": quiz.id,
+                "title": quiz.title,
+                "duedate": str(quiz.duedate),
+                "question": quiz.question,
+                "sample_sol": quiz.sample_sol,
+                "duration": quiz.duration,
+                "languages": quiz.languages,
+                "restriction": quiz.restriction,
+                "total_s": quiz.total_s
+            })
     
-    quizzes = list(set(quizzes))
-    quizzes.sort(key=lambda x: x.duedate, reverse=True)
+    overdue_quizzes = []
+    for quiz in quizzes:
+        duedate = datetime.fromisoformat(quiz["duedate"])
+
+        now = datetime.now()
+
+        is_overdue = now > duedate
+        
+        if is_overdue:
+            overdue_quizzes.append(quiz)
+    
+    
+    participated_quiz_ids = list(student.paticipated_quizzes)
+    unparticipated=[]
+    quiz_responses = {}
+    for qu in quizzes:
+        if qu["id"] in globals.root["quizzes"]:
+            quiz = globals.root["quizzes"][qu["id"]]
+            if qu["id"] in participated_quiz_ids:
+                if id in quiz.participated_students:
+                    rid = quiz.participated_students[id]
+                    if rid in globals.root["responses"]:
+                        response = globals.root["responses"][rid]
+                        quiz_responses[qu["id"]] = {
+                            "score": response.score,
+                            "mistakes": response.mistakes,
+                            "comments": response.comments
+                        }
+            else:
+                not_found=True
+                for qq in overdue_quizzes:
+                    if qq['id']==qu["id"]:
+                        not_found=False
+                if not_found:
+                    unparticipated.append(quiz)
+                
     
     return templates.TemplateResponse(
         "student_quizzes.html",
@@ -121,6 +168,9 @@ async def show_quizzes(id: int, request: Request):
             "request": request,
             "student_id": id,
             "quizzes": quizzes,
+            "participated_quizzes": quiz_responses,
+            "overdue_quizzes": overdue_quizzes,
+            "unparticipated":unparticipated,
             "version": int(time.time())
         }
     )
@@ -131,7 +181,9 @@ async def show_form(sid:int, id:int,request:Request):
 
 
 @app.post("/student/{sid}/quiz/{id}/submit", response_class=HTMLResponse)
-async def submit_quiz( sid: int, id: int, student_code: str = Form(...)):
+async def submit_quiz( sid: int, id: int, student_code: str = Form(...), system_log:str=Form(None)):
+    if not student_code:
+        student_code=""
     quiz = globals.root["quizzes"][id]
     student = globals.root["students"][sid]
     
@@ -147,6 +199,8 @@ async def submit_quiz( sid: int, id: int, student_code: str = Form(...)):
         res_id, quiz, student_code, calculated_result[0], 
         calculated_result[1], calculated_result[2], datetime.now()
     )
+    if system_log:
+        response.system_log=system_log.split('\n')
     quiz.participated_students[sid] = res_id
     quiz._p_changed = True  
     
@@ -354,3 +408,8 @@ async def update_score(id: int, qid: int, sid: int, score:int=Form(...) ):
             response._p_changed = True
             transaction.commit()
     return RedirectResponse(f"/professor/{id}/quiz/{qid}/{sid}/responses", status_code=303)
+
+@app.get("/professor/{id}/courses", response_class=HTMLResponse)
+async def show_courses(id:int,request:Request):
+    prof=globals.root["professors"][id]
+    return templates.TemplateResponse("teacher_courses.html", {"request":request, "id":id, "courses":prof.courses})
