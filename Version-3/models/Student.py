@@ -17,8 +17,9 @@ class Student(persistent.Persistent):
             self._p_changed = True  
     
     def enroll_course(self, course):
-        self.courses.append(course)
-        course.enrolled_student.append(self.id)
+        if course not in self.courses:
+            self.courses.append(course)
+            course.enrolled_student.append(self.id)
 
 
 
