@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduHub - AI Tutor</title>
+    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}" />
+  </head>
+  <body>
+    <div class="header">
+      <div class="header-content">
+        <div class="brand">
+          CodeHive
+          <img
+            src="{{url_for('static', path='test4.png')}}"
+            alt="CodeHive"
+            width="40"
+            height="35"
+          />
+        </div>
+        <div
+          class="tab"
+          style="
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{id}}/quizzes"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Quiz</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{id}}/discussions"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Discussion</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{id}}/courses"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Courses</a
+            >
+          </span>
+          <span style="margin: 0 40px">
+            <a
+              href="/student/{{id}}/profile"
+              class="btn btn-tabs"
+              style="font-size: 16px"
+              >Profile</a
+            >
+          </span>
+        </div>
+        <a href="/" class="loginandout" style="font-size: 16px">Logout</a>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="content">
+        <a href="/student/{{id}}/courses" class="btn btn-secondary back-btn"
+          >← Back to Courses</a
+        >
+        <h2 class="section-title" id="chatCourseName">{{course.name}}</h2>
+        <div class="chat-container">
+          <div class="chat-header">Ask me anything about your {{course.name}} course</div>
+          <div class="chat-messages" id="chatMessages">
+            {% for msg in history %}
+            {% if msg["role"] == "TA"%}
+            <div class="message message-ai">
+            {{msg["content"]}}
+            </div>
+            {%else%}
+            <div class="message message-user">
+            {{msg["content"]}}
+            </div>
+            {%endif%}
+            {%endfor%}
+          </div>
+          <form action="/student/{{id}}/chat/{{chatid}}" method="POST">
+          <div class="chat-input-area">
+            <input
+              type="text"
+              class="chat-input"
+              id="chatInput"
+              placeholder="Type your question..."
+              name="question"
+            />
+            <button class="btn btn-primary" type="submit">
+              Send
+            </button>
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+  
+    </script>
+  </body>
+</html>
