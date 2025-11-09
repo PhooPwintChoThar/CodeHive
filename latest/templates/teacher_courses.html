@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EduHub - Teacher Dashboard</title>
+    <title>EduHub - My Courses</title>
     <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}" />
   </head>
   <body>
@@ -49,33 +49,14 @@
     </div>
     <div class="container">
       <div class="content">
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-          "
-        >
-          <h2 class="section-title" style="margin: 0">Quiz</h2>
-          <a
-            href="/professor/{{id}}/quiz/new"
-            class="btn"
-            style="font-size: 24px; padding: 10px 20px; text-decoration: none"
-            >➕</a
-          >
-        </div>
-        <div class="quiz-list">
-          {%for q in quizzes %}
-          <a
-            href="/professor/{{id}}/quiz/{{q.id}}/submissions"
-            class="quiz-card"
-          >
-            <div class="quiz-title">{{q.title}}</div>
-            <div class="quiz-meta">
-              <span>📅 Created:{{q.duedate}}</span>
-              <span>👥 {{q.participated_students | length}} submissions</span>
-              <span>Duration: {{q.duration}}</span>
+        <h2 class="section-title">My Courses</h2>
+        <div class="course-list">
+          {%for c in courses%}
+          <a href="/professor/{{id}}/courses/{{c.id}}" class="course-card">
+            <div class="course-title">{{c.name}}</div>
+            <div class="course-meta">
+              <span>ID:{{c.id}}</span>
+              <span>{{c.enrolled_student | length}} students enrolled</span>
             </div>
           </a>
           {%endfor%}

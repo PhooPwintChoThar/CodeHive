@@ -32,6 +32,7 @@
               href="/student/{{sid}}/quizzes"
               class="btn btn-tabs"
               style="font-size: 16px"
+              onclick="return preventNavigation(event)"
               >Quiz</a
             >
           </span>
@@ -40,6 +41,7 @@
               href="/student/{{sid}}/discussions"
               class="btn btn-tabs"
               style="font-size: 16px"
+              onclick="return preventNavigation(event)"
               >Discussion</a
             >
           </span>
@@ -48,6 +50,7 @@
               href="/student/{{sid}}/courses"
               class="btn btn-tabs"
               style="font-size: 16px"
+              onclick="return preventNavigation(event)"
               >Courses</a
             >
           </span>
@@ -56,22 +59,65 @@
               href="/student/{{id}}/profile"
               class="btn btn-tabs"
               style="font-size: 16px"
+              onclick="return preventNavigation(event)"
               >Profile</a
             >
           </span>
         </div>
-        <a href="/" class="loginandout" style="font-size: 16px">Logout</a>
+        <a
+          href="/"
+          class="loginandout"
+          style="font-size: 16px"
+          onclick="return preventNavigation(event)"
+          >Logout</a
+        >
+      </div>
+    </div>
+
+    <div class="lockdown-warning" id="lockdownWarning">
+      <div class="lockdown-modal">
+        <h3>⚠️ Quiz in Progress</h3>
+        <p>
+          You are currently taking a quiz. You cannot navigate away until you:
+        </p>
+        <ul style="text-align: left; margin: 15px 0">
+          <li>Submit the quiz</li>
+          <li>Time runs out</li>
+        </ul>
+        <div class="timer">
+          Time Remaining: <span id="timerDisplay">--:--</span>
+        </div>
+        <button class="fullscreen-btn" onclick="closeWarning()">
+          Return to Quiz
+        </button>
       </div>
     </div>
 
     <div class="container">
       <div class="content">
-        <a href="/student/{{sid}}/quizzes" class="btn btn-secondary back-btn"
+        <a
+          href="/student/{{sid}}/quizzes"
+          class="btn btn-secondary back-btn"
+          onclick="return preventNavigation(event)"
           >← Back to Quizzes</a
         >
         <h2 class="section-title" id="quizTitle">{{quiz.title}}</h2>
+        <div
+          style="
+            margin-top: 15px;
+            font-size: 20px;
+            color: var(--primary);
+            font-weight: bold;
+          "
+        >
+          <span>Time Remaining: <span id="timerQuiz">--:--</span></span>
+        </div>
         <!-- endpoint defined here-->
-        <form action="/student/{{sid}}/quiz/{{quiz.id}}/submit" method="POST">
+        <form
+          action="/student/{{sid}}/quiz/{{quiz.id}}/submit"
+          method="POST"
+          id="quizForm"
+        >
           <div class="form-group">
             <label class="form-label">{{quiz.question}}</label>
             <div class="solution-display" id="quizInstructions">
@@ -79,7 +125,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label">You can test here</label>
+            <label class="form-label">Test Your Code Here</label>
             <!-- student_code named here-->
             <iframe
               id="onecompiler"
@@ -91,12 +137,177 @@
             </iframe>
           </div>
           <div class="form-group">
-            <label class="form-label">Paste Your Final answer here:</label>
-            <textarea name="student_code"></textarea>
+            <label class="form-label">Paste Your Final Answer Here:</label>
+            <textarea
+              name="student_code"
+              style="
+                width: 100%;
+                height: 150px;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+              "
+            ></textarea>
           </div>
+          <input
+            name="system_log"
+            id="log"
+            type="text"
+            style="display: none"
+            value=""
+          />
           <button type="submit" class="btn btn-primary">Submit Quiz</button>
         </form>
       </div>
     </div>
+
+    <script>
+      const quizDuration = {{quiz.duration}}; // Duration in minutes from backend
+      let timeRemaining = quizDuration * 60; // Convert to seconds
+      let quizSubmitted = false;
+      const lockdownWarning = document.getElementById('lockdownWarning');
+      const quizForm = document.getElementById('quizForm');
+      const log=document.getElementById("log");
+      function getTime(){
+        const now = new Date();
+
+        const formatted = now.getFullYear() + "-" +
+                          String(now.getMonth() + 1).padStart(2, "0") + "-" +
+                          String(now.getDate()).padStart(2, "0") + " " +
+                          String(now.getHours()).padStart(2, "0") + ":" +
+                          String(now.getMinutes()).padStart(2, "0") + ":" +
+                          String(now.getSeconds()).padStart(2, "0");
+
+        return formatted
+      }
+      // Start timer on page load
+      function startTimer() {
+        const timerDisplay = document.getElementById('timerDisplay');
+        const timerQuiz = document.getElementById('timerQuiz');
+
+        const interval = setInterval(() => {
+          if (timeRemaining <= 0) {
+            clearInterval(interval);
+            autoSubmitQuiz();
+            return;
+          }
+
+          const minutes = Math.floor(timeRemaining / 60);
+          const seconds = timeRemaining % 60;
+          const timeString = `${minutes.toString().padStart(2, '0')}:${seconds
+            .toString()
+            .padStart(2, '0')}`;
+
+          timerDisplay.textContent = timeString;
+          timerQuiz.textContent = timeString;
+
+          timeRemaining--;
+        }, 1000);
+      }
+
+      // Auto-submit quiz when time runs out
+      function autoSubmitQuiz() {
+        alert('Time is up! Your quiz is being submitted automatically.');
+        quizSubmitted = true;
+        quizForm.submit();
+      }
+
+      // Prevent navigation
+      function preventNavigation(event) {
+        event.preventDefault();
+
+        //console.log('Navigation attempt blocked - Quiz in progress');
+        showLockdownWarning();
+        return false;
+      }
+
+      // Show lockdown warning
+      function showLockdownWarning() {
+        lockdownWarning.style.display = 'flex';
+      }
+
+      // Close warning
+      function closeWarning() {
+        lockdownWarning.style.display = 'none';
+      }
+
+      // Prevent back button
+      history.pushState(null, null, location.href);
+      window.addEventListener('popstate', function(event) {
+        console.log('Back button attempt blocked - Quiz in progress');
+        history.pushState(null, null, location.href);
+        showLockdownWarning();
+      });
+
+      // Prevent closing tab/window
+      window.addEventListener('beforeunload', function(event) {
+        if (!quizSubmitted) {
+          console.log('Page unload attempt blocked - Quiz in progress');
+          event.preventDefault();
+          event.returnValue = '';
+          return '';
+        }
+      });
+
+      // Prevent switching tabs
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+        let before=log.getAttribute("value")
+        log.setAttribute("value", before+"\n"+"Tab switch detected "+getTime())
+          console.log('Tab switch detected - User left the quiz tab');
+          console.warn('User attempted to switch away from quiz');
+        } else {
+        let before=log.getAttribute("value")
+        log.setAttribute("value", before+"\n"+'User returned to quiz tab'+getTime())
+          console.log('User returned to quiz tab');
+        }
+      });
+
+      // Prevent right-click
+      document.addEventListener('contextmenu', function(event) {
+        event.preventDefault();
+        console.log('Right-click blocked during quiz');
+        return false;
+      });
+
+      // Prevent keyboard shortcuts
+      document.addEventListener('keydown', function(event) {
+        // Prevent F12 (Developer Tools)
+        if (event.keyCode === 123) {
+          event.preventDefault();
+          console.log('F12 (Developer Tools) blocked');
+          return false;
+        }
+        // Prevent Ctrl+Shift+I (Developer Tools)
+        if (event.ctrlKey && event.shiftKey && event.keyCode === 73) {
+          event.preventDefault();
+          console.log('Ctrl+Shift+I (Developer Tools) blocked');
+          return false;
+        }
+        // Prevent Ctrl+Shift+C (Inspect Element)
+        if (event.ctrlKey && event.shiftKey && event.keyCode === 67) {
+          event.preventDefault();
+          console.log('Ctrl+Shift+C (Inspect Element) blocked');
+          return false;
+        }
+        // Prevent Alt+Left (Back button)
+        if (event.altKey && event.keyCode === 37) {
+          event.preventDefault();
+          console.log('Alt+Left (Back button) blocked');
+          return false;
+        }
+      });
+
+      // Mark quiz as submitted when form is submitted
+      quizForm.addEventListener('submit', function() {
+        quizSubmitted = true;
+      });
+
+      // Initialize timer on page load
+      window.addEventListener('load', function() {
+        startTimer();
+        console.log('Quiz lockdown activated. Duration: ' + quizDuration + ' minutes');
+      });
+    </script>
   </body>
 </html>
