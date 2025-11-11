@@ -6,7 +6,7 @@
 <title>CodeHive - Where developers swarm together to learn</title>
 <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}" />
 <style>
-/* Additional styles for new sections */
+
 * {
   box-sizing: border-box;
 }
@@ -17,7 +17,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Features Section */
+
 .features {
   padding: 6rem 4rem;
   background: white;
@@ -379,7 +379,7 @@ height="750"
 <div class="scroll-indicator"></div>
 </div>
 
-<!-- Features Section -->
+<!-- Features  -->
 <section class="features" id="features">
 <h2 class="section-title">What CodeHive Offers</h2>
 <p class="section-subtitle">A complete platform for teachers and students to collaborate and learn</p>
@@ -423,7 +423,7 @@ height="750"
 </div>
 </section>
 
-<!-- How It Works Section -->
+<!-- How It Works  -->
 <section class="how-it-works" id="how-it-works">
 <h2 class="section-title">How It Works</h2>
 <p class="section-subtitle">Simple workflow for teachers and students</p>
@@ -449,7 +449,7 @@ height="750"
 </div>
 </section>
 
-<!-- CTA Section -->
+
 <section class="cta">
 <h2>Ready to Join the Hive?</h2>
 <p>Join our community of teachers and students learning together</p>
@@ -457,7 +457,6 @@ height="750"
 </section>
 
 <script>
-// Intersection Observer for scroll animations
 const observerOptions = {
   threshold: 0.2,
   rootMargin: '0px 0px -100px 0px'
@@ -471,24 +470,24 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, observerOptions);
 
-// Observe all animated elements
+
 document.querySelectorAll('.section-title, .section-subtitle, .feature-card, .step, .cta h2, .cta p, .cta-button').forEach(el => {
   observer.observe(el);
 });
 
-// Stagger animation for feature cards
+//  animation for feature cards
 const featureCards = document.querySelectorAll('.feature-card');
 featureCards.forEach((card, index) => {
   card.style.transitionDelay = `${index * 0.1}s`;
 });
 
-// Stagger animation for steps
+// animation 
 const steps = document.querySelectorAll('.step');
 steps.forEach((step, index) => {
   step.style.transitionDelay = `${index * 0.2}s`;
 });
 
-// Smooth scrolling for navigation links
+
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     e.preventDefault();

@@ -1,77 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>EduHub - Quiz Submissions</title>
-    <link rel="stylesheet" href="{{url_for('static', path='styles.css')}}" />
-    <style>
-        .comparison-button {
-            position: fixed;
-            top: 100px;
-            right: 30px;
-            z-index: 40;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduHub - Quiz Submissions</title>
+<link rel="stylesheet" href="{{url_for('static', path='styles.css')}}" />
+<style>
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
-
+        
         .btn-compare {
-            padding: 12px 24px;
             background-color: #f59e0b;
             color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
         }
-
         .btn-compare:hover {
             background-color: #d97706;
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
-    </style>
+        .student-list {
+            display: grid;
+            gap: var(--sp-2);
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          }
+          .student-item {
+            background: var(--tertiary);
+            padding: var(--sp-2);
+            border-radius: 10px;
+            border-left: 4px solid var(--secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            gap: var(--sp-2);
+          }
+          .student-item:hover {
+            box-shadow: 0 10px 30px rgba(47, 65, 86, 0.15);
+            transform: translateY(-2px);
+          }
+</style>
 </head>
 <body>
-    <div class="header">
-        <div class="header-content">
-            <div class="brand">
+<div class="header">
+<div class="header-content">
+<div class="brand">
                 CodeHive
-                <img src="{{url_for('static', path='test4.png')}}" alt="CodeHive" width="40" height="35" />
-            </div>
-            <a href="/" class="loginandout">Logout</a>
-            <div style="width: 40px"></div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="content">
-            <a href="/professor/{{id}}/quizzes" class="btn btn-secondary back-btn">← Back to Quizzes</a>
-            <h2 class="section-title">Quiz Submissions</h2>
-
-            <!-- Analysis Button -->
-            <div class="comparison-button">
-                <a href="/professor/{{id}}/quiz/{{quiz.id}}/analysis" class="btn-compare">
-                    🔍 Plagiarism Analysis (AST)
-                </a>
-            </div>
-
-            <!-- Student List -->
-            <div class="student-list">
-                {%for student in student_result_list%}
-                <a href="/professor/{{id}}/quiz/{{quiz.id}}/{{student.id}}/responses" class="student-item">
-                    <div>
-                        <div class="student-name">{{student.name}}</div>
-                        <div class="student-score">{{student_result_list[student].score}}</div>
-                        <div class="student-time">Submitted: {{student_result_list[student].submitted_time}}</div>
-                    </div>
-                    <span>→</span>
-                </a>
-                {%endfor%}
-            </div>
-        </div>
-    </div>
+<img src="{{url_for('static', path='test4.png')}}" alt="CodeHive" width="40" height="35" />
+</div>
+<a href="/" class="loginandout">Logout</a>
+<div style="width: 40px"></div>
+</div>
+</div>
+<div class="container">
+<div class="content">
+<div class="button-container">
+<a href="/professor/{{id}}/quizzes" class="btn btn-secondary back-btn">← Back to Quizzes</a>
+<a href="/professor/{{id}}/quiz/{{quiz.id}}/analysis" class="btn btn-compare">
+                Analysis
+</a>
+</div>
+<h2 class="section-title">Quiz Submissions</h2>
+<!-- Student List -->
+<div class="student-list">
+{%for student in student_result_list%}
+<a href="/professor/{{id}}/quiz/{{quiz.id}}/{{student.id}}/responses" class="student-item">
+<div>
+<div class="student-name">{{student.name}}</div>
+<div class="student-score">Score : {{student_result_list[student].score}}</div>
+<div class="student-time">Submitted: {{ student_result_list[student].submitted_time.strftime("%Y-%m-%d %H:%M") }}</div>
+</div>
+<span>→</span>
+</a>
+{%endfor%}
+</div>
+</div>
+</div>
 </body>
 </html>

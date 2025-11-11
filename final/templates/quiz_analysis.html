@@ -20,20 +20,33 @@
         .header-section h1 {
             font-size: 32px;
             font-weight: 700;
-            color: #1f2937;
+            color: #2f4156;
             margin-bottom: 8px;
         }
 
         .header-section .subtitle {
-            color: #6b7280;
+            color: #567c8d;
             font-size: 16px;
         }
+
+        .back-btn{
+            margin-bottom: var(--sp-2);
+        }
+
+        .quiz-btn-secondary {
+            background: var(--white);
+            color: var(--primary);
+          }
+
+          .quiz-btn-secondary::hover {
+            box-shadow: 0 10px 30px rgba(47, 65, 86, 0.15);
+          }
 
         .toggle-container {
             display: flex;
             gap: 12px;
             margin: 30px 0;
-            background-color: #f3f4f6;
+            background-color: white;
             padding: 8px;
             border-radius: 12px;
             width: fit-content;
@@ -47,17 +60,17 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            color: #6b7280;
+            color: #567c8d;
         }
 
         .toggle-btn.active {
-            background-color: #3b82f6;
-            color: white;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-color: #2f4156;
+            color: #ffffff;
+            box-shadow: 0 2px 4px rgba(47, 65, 86, 0.2);
         }
 
         .toggle-btn:hover:not(.active) {
-            background-color: #e5e7eb;
+            background-color: #c8d9e6;
         }
 
         .view-section {
@@ -82,24 +95,24 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: white;
             color: white;
             padding: 24px;
             border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(47, 65, 86, 0.15);
         }
 
         .stat-card.warning {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            background: white;
         }
 
         .stat-card.success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: white;
+            color: #2f4156;
         }
 
         .stat-label {
             font-size: 14px;
-            opacity: 0.9;
             margin-bottom: 8px;
         }
 
@@ -112,15 +125,16 @@
             background-color: white;
             border-radius: 12px;
             padding: 24px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 8px rgba(47, 65, 86, 0.1);
             margin-bottom: 30px;
+            border: 1px solid #e3dfdc;
         }
 
         .chart-section h3 {
             font-size: 20px;
             font-weight: 700;
             margin-bottom: 20px;
-            color: #1f2937;
+            color: #2f4156;
         }
 
         .chart-container {
@@ -138,7 +152,7 @@
         .comparison-item {
             padding: 20px;
             border-radius: 10px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid #c8d9e6;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -157,13 +171,13 @@
         }
 
         .comparison-item.safe {
-            border-color: #86efac;
-            background: linear-gradient(to right, #f0fdf4 0%, white 100%);
+            border-color: #c8d9e6;
+            background: linear-gradient(to right, #e3dfdc 0%, white 100%);
         }
 
         .comparison-item:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(47, 65, 86, 0.15);
         }
 
         .comparison-details {
@@ -172,14 +186,14 @@
 
         .comparison-title {
             font-weight: 600;
-            color: #1f2937;
+            color: #2f4156;
             margin-bottom: 6px;
             font-size: 16px;
         }
 
         .comparison-subtitle {
             font-size: 13px;
-            color: #6b7280;
+            color: #567c8d;
         }
 
         .similarity-badge {
@@ -192,7 +206,7 @@
         .similarity-percentage {
             font-size: 32px;
             font-weight: 700;
-            color: #1f2937;
+            color: #2f4156;
         }
 
         .similarity-label {
@@ -213,13 +227,13 @@
         }
 
         .similarity-label.safe {
-            background-color: #dcfce7;
-            color: #16a34a;
+            background-color: #c8d9e6;
+            color: #2f4156;
         }
 
         .info-box {
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            border: 1px solid #93c5fd;
+            background: white;
+            border: 1px solid #567c8d;
             border-radius: 10px;
             padding: 20px;
             margin-top: 30px;
@@ -228,14 +242,14 @@
         .info-box h4 {
             font-size: 16px;
             font-weight: 700;
-            color: #1e40af;
+            color: #2f4156;
             margin-bottom: 12px;
         }
 
         .info-box ul {
             margin: 0;
             padding-left: 20px;
-            color: #1e3a8a;
+            color: #2f4156;
         }
 
         .info-box li {
@@ -243,27 +257,10 @@
             line-height: 1.5;
         }
 
-        .back-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #f3f4f6;
-            color: #374151;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.2s;
-            margin-bottom: 20px;
-        }
-
-        .back-btn:hover {
-            background-color: #e5e7eb;
-            transform: translateX(-4px);
-        }
-
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: #6b7280;
+            color: #567c8d;
         }
 
         .empty-state-icon {
@@ -285,23 +282,12 @@
     </div>
 
     <div class="analysis-container">
-        <a href="/professor/{{professor_id}}/quiz/{{quiz_id}}/submissions" class="back-btn">
-            ← Back to Submissions
+        <a href="/professor/{{professor_id}}/quiz/{{quiz_id}}/submissions" class="btn quiz-btn-secondary back-btn">← Back to Submissions
         </a>
 
         <div class="header-section">
             <h1>🔍 Plagiarism Analysis</h1>
             <p class="subtitle">{{current_quiz.title}} - AST-based Code Similarity Detection</p>
-        </div>
-
-        <!-- Toggle Buttons -->
-        <div class="toggle-container">
-            <button class="toggle-btn active" onclick="switchView('current')">
-                Current Quiz
-            </button>
-            <button class="toggle-btn" onclick="switchView('all')">
-                All Quizzes in Course
-            </button>
         </div>
 
         <!-- Current Quiz View -->
@@ -365,105 +351,17 @@
             {%endif%}
         </div>
 
-        <!-- All Quizzes View -->
-        <div id="allView" class="view-section">
-            {% if  has_submissions %}
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Cross-Quiz Matches (>50%)</div>
-                    <div class="stat-value">{{all_quizzes_analysis.high_similarity_count}}</div>
-                </div>
-            </div>
-
-            {% if all_quizzes_analysis.cross_quiz_comparisons|length > 0 %}
-            <!-- Cross-Quiz Chart -->
-            <div class="chart-section">
-                <h3>📈 Cross-Quiz Similarity Distribution</h3>
-                <div class="chart-container">
-                    <canvas id="allQuizzesChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Cross-Quiz Comparisons -->
-            <div class="chart-section">
-                <h3>🔗 Cross-Quiz Comparisons (>50% similarity)</h3>
-                <div class="comparison-list">
-                    {% for comp in all_quizzes_analysis.cross_quiz_comparisons %}
-                    <div class="comparison-item {% if comp.similarity > 75 %}flagged{% elif comp.similarity > 60 %}warning{% else %}safe{% endif %}">
-                        <div class="comparison-details">
-                            <div class="comparison-title">
-                                {{student_names[comp.student_id]}}
-                            </div>
-                            <div class="comparison-subtitle">
-                                {{quiz_names[comp.quiz1]}} ↔ {{quiz_names[comp.quiz2]}}
-                            </div>
-                        </div>
-                        <div class="similarity-badge">
-                            <div class="similarity-percentage">{{comp.similarity}}%</div>
-                            <div class="similarity-label {% if comp.similarity > 75 %}flagged{% elif comp.similarity > 60 %}warning{% else %}safe{% endif %}">
-                                {% if comp.similarity > 75 %}
-                                    ⚠️ Very Similar
-                                {% elif comp.similarity > 60 %}
-                                    ⚡ Similar
-                                {% else %}
-                                    ✓ Moderate
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% else %}
-            <div class="empty-state">
-                <div class="empty-state-icon">📭</div>
-                <h3>No significant cross-quiz similarities found</h3>
-                <p>No student submissions exceeded 50% similarity across different quizzes</p>
-            </div>
-            {% endif %}
-            {% else%}
-            <p> No response is available</p>
-            {%endif%}
-        </div>
-
-        <!-- Info Box -->
-        <div class="info-box">
-            <h4>🧠 About AST-Based Analysis</h4>
-            <ul>
-                <li><strong>Abstract Syntax Tree (AST)</strong>: Analyzes code structure rather than surface-level text</li>
-                <li><strong>Variable Normalization</strong>: Detects identical logic even with different variable names</li>
-                <li><strong>Structural Comparison</strong>: Uses tree edit distance to measure code similarity</li>
-                <li><strong>Thresholds</strong>: >75% = High risk, 60-75% = Medium risk, <60% = Low risk</li>
-                <li><strong>Current Quiz</strong>: Compares all student submissions within this quiz</li>
-                <li><strong>All Quizzes</strong>: Identifies students reusing code across different quizzes</li>
-            </ul>
-        </div>
+    
     </div>
 
     <script>
         const currentAnalysis = {{current_analysis | tojson}};
-        const allQuizzesAnalysis = {{all_quizzes_analysis | tojson}};
         const studentNames = {{student_names | tojson}};
-        const quizNames = {{quiz_names | tojson}};
+       
 
         let currentChart = null;
-        let allQuizzesChart = null;
 
-        function switchView(view) {
-            document.querySelectorAll('.toggle-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-
-            document.getElementById('currentView').classList.toggle('active', view === 'current');
-            document.getElementById('allView').classList.toggle('active', view === 'all');
-
-            if (view === 'current' && !currentChart) {
-                renderCurrentQuizChart();
-            } else if (view === 'all' && !allQuizzesChart) {
-                renderAllQuizzesChart();
-            }
-        }
+    
 
         function renderCurrentQuizChart() {
             const ctx = document.getElementById('currentQuizChart').getContext('2d');
@@ -482,11 +380,11 @@
                         data: data.map(d => d.avg),
                         backgroundColor: data.map(d => 
                             d.avg > 75 ? '#ef4444' : 
-                            d.avg > 60 ? '#f59e0b' : '#3b82f6'
+                            d.avg > 60 ? '#f59e0b' : '#567c8d'
                         ),
                         borderColor: data.map(d => 
                             d.avg > 75 ? '#dc2626' : 
-                            d.avg > 60 ? '#d97706' : '#1e40af'
+                            d.avg > 60 ? '#d97706' : '#2f4156'
                         ),
                         borderWidth: 2,
                         borderRadius: 8,
@@ -515,62 +413,7 @@
             });
         }
 
-        function renderAllQuizzesChart() {
-            const ctx = document.getElementById('allQuizzesChart').getContext('2d');
-            
-            if (allQuizzesAnalysis.cross_quiz_comparisons.length === 0) {
-                return;
-            }
-
-            const comparisons = allQuizzesAnalysis.cross_quiz_comparisons;
-            const labels = comparisons.map(c => 
-                `${studentNames[c.student_id]} (${quizNames[c.quiz1]} vs ${quizNames[c.quiz2]})`
-            );
-            const similarities = comparisons.map(c => c.similarity);
-
-            allQuizzesChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Cross-Quiz Similarity (%)',
-                        data: similarities,
-                        backgroundColor: similarities.map(s => 
-                            s > 75 ? '#ef4444' : 
-                            s > 60 ? '#f59e0b' : '#10b981'
-                        ),
-                        borderColor: similarities.map(s => 
-                            s > 75 ? '#dc2626' : 
-                            s > 60 ? '#d97706' : '#059669'
-                        ),
-                        borderWidth: 2,
-                        borderRadius: 8,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: 'y',
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            max: 100,
-                            title: {
-                                display: true,
-                                text: 'Similarity Percentage'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-        }
-
-        // Initialize current quiz chart on load
+       
         document.addEventListener('DOMContentLoaded', () => {
             renderCurrentQuizChart();
         });
