@@ -1,6 +1,3 @@
-/* =========================
-   Reset & Theme
-   ========================= */
 * {
   margin: 0;
   padding: 0;
@@ -14,47 +11,38 @@
   --light: #e3dfdc;
   --white: #ffffff;
 
-  /* Fluid type scale (with min/max for readability) */
   --fs-xs: clamp(12px, 0.85vw, 14px);
   --fs-sm: clamp(13px, 1vw, 16px);
   --fs-md: clamp(15px, 1.2vw, 18px);
   --fs-lg: clamp(18px, 2.2vw, 28px);
   --fs-xl: clamp(24px, 3.2vw, 48px);
 
-  /* Fluid spacing */
   --sp-1: clamp(6px, 0.8vw, 10px);
   --sp-2: clamp(10px, 1.2vw, 16px);
   --sp-3: clamp(14px, 1.6vw, 24px);
   --sp-4: clamp(20px, 2.2vw, 32px);
   --sp-5: clamp(28px, 3vw, 48px);
 }
-
-/* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
     transition: none !important;
   }
 }
-
-/* =========================
-     Global
-     ========================= */
 html,
 body {
   max-width: 100%;
-  overflow-x: hidden; /* Prevent horizontal overflow */
+  overflow-x: hidden; 
 }
 
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, var(--tertiary) 0%, var(--light) 100%);
-  min-height: 100dvh; /* Mobile-safe height */
+  min-height: 100dvh; 
   line-height: 1.5;
   font-size: var(--fs-md);
 }
 
-/* Images/media do not exceed parent width */
 img,
 video,
 canvas,
@@ -64,7 +52,6 @@ iframe {
   height: auto;
 }
 
-/* Wrap long words or URLs */
 :where(
     p,
     li,
@@ -78,9 +65,6 @@ iframe {
   word-break: break-word;
 }
 
-/* =========================
-     Container
-     ========================= */
 .container {
   max-width: 1200px;
   width: min(100% - 2rem, 1200px);
@@ -95,9 +79,6 @@ iframe {
   }
 }
 
-/* =========================
-     Landing Page
-     ========================= */
 .landing-page {
   display: flex;
   flex-direction: column;
@@ -107,8 +88,6 @@ iframe {
   text-align: center;
   padding-inline: var(--sp-3);
 }
-
-/* Heading text logo (no wrap, fluid only) */
 .logo {
   font-size: clamp(20px, 8vmin, 64px);
   font-weight: bold;
@@ -122,7 +101,6 @@ iframe {
   margin-bottom: var(--sp-5);
 }
 
-/* Auto-fit grid columns */
 .role-selection {
   display: grid;
   gap: var(--sp-3);
@@ -160,9 +138,6 @@ iframe {
   font-size: var(--fs-sm);
 }
 
-/* =========================
-     Header (FULLY RESPONSIVE)
-     ========================= */
 .header {
   background: var(--primary);
   color: var(--white);
@@ -172,7 +147,6 @@ iframe {
   z-index: 5;
 }
 
-/* Unified header layout */
 .header-content {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -198,7 +172,6 @@ iframe {
   height: auto;
 }
 
-/* Handle inline styles from HTML for .tab */
 .tab {
   display: flex !important;
   flex: 1 !important;
@@ -211,7 +184,7 @@ iframe {
 }
 
 .tab span {
-  margin: 0 !important; /* Override inline styles */
+  margin: 0 !important; 
   white-space: nowrap;
 }
 
@@ -222,7 +195,6 @@ iframe {
   flex-wrap: wrap;
 }
 
-/* Responsive header for tablets */
 @media (max-width: 900px) {
   .header-content {
     grid-template-columns: 1fr auto;
@@ -244,7 +216,6 @@ iframe {
   }
 }
 
-/* Mobile header */
 @media (max-width: 720px) {
   .header-content {
     row-gap: 8px;
@@ -275,9 +246,6 @@ iframe {
   }
 }
 
-/* =========================
-     Buttons
-     ========================= */
 .btn {
   padding: 10px 16px;
   border: none;
@@ -322,7 +290,6 @@ iframe {
   white-space: nowrap;
 }
 
-/* Tab buttons inside header */
 .btn-tabs {
   color: var(--white);
   display: inline-block;
@@ -345,7 +312,6 @@ iframe {
   text-decoration: none;
 }
 
-/* Responsive buttons */
 @media (max-width: 720px) {
   .btn,
   .loginandout,
@@ -374,9 +340,6 @@ iframe {
   }
 }
 
-/* =========================
-     Navigation Tabs (Component outside header)
-     ========================= */
 .nav-tabs {
   display: flex;
   gap: clamp(8px, 2vw, 24px);
@@ -441,9 +404,6 @@ iframe {
   }
 }
 
-/* =========================
-     Content
-     ========================= */
 .content {
   background: var(--white);
   padding: var(--sp-4);
@@ -486,10 +446,6 @@ iframe {
   }
 }
 
-/* =========================
-     Home Page Hero (FULLY RESPONSIVE)
-     ========================= */
-/* Handle inline styles from home_page.html */
 .container > div[style*="display: flex"] {
   display: flex !important;
   align-items: center !important;
@@ -499,13 +455,11 @@ iframe {
   flex-wrap: wrap;
 }
 
-/* Hero text container */
 .container > div[style*="display: flex"] > div[style*="flex: 1"] {
   flex: 1 1 100% !important;
   min-width: 280px;
 }
 
-/* Brand title */
 .container > div[style*="display: flex"] > div > p[style*="font-size: 72px"] {
   font-size: clamp(36px, 8vw, 72px) !important;
   font-weight: bold !important;
@@ -513,7 +467,6 @@ iframe {
   line-height: 1.2 !important;
 }
 
-/* Tagline */
 .container > div[style*="display: flex"] > div > p[style*="font-size: 42px"] {
   font-size: clamp(24px, 5vw, 42px) !important;
   font-weight: bold !important;
@@ -522,7 +475,6 @@ iframe {
   color: #000 !important;
 }
 
-/* Description */
 .container > div[style*="display: flex"] > div > p[style*="font-size: 18px"] {
   font-size: clamp(14px, 1.8vw, 18px) !important;
   margin: 0 !important;
@@ -531,7 +483,6 @@ iframe {
   max-width: 100% !important;
 }
 
-/* Actions container */
 .container
   > div[style*="display: flex"]
   > div
@@ -542,7 +493,6 @@ iframe {
   flex-wrap: wrap;
 }
 
-/* Hero image container */
 .container > div[style*="display: flex"] > div[style*="flex-shrink: 0"] {
   flex-shrink: 0 !important;
   margin-left: clamp(20px, 5vw, 50px) !important;
@@ -555,7 +505,6 @@ iframe {
   max-width: 750px;
 }
 
-/* Tablet responsive for home hero (768px - 1100px) */
 @media (max-width: 1100px) {
   .container > div[style*="display: flex"] > div[style*="flex-shrink: 0"] {
     margin-left: clamp(10px, 2vw, 30px) !important;
@@ -571,7 +520,6 @@ iframe {
   }
 }
 
-/* Mobile responsive for home hero (below 768px) */
 @media (max-width: 768px) {
   .container > div[style*="display: flex"] {
     flex-direction: column;
@@ -581,7 +529,7 @@ iframe {
 
   .container > div[style*="display: flex"] > div[style*="flex: 1"] {
     width: 100%;
-    order: 2; /* Text content goes BELOW logo */
+    order: 2; 
   }
 
   .container > div[style*="display: flex"] > div[style*="flex-shrink: 0"] {
@@ -590,7 +538,7 @@ iframe {
     width: 100%;
     display: flex;
     justify-content: center;
-    order: 1; /* Logo goes at TOP */
+    order: 1;
     margin-bottom: var(--sp-3);
   }
 }
@@ -629,7 +577,6 @@ iframe {
   }
 }
 
-/* Utility colors for brand */
 .color-primary {
   color: #2f4156;
 }
@@ -637,9 +584,6 @@ iframe {
   color: #6b93b8;
 }
 
-/* =========================
-     Lists (Quiz/Course/Discussion)
-     ========================= */
 .quiz-list,
 .course-list{
   display: grid;
@@ -649,14 +593,14 @@ iframe {
 
 .discussion-list{
   display: flex;
-  flex-direction: column; /* This ensures vertical stacking */
+  flex-direction: column; 
   gap: 20px;
   width: 100%;
 }
 
 .discussion-card {
-  width: 100%; /* Take full width */
-  max-width: 100%; /* Prevent growing beyond container */
+  width: 100%; 
+  max-width: 100%; 
   display: block;
   background: var(--tertiary);
   padding: var(--sp-3);
@@ -714,9 +658,6 @@ iframe {
   }
 }
 
-/* =========================
-     Forms
-     ========================= */
 .form-group {
   margin-bottom: var(--sp-3);
 }
@@ -755,18 +696,16 @@ iframe {
   }
 }
 
-/* =========================
-     Student List
-     ========================= */
 .student-list {
   display: grid;
   gap: var(--sp-2);
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 .student-item {
-  background: var(--light);
+  background: var(--tertiary);
   padding: var(--sp-2);
-  border-radius: 8px;
+  border-radius: 10px;
+  border-left: 4px solid var(--secondary);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -777,7 +716,8 @@ iframe {
   gap: var(--sp-2);
 }
 .student-item:hover {
-  background: var(--tertiary);
+  box-shadow: 0 10px 30px rgba(47, 65, 86, 0.15);
+  transform: translateY(-2px);
 }
 .student-name {
   font-weight: 600;
@@ -794,9 +734,6 @@ iframe {
   }
 }
 
-/* =========================
-     Discussion Forum
-     ========================= */
 .discussion-post {
   background: var(--white);
   padding: var(--sp-3);
@@ -844,9 +781,6 @@ iframe {
   }
 }
 
-/* =========================
-     Chat Interface
-     ========================= */
 .chat-container {
   display: flex;
   flex-direction: column;
@@ -931,9 +865,6 @@ iframe {
   }
 }
 
-/* =========================
-     Modal
-     ========================= */
 .modal {
   display: none;
   position: fixed;
@@ -996,10 +927,6 @@ iframe {
   }
 }
 
-/* =========================
-     Inline Style Overrides for Teacher Pages
-     ========================= */
-/* Handle inline styled divs in teacher pages */
 [style*="display: flex"][style*="justify-content: space-between"] {
   display: flex !important;
   justify-content: space-between !important;
@@ -1015,10 +942,6 @@ iframe {
     align-items: flex-start !important;
   }
 }
-
-/* =========================
-     Height Constraints
-     ========================= */
 @media (max-height: 720px) {
   .landing-page {
     min-height: 100dvh;
@@ -1047,17 +970,12 @@ iframe {
     overflow: auto;
   }
 }
-
-/* =========================
-     iFrame Responsiveness
-     ========================= */
 iframe {
   max-width: 100%;
   width: 100% !important;
   height: auto;
 }
 
-/* OneCompiler iframe specific */
 #onecompiler {
   width: 100% !important;
   height: clamp(400px, 60vh, 600px) !important;
@@ -1077,16 +995,11 @@ iframe {
   }
 }
 
-/* =========================
-     Additional Inline Style Fixes
-     ========================= */
-/* Fix for hardcoded widths */
 [style*="width: 40px"] {
   width: auto !important;
   min-width: 20px;
 }
 
-/* Fix for hardcoded margins on spans */
 span[style*="margin: 0 40px"] {
   margin: 0 clamp(8px, 2vw, 40px) !important;
 }
@@ -1097,9 +1010,6 @@ span[style*="margin: 0 40px"] {
   }
 }
 
-/* =========================
-     Table Responsiveness (if any tables exist)
-     ========================= */
 table {
   width: 100%;
   overflow-x: auto;
@@ -1112,9 +1022,6 @@ table {
   }
 }
 
-/* =========================
-     Utility Classes for Responsive Text
-     ========================= */
 .text-responsive-sm {
   font-size: clamp(12px, 2.5vw, 14px);
 }
@@ -1131,9 +1038,6 @@ table {
   font-size: clamp(20px, 5vw, 32px);
 }
 
-/* =========================
-     Flex Container Helpers
-     ========================= */
 .flex-wrap-responsive {
   display: flex;
   flex-wrap: wrap;
@@ -1146,9 +1050,6 @@ table {
   }
 }
 
-/* =========================
-     Grid Responsive Helpers
-     ========================= */
 .grid-responsive {
   display: grid;
   gap: var(--sp-3);
@@ -1162,9 +1063,6 @@ table {
   }
 }
 
-/* =========================
-     Scrollbar Styling
-     ========================= */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -1184,15 +1082,11 @@ table {
   background: var(--primary);
 }
 
-/* Firefox scrollbar */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--secondary) var(--light);
 }
 
-/* =========================
-     Print Styles
-     ========================= */
 @media print {
   .header,
   .nav-tabs,
@@ -1213,16 +1107,11 @@ table {
   }
 }
 
-/* =========================
-     Accessibility Improvements
-     ========================= */
-/* Focus visible for keyboard navigation */
 :focus-visible {
   outline: 3px solid var(--secondary);
   outline-offset: 2px;
 }
 
-/* Skip to main content link */
 .skip-to-main {
   position: absolute;
   top: -40px;
@@ -1238,7 +1127,6 @@ table {
   top: 0;
 }
 
-/* Screen reader only text */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -1251,9 +1139,6 @@ table {
   border-width: 0;
 }
 
-/* =========================
-     Loading States
-     ========================= */
 .loading {
   opacity: 0.6;
   pointer-events: none;
@@ -1278,9 +1163,6 @@ table {
   }
 }
 
-/* =========================
-     Error and Success States
-     ========================= */
 .error-message {
   background: #fee;
   color: #c33;
@@ -1308,9 +1190,6 @@ table {
   margin-bottom: var(--sp-2);
 }
 
-/* =========================
-     Animation Classes
-     ========================= */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -1341,9 +1220,6 @@ table {
   animation: slideIn 0.4s ease-out;
 }
 
-/* =========================
-     Hover Effects for Touch Devices
-     ========================= */
 @media (hover: none) and (pointer: coarse) {
   .btn:hover,
   .btn-primary:hover,
@@ -1364,9 +1240,6 @@ table {
   }
 }
 
-/* =========================
-     Safe Area for Notched Devices
-     ========================= */
 @supports (padding: max(0px)) {
   body {
     padding-left: max(0px, env(safe-area-inset-left));
@@ -1379,36 +1252,6 @@ table {
   }
 }
 
-/* =========================
-     Dark Mode Support (Optional)
-     ========================= */
-@media (prefers-color-scheme: dark) {
-  /* Uncomment to enable dark mode support
-    :root {
-      --primary: #4a5c6a;
-      --secondary: #7a9caf;
-      --tertiary: #3a4a56;
-      --light: #2a3a46;
-      --white: #1a2a36;
-    }
-    
-    body {
-      background: linear-gradient(135deg, #1a2a36 0%, #2a3a46 100%);
-      color: #e3dfdc;
-    }
-    
-    .content,
-    .modal-content {
-      background: #2a3a46;
-      color: #e3dfdc;
-    }
-    */
-}
-
-/* =========================
-     Final Responsive Catch-All
-     ========================= */
-/* Ensure nothing breaks on very small screens */
 @media (max-width: 360px) {
   body {
     font-size: 14px;
@@ -1439,7 +1282,6 @@ table {
   }
 }
 
-/* Ensure buttons group properly on all screens */
 .user-actions,
 .form-group > .btn,
 [style*="display: flex; gap: 10px"] {
@@ -1508,9 +1350,6 @@ table {
   background-color: #cbd5e0;
 }
 
-/* =========================
-     Discussion Dropdown Menu
-     ========================= */
 .dropdown {
   position: relative;
   display: inline-block;
@@ -1571,9 +1410,6 @@ table {
   background-color: #fee !important;
 }
 
-/* =========================
-     Comment Styles
-     ========================= */
 .comments-list {
   margin-top: 15px;
   padding-top: 15px;
@@ -1600,9 +1436,6 @@ table {
   transform: scale(1.2);
 }
 
-/* =========================
-     Reply Section (Enhanced)
-     ========================= */
 .reply-section {
   margin-top: 15px;
   padding-top: 15px;
@@ -1668,18 +1501,12 @@ table {
   color: white;
 }
 
-/* =========================
-     Like Button States
-     ========================= */
 .like-btn {
   display: inline-flex;
   align-items: center;
   gap: 5px;
 }
 
-/* =========================
-     Icon Alignment (like.png & comment.png)
-     ========================= */
 .post-action img {
   width: 60px;
   height: 60px;
@@ -1742,9 +1569,6 @@ table {
   margin-bottom: 5px;
 }
 
-/* =========================
-     Responsive Adjustments
-     ========================= */
 @media (max-width: 720px) {
   .login-box {
     padding: 35px;
@@ -1945,7 +1769,6 @@ body {
   font-weight: bold;
 }
 
-/* Main Container */
 .profile-container {
   max-width: 900px;
   margin: 0 auto;
@@ -1964,7 +1787,6 @@ body {
   color: #2c3e50;
 }
 
-/* Profile Card */
 .profile-card {
   background-color: white;
   border-radius: 15px;
@@ -2020,7 +1842,6 @@ body {
   color: #2c3e50;
 }
 
-/* Profile Stats */
 .profile-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2048,7 +1869,6 @@ body {
   font-weight: 500;
 }
 
-/* Course Cards */
 .course-card {
   background: linear-gradient(135deg, #b8d4e6 0%, #a8c5d8 100%);
   border-radius: 15px;
@@ -2074,7 +1894,6 @@ body {
   color: #5d6d7e;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .profile-stats {
     grid-template-columns: 1fr;
