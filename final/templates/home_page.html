@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CodeHive - Where developers swarm together to learn</title>
+<link rel="stylesheet" href="{{url_for('static', path='styles.css')}}" />
+<style>
+/* Additional styles for new sections */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* Features Section */
+.features {
+  padding: 6rem 4rem;
+  background: white;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
+}
+
+.section-title.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-subtitle {
+  text-align: center;
+  color: #636e72;
+  margin-bottom: 4rem;
+  font-size: 1.2rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease 0.2s;
+}
+
+.section-subtitle.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  padding: 2rem;
+  border-radius: 15px;
+  background: #f5f6fa;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(50px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.feature-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #6b93b8, #2f4156);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+.feature-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #2f4156;
+}
+
+.feature-card p {
+  color: #636e72;
+  line-height: 1.6;
+}
+
+/* How It Works Section */
+.how-it-works {
+  padding: 6rem 4rem;
+  background: linear-gradient(135deg, #f5f6fa 0%, #e8eaf0 100%);
+}
+
+.steps {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.step {
+  text-align: center;
+  max-width: 300px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.6s ease;
+  flex: 1;
+  min-width: 250px;
+}
+
+.step.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.step-number {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #6b93b8, #2f4156);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 10px 25px rgba(107, 147, 184, 0.3);
+}
+
+.step h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #2f4156;
+}
+
+.step p {
+  color: #636e72;
+  line-height: 1.6;
+}
+
+/* CTA Section */
+.cta {
+  padding: 6rem 4rem;
+  background: linear-gradient(135deg, #2f4156 0%, #1a2633 100%);
+  text-align: center;
+  color: white;
+}
+
+.cta h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
+}
+
+.cta h2.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cta p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease 0.2s;
+}
+
+.cta p.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cta-button {
+  padding: 1rem 3rem;
+  background: #6b93b8;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(30px);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.cta-button.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s ease 0.4s;
+}
+
+.cta-button:hover {
+  background: #2f4156;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(107, 147, 184, 0.3);
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: bounce 2s infinite;
+  z-index: 10;
+}
+
+.scroll-indicator::before {
+  content: '';
+  width: 30px;
+  height: 50px;
+  border: 3px solid #2f4156;
+  border-radius: 20px;
+  display: block;
+  position: relative;
+}
+
+.scroll-indicator::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: #2f4156;
+  border-radius: 50%;
+  display: block;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: scrollDot 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+  40% { transform: translateX(-50%) translateY(-20px); }
+  60% { transform: translateX(-50%) translateY(-10px); }
+}
+
+@keyframes scrollDot {
+  0% { top: 10px; opacity: 1; }
+  100% { top: 30px; opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .features {
+    padding: 4rem 2rem;
+  }
+
+  .how-it-works {
+    padding: 4rem 2rem;
+  }
+
+  .cta {
+    padding: 4rem 2rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .steps {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .step {
+    max-width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+<div class="header">
+<div class="header-content">
+<div class="brand">
+          CodeHive
+<img
+src="{{url_for('static', path='test4.png')}}"
+alt="CodeHive"
+width="40"
+height="35"
+ />
+</div>
+</div>
+</div>
+<div class="container" style="position: relative; min-height: 100vh;">
+<div
+style="
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 100px;
+          gap: 30px;
+          flex-wrap: nowrap;
+        "
+>
+<div style="flex: 1; min-width: 0">
+<p
+style="
+              font-size: 72px;
+              font-weight: bold;
+              margin: 0;
+              line-height: 1.2;
+            "
+>
+<span style="color: #2f4156">Code</span
+><span style="color: #6b93b8">Hive</span>
+</p>
+<p
+style="
+              font-size: 42px;
+              font-weight: bold;
+              margin-top: 20px;
+              margin-bottom: 30px;
+              color: #000;
+            "
+>
+Where teaching innovation<br />meets learning excellence
+</p>
+<p
+style="
+              font-size: 18px;
+              margin: 0;
+              line-height: 1.6;
+              color: #333;
+              max-width: 700px;
+            "
+>
+A collaborative learning platform where teachers create subject-based <br />quizzes,
+AI provides instant feedback and grading, and students connect through
+forums while tracking their journey to mastery.
+</p>
+<div style="margin-top: 20px">
+<a href="/login" class="loginandout">Log In</a>
+</div>
+</div>
+<div style="flex-shrink: 0; margin-left: 50px; align-self: center">
+<img
+src="{{url_for('static', path='test2.png')}}?v=3"
+alt="logo"
+width="750"
+height="750"
+ />
+</div>
+</div>
+<div class="scroll-indicator"></div>
+</div>
+
+<!-- Features Section -->
+<section class="features" id="features">
+<h2 class="section-title">What CodeHive Offers</h2>
+<p class="section-subtitle">A complete platform for teachers and students to collaborate and learn</p>
+
+<div class="features-grid">
+<div class="feature-card">
+<div class="feature-icon">📝</div>
+<h3>AI-Powered Quizzes</h3>
+<p>Teachers create subject-specific quizzes while AI automatically grades submissions, provides detailed feedback on incorrect answers, and detects plagiarism between students in real-time.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">👨‍🏫</div>
+<h3>Teacher Dashboard</h3>
+<p>View enrolled students, monitor quiz results, edit AI-assigned points, and track student activity logs including tab switches during quizzes to ensure academic integrity.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">💬</div>
+<h3>Discussion Forums</h3>
+<p>Students can post coding errors and challenges they encounter, while peers collaborate by commenting and providing solutions in an interactive community environment.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">🤖</div>
+<h3>AI Learning Assistant</h3>
+<p>Get instant help from our AI chatbot. Ask questions about any subject, clarify concepts, and receive personalized explanations to accelerate your learning.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">📊</div>
+<h3>Performance Analytics</h3>
+<p>Students can visualize their strengths and weaknesses through interactive bar charts showing mastery levels across different subjects to identify areas for improvement.</p>
+</div>
+
+<div class="feature-card">
+<div class="feature-icon">🔒</div>
+<h3>Plagiarism Detection</h3>
+<p>Advanced AI algorithms compare student submissions during quizzes to ensure originality and maintain academic honesty across all assessments.</p>
+</div>
+</div>
+</section>
+
+<!-- How It Works Section -->
+<section class="how-it-works" id="how-it-works">
+<h2 class="section-title">How It Works</h2>
+<p class="section-subtitle">Simple workflow for teachers and students</p>
+
+<div class="steps">
+<div class="step">
+<div class="step-number">1</div>
+<h3>Join Your Role</h3>
+<p>Sign up as a teacher to create courses and quizzes, or as a student to enroll in subjects and start learning with AI-powered assessments.</p>
+</div>
+
+<div class="step">
+<div class="step-number">2</div>
+<h3>Learn & Assess</h3>
+<p>Students take subject-specific quizzes while teachers monitor progress. AI grades automatically, detects plagiarism, and tracks activity logs for complete transparency.</p>
+</div>
+
+<div class="step">
+<div class="step-number">3</div>
+<h3>Collaborate & Improve</h3>
+<p>Join discussion forums, get AI tutoring, and analyze performance charts. Teachers can adjust grades and provide feedback while students identify areas to strengthen.</p>
+</div>
+</div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta">
+<h2>Ready to Join the Hive?</h2>
+<p>Join our community of teachers and students learning together</p>
+<a href="/login" class="cta-button">Get Started</a>
+</section>
+
+<script>
+// Intersection Observer for scroll animations
+const observerOptions = {
+  threshold: 0.2,
+  rootMargin: '0px 0px -100px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, observerOptions);
+
+// Observe all animated elements
+document.querySelectorAll('.section-title, .section-subtitle, .feature-card, .step, .cta h2, .cta p, .cta-button').forEach(el => {
+  observer.observe(el);
+});
+
+// Stagger animation for feature cards
+const featureCards = document.querySelectorAll('.feature-card');
+featureCards.forEach((card, index) => {
+  card.style.transitionDelay = `${index * 0.1}s`;
+});
+
+// Stagger animation for steps
+const steps = document.querySelectorAll('.step');
+steps.forEach((step, index) => {
+  step.style.transitionDelay = `${index * 0.2}s`;
+});
+
+// Smooth scrolling for navigation links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>
