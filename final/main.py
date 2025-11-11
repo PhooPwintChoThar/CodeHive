@@ -692,17 +692,6 @@ async def quiz_analysis(request: Request, pid: int, qid: int):
 
     current_analysis = compare_all_submissions(student_codes)
 
-    quiz_submissions = {}
-    quiz_names = {}
-    
-    for q in cur_course.get_quizzes():
-        codes={}
-        for s in q.participated_students:
-            codes[s]=respons[q.participated_students[s]].answer
-        quiz_submissions[q.id]=codes
-        quiz_names[q.id]=q.title
-
-    all_quizzes_analysis = compare_across_quizzes(quiz_submissions)
 
     return templates.TemplateResponse("quiz_analysis.html", {
         "request": request,
@@ -710,9 +699,7 @@ async def quiz_analysis(request: Request, pid: int, qid: int):
         "quiz_id": qid,
         "current_quiz": quiz,
         "student_names": student_names,
-        "quiz_names": quiz_names,
         "current_analysis": current_analysis,
-        "all_quizzes_analysis": all_quizzes_analysis,
         "has_submissions":has_submissions
     })
 
