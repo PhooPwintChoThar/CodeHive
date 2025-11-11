@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EduHub - Create Quiz</title>
+<link rel="stylesheet" href="{{url_for('static', path='styles.css')}}">
+<style>
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+  }
+
+  .modal-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+
+  .modal-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #d32f2f;
+    margin-bottom: 15px;
+  }
+
+  .modal-message {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.5;
+  }
+
+  .modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .modal-btn {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+
+  .modal-btn-continue {
+    background-color: var(--primary);
+    color: white;
+  }
+
+  .modal-btn-continue:hover {
+    background-color: var(--primary-dark);
+  }
+
+  .modal-btn-cancel {
+    background-color: #e0e0e0;
+    color: #333;
+  }
+
+  .modal-btn-cancel:hover {
+    background-color: #d0d0d0;
+  }
+
+  .modal-content.success {
+    background-color: #f1f8f6;
+  }
+
+  .modal-title.success {
+    color: #388e3c;
+  }
+
+  .modal-btn-ok {
+    background-color: #388e3c;
+    color: white;
+    min-width: 150px;
+  }
+
+  .modal-btn-ok:hover {
+    background-color: #2e7d32;
+  }
+
+  .success-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+  }
+</style>
+</head>
+<body>
+<div class="header">
+<div class="header-content">
+<div class="brand">
+          CodeHive
+<img src="{{url_for('static', path='test4.png')}}" alt="CodeHive" width="40" height="35" />
+</div>
+<a href="/" class="loginandout">Logout</a>
+<div style="width: 40px"></div>
+</div>
+</div>
+<div class="container">
+<div class="content">
+<h2 class="section-title">Create New Quiz</h2>
+
+<!-- Wrong sample output warning -->
+<div id="confirmationModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-title">⚠️ Question Validation Warning</div>
+    <div class="modal-message" id="modalMessage"></div>
+    <div class="modal-buttons">
+      <button class="modal-btn modal-btn-cancel" onclick="cancelSubmit()">Go Back</button>
+      <button class="modal-btn modal-btn-continue" onclick="continueSubmit()">Continue Anyway</button>
+    </div>
+  </div>
+</div>
+
+<div id="successModal" class="modal-overlay">
+  <div class="modal-content success">
+    <div class="success-icon">✅</div>
+    <div class="modal-title success">Quiz Created Successfully!</div>
+    <div class="modal-message" id="successMessage">Your quiz has been created and is ready for students.</div>
+    <div class="modal-buttons">
+      <button class="modal-btn modal-btn-ok" onclick="goToQuizzes()">View Quizzes</button>
+    </div>
+  </div>
+</div>
+
+<form id="quizForm" action="/professor/{{id}}/quiz/new" method="POST">
+<div class="form-group">
+<label class="form-label">Quiz Title</label>
+<input
+type="text"
+class="form-input"
+placeholder="e.g., Quiz-1"
+name="title"
+required
+ />
+</div>
+<div class="form-group">
+<label class="form-label">Course</label>
+<select name="course">
+{% for c in courses%}
+<option value={{c.id | string}}> {{c.id}} - {{c.name}}</option>
+{%endfor%}
+</select>
+</div>
+<div class="form-group">
+<label class="form-label">Question</label>
+<textarea
+class="form-textarea"
+placeholder="Type Your Question "
+style="min-height: 150px"
+name="question"
+required
+></textarea>
+</div>
+<div class="form-group">
+<label class="form-label">Languages</label>
+<input
+type="text"
+class="form-input"
+placeholder="e.g.Python, Java, etc (for programming subjects) "
+name="languages"
+ />
+</div>
+<div class="form-group">
+<label class="form-label"
+>Sample Output</label
+>
+<textarea
+class="form-textarea"
+placeholder="e.g., 2,4,6,8"
+style="min-height: 150px"
+name="sample_output"
+></textarea>
+</div>
+<div class="form-group">
+<label class="form-label">Due Date</label>
+<input type="date" class="form-input" name="duedate" required />
+</div>
+<div class="form-group">
+<label class="form-label">Time Limit (minutes)</label>
+<input
+type="number"
+class="form-input"
+placeholder="e.g., 30"
+name="duration"
+required
+ />
+</div>
+<div class="form-group">
+<label class="form-label">Restrictions</label>
+<input
+type="text"
+class="form-input"
+placeholder="e.g., Use while loop only"
+name="restriction"
+ />
+</div>
+<div class="form-group">
+<label class="form-label">Total Score (Default 5)</label>
+<input
+type="number"
+class="form-input"
+placeholder="e.g., 30"
+name="total_s"
+required
+ />
+</div>
+<div style="display: flex; gap: 10px">
+<a href="/professor/{{id}}/quizzes" class="btn" style="text-decoration: none"
+>Back</a
+>
+<button type="submit" class="btn btn-primary" id="submitBtn">Create Quiz</button>
+</div>
+</form>
+</div>
+</div>
+
+<script>
+const quizForm = document.getElementById('quizForm');
+const confirmationModal = document.getElementById('confirmationModal');
+const modalMessage = document.getElementById('modalMessage');
+let shouldBypassValidation = false;
+
+quizForm.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  if (shouldBypassValidation) {
+    quizForm.submit();
+    return;
+  }
+
+  const formData = new FormData(quizForm);
+  const question = formData.get('question');
+  const course_id = formData.get('course');
+  const sample_output = formData.get('sample_output');
+  const restriction = formData.get('restriction');
+
+  try {
+    const response = await fetch(
+      `/professor/{{id}}/quiz/validate`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: question,
+          course_id: parseInt(course_id),
+          sample_output: sample_output,
+          restriction: restriction
+        })
+      }
+    );
+
+    const result = await response.json();
+
+    if (result.correct) {
+      quizForm.submit();
+    } else {
+      modalMessage.textContent = result.message + '\n\nDo you want to continue anyway?';
+      confirmationModal.classList.add('active');
+    }
+  } catch (error) {
+    console.error('Error validating question:', error);
+    alert('Error validating question. Please try again.');
+  }
+});
+
+function cancelSubmit() {
+  confirmationModal.classList.remove('active');
+  shouldBypassValidation = false;
+}
+
+function continueSubmit() {
+  confirmationModal.classList.remove('active');
+  shouldBypassValidation = true;
+  quizForm.submit();
+}
+
+function goToQuizzes() {
+  window.location.href = '/professor/{{id}}/quizzes';
+}
+</script>
+
+{% if message %}
+<script>
+  window.addEventListener('load', function() {
+    const message = "{{ message }}";
+    if (message) {
+      const successModal = document.getElementById('successModal');
+      const successMessage = document.getElementById('successMessage');
+      
+      if (message.includes('successfully')) {
+        successMessage.textContent = message;
+        successModal.classList.add('active');
+      } else {
+        alert(message);
+      }
+    }
+  });
+</script>
+{% endif %}
+</body>
+</html>
