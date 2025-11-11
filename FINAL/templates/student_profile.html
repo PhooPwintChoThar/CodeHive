@@ -32,32 +32,32 @@
           "
         >
           <span style="margin: 0 40px">
-            <a
-              href="/student/{{id}}/quizzes"
+            
+            <a href="/student/{{id}}/quizzes"
               class="btn btn-tabs"
               style="font-size: 16px"
               >Quiz</a
             >
           </span>
           <span style="margin: 0 40px">
-            <a
-              href="/student/{{id}}/discussions"
+            
+            <a href="/student/{{id}}/discussions"
               class="btn btn-tabs"
               style="font-size: 16px"
               >Discussion</a
             >
           </span>
           <span style="margin: 0 40px">
-            <a
-              href="/student/{{id}}/courses"
+            
+            <a href="/student/{{id}}/courses"
               class="btn btn-tabs"
               style="font-size: 16px"
               >Courses</a
             >
           </span>
           <span style="margin: 0 40px">
-            <a
-              href="/student/{{id}}/profile"
+            
+            <a href="/student/{{id}}/profile"
               class="btn btn-tabs"
               style="font-size: 16px"
               >Profile</a
@@ -194,6 +194,10 @@
         {% endfor %}
       ];
       
+      // Calculate max score and normalize grades to percentage
+      const maxPossibleScore = Math.max(...categoryGrades);
+      const normalizedGrades = categoryGrades.map(grade => (grade / maxPossibleScore) * 100);
+      
       // Format 
       const formattedSkillCategories = skillCategories.map(skill => {
         // Decoding HTML entities 
@@ -212,7 +216,7 @@
         return `rgba(102, 126, 234, ${0.6 + intensity * 0.4})`;
       }
 
-      const barColors = categoryGrades.map((grade) => getBarColor(grade));
+      const barColors = normalizedGrades.map((grade) => getBarColor(grade));
 
       const skillsChart = new Chart(ctx, {
         type: "bar",
@@ -221,7 +225,7 @@
           datasets: [
             {
               label: "Skill Proficiency (%)",
-              data: categoryGrades,
+              data: normalizedGrades,
               backgroundColor: barColors,
               borderColor: "#667eea",
               borderWidth: 2,
@@ -247,20 +251,25 @@
             tooltip: {
               callbacks: {
                 label: function (context) {
-                  let grade = context.parsed.y;
+                  let percentage = context.parsed.y;
+                  let actualScore = categoryGrades[context.dataIndex];
                   let status = "";
 
-                  if (grade >= 80) {
+                  if (percentage >= 80) {
                     status = "🏆 Mastery Level - Excellent!";
-                  } else if (grade >= 60) {
+                  } else if (percentage >= 60) {
                     status = "📈 Good Progress - Keep it up!";
-                  } else if (grade >= 40) {
+                  } else if (percentage >= 40) {
                     status = "⚠️ Needs Improvement";
                   } else {
                     status = "❌ Urgent Attention Required";
                   }
 
-                  return ["Proficiency: " + grade + "%", "Status: " + status];
+                  return [
+                    "Score: " + actualScore + " / " + maxPossibleScore,
+                    "Proficiency: " + percentage.toFixed(1) + "%",
+                    "Status: " + status
+                  ];
                 },
               },
               backgroundColor: "rgba(0, 0, 0, 0.85)",
