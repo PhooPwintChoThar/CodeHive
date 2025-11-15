@@ -10,9 +10,8 @@ A comprehensive educational platform that brings together teachers and students 
 
 ## 🚀 Live Demo
 
-**Experience CodeHive Live:** [Demo Link Coming Soon]
+**Experience CodeHive Live:** https://codehivehdeploy.onrender.com
 
-*Note: The live demo will be available once the project is deployed*
 
 ## 🎯 Quick Start - Test Immediately
 
