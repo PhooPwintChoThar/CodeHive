@@ -16,20 +16,7 @@ A comprehensive educational platform that brings together teachers and students 
 
 ## 🎯 Quick Start - Test Immediately
 
-Use these pre-configured accounts to explore the platform:
-
-### 👨‍🏫 Teacher Accounts
-| ID | Name | Courses |
-|----|------|---------|
-| **100** | Ronnachai Tiyarattanachai | Calculus, Differential Equations |
-| **102** | Visit Hirankitti | Programming, Software Engineering, Web Development |
-| **110** | Suphamit Chittayasothorn | Database Systems |
-
-### 👨‍🎓 Student Accounts
-- **67011073** - Adisorn Numpradit
-- **67011110** - Ebboonya Srisook  
-- **68011322** - David Seneclauze
-- **68011590** - Watcharawee Tantipanyathep
+Use the pre-configured accounts in data.py to explore the platform.
 
 *No password required - just enter the ID*
 
