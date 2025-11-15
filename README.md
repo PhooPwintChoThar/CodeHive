@@ -59,3 +59,9 @@ pip install -r requirements.txt
 
 # Run the application
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+#Access the application
+Open your browser and navigate to: http://localhost:8000
+
+##HomePage
+http://./images/home1.png
