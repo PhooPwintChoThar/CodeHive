@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+jinja2
+python-multipart
+zodb
+BTrees
+persistent
+transaction
+ZConfig
+openai
+python-dateutil
