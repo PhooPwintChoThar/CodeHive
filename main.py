@@ -367,19 +367,19 @@ async def submit_quiz( sid: int, id: int, student_code: str = Form(...), system_
     networking=[1286241,1286223]
     if(calculated_result[0]>0):
         if quiz.course_id in mathematical:
-            student.skills["Mathematical & Analytical Skills"]+=1
+            student.skills["Mathematical & Analytical Skills"]+=calculated_result[0]
             student._p_changed=True
             
         if quiz.course_id in programming:
-            student.skills["Programming & Software Development Skills"]+=1
+            student.skills["Programming & Software Development Skills"]+=calculated_result[0]
             student._p_changed=True
         
         if quiz.course_id in computer:
-            student.skills["Computer Systems & Hardware Skills"]+=1
+            student.skills["Computer Systems & Hardware Skills"]+=calculated_result[0]
             student._p_changed=True
         
         if quiz.course_id in networking:
-            student.skills["Data & Networking Skills"]+=1
+            student.skills["Data & Networking Skills"]+=calculated_result[0]
             student._p_changed=True
     
     print(student.skills)
