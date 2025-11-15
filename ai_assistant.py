@@ -4,7 +4,7 @@ import re
 
 def getAPI():
     return OpenAI(
-            api_key="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", 
+            api_key="your-openai-api-key", 
             base_url="https://openrouter.ai/api/v1",
             default_headers={
                 "HTTP-Referer": "http://localhost:3000",  
